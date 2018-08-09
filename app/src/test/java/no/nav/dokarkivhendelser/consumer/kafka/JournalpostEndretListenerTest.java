@@ -1,13 +1,10 @@
 package no.nav.dokarkivhendelser.consumer.kafka;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.common.header.Header;
-import org.apache.kafka.common.header.Headers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,19 +26,8 @@ public class JournalpostEndretListenerTest {
 
     @Before
     public void before() throws Exception {
-        when(consumerRecordMock.topic()).thenReturn("topic");
-
-        Headers headers = mock(Headers.class);
-        when(consumerRecordMock.headers()).thenReturn(headers);
-
-        Header tracking = mock(Header.class);
-        when(tracking.value()).thenReturn("123".getBytes(UTF_8));
-        when(headers.lastHeader("journalpostId")).thenReturn(tracking);
-
-        when(converterMock.convert(consumerRecordMock)).thenReturn(JournalpostEndretEvent.builder()
-                .journalpostId(Long.parseLong("123"))
-                .innhold(new byte[]{0})
-                .build());
+        when(converterMock.convert(any(ConsumerRecord.class))).thenReturn(
+                JournalpostEndretEvent.builder().journalpostId(123L).innhold(new byte[]{1}).build());
     }
 
     @Test
