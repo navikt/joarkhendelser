@@ -1,7 +1,6 @@
 package no.nav.dokarkivhendelser.consumer.kafka;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,10 +27,6 @@ public class JournalpostEndretListenerTest {
     @InjectMocks
     private JournalpostEndretListener listener;
 
-    @Mock
-    private JournalpostEndretEvent eventMock;
-
-
     @Before
     public void before() throws Exception {
         when(consumerRecordMock.topic()).thenReturn("topic");
@@ -47,9 +42,6 @@ public class JournalpostEndretListenerTest {
                 .journalpostId(Long.parseLong("123"))
                 .innhold(new byte[]{0})
                 .build());
-    }
-
-    public void tearDown() throws Exception {
     }
 
     @Test
