@@ -1,0 +1,41 @@
+image: "docker.adeo.no:5000/dok/dokarkivhendelser"
+replicas:
+  min: 1
+  max: 2
+  cpuThresholdPercentage: 50
+port: 8080
+healthcheck:
+  liveness:
+    path: /isAlive
+    initialDelay: 30
+    failureThreshold: 10
+  readiness:
+    path: /isReady
+    initialDelay: 30
+    timeout: 3
+prometheus:
+  enabled: true
+  path: /actuator/prometheus
+resources:
+  limits:
+    cpu: 3000m
+    memory: 1024Mi
+fasitResources:
+  used:
+  - alias: securityTokenService
+    resourceType: baseurl
+  - alias: srvdokarkivhendelser
+    resourceType: credential
+    propertyMap:
+      username: serviceuser.username
+      password: serviceuser.password
+  - alias: kafka.brokers
+    resourceType: BaseUrl
+    propertyMap:
+      url: spring.kafka.bootstrap-servers
+  - alias: kafka.schema.registry
+    resourceType: BaseUrl
+    propertyMap:
+      url: spring.kafka.properties.schema.registry.url
+
+
