@@ -40,10 +40,13 @@ public class JournalpostEndretListenerTest {
         when(consumerRecordMock.headers()).thenReturn(headers);
 
         Header tracking = mock(Header.class);
-        when(tracking.value()).thenReturn("tracking".getBytes(UTF_8));
-        when(headers.lastHeader("trackingId")).thenReturn(tracking);
+        when(tracking.value()).thenReturn("123".getBytes(UTF_8));
+        when(headers.lastHeader("journalpostId")).thenReturn(tracking);
 
-        when(converterMock.convert(consumerRecordMock)).thenReturn(eventMock);
+        when(converterMock.convert(consumerRecordMock)).thenReturn(JournalpostEndretEvent.builder()
+                .journalpostId(Long.parseLong("123"))
+                .innhold(new byte[]{0})
+                .build());
     }
 
     public void tearDown() throws Exception {
