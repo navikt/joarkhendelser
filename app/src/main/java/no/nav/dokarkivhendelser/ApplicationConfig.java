@@ -1,12 +1,20 @@
 package no.nav.dokarkivhendelser;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
-import no.nav.dokarkivhendelser.config.KafkaConfig;
+import io.micrometer.core.instrument.MeterRegistry;
+import no.nav.dokarkivhendelser.metrics.DokMetricsAspect;
 
 @ComponentScan
 @EnableAutoConfiguration
+@EnableAspectJAutoProxy
 public class ApplicationConfig {
+    @Bean
+    public DokMetricsAspect timedAspect(MeterRegistry meterRegistry) {
+        return new DokMetricsAspect(meterRegistry);
+    }
+
 }

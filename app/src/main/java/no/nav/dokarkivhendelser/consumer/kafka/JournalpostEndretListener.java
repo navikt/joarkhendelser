@@ -1,5 +1,7 @@
 package no.nav.dokarkivhendelser.consumer.kafka;
 
+import static no.nav.dokarkivhendelser.metrics.MetricLabels.DOK_ARKIV_HENDELSE_JOURNALPOST_ENDRET;
+
 import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +9,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
+import no.nav.dokarkivhendelser.metrics.Metrics;
 
 @Slf4j
 @Component
@@ -17,6 +20,7 @@ public class JournalpostEndretListener {
 
 
     @KafkaListener(topics = "${journalpostEndret.topic}")
+    @Metrics(value = DOK_ARKIV_HENDELSE_JOURNALPOST_ENDRET, percentiles = {0.5, 0.95}, logExceptions = false)
     public void onMessage(ConsumerRecord<?, Map> record) {
         long start = System.currentTimeMillis();
         try {
