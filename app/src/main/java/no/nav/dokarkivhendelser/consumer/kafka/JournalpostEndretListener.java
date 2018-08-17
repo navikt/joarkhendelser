@@ -1,5 +1,6 @@
 package no.nav.dokarkivhendelser.consumer.kafka;
 
+import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -16,16 +17,18 @@ public class JournalpostEndretListener {
 
 
     @KafkaListener(topics = "${journalpostEndret.topic}")
-    public void onMessage(ConsumerRecord<?, byte[]> record) {
+    public void onMessage(ConsumerRecord<?, Map> record) {
         long start = System.currentTimeMillis();
         try {
-            log.info("Received event from topic: [{}]", record.topic());
+            log.debug("Received event from topic: [{}]", record.topic());
             JournalpostEndretEvent event = converter.convert(record);
-            log.info("Got event for journalpost: [{}]", event.getJournalpostId());
+            log.info("Got {}-operation for journalpostId:{}. Fagomrade {} og arkivtype {}",
+                    event.getOperation(), event.getJournalpostId(), event.getFagomrade(), event.getJournalpostType());
+            log.info("Columns changed: {}", event.getColumnsChanged().toString());
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        log.info("handling took " + (System.currentTimeMillis() - start) + " ms");
+        log.debug("handling took " + (System.currentTimeMillis() - start) + " ms");
     }
 }

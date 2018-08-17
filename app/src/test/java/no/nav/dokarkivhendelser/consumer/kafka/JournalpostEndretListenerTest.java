@@ -4,6 +4,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.HashSet;
+import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +18,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class JournalpostEndretListenerTest {
 
     @Mock
-    private ConsumerRecord<?, byte[]> consumerRecordMock;
+    private ConsumerRecord<?, Map> consumerRecordMock;
 
     @Mock
     private ConsumerRecordToJournalpostEndretConverter converterMock;
@@ -26,8 +28,18 @@ public class JournalpostEndretListenerTest {
 
     @Before
     public void before() throws Exception {
+        HashSet<String> columnsChanged = new HashSet<>();
+        columnsChanged.add("T_JOURNALPOST");
+
         when(converterMock.convert(any(ConsumerRecord.class))).thenReturn(
-                JournalpostEndretEvent.builder().journalpostId(123L).innhold(new byte[]{1}).build());
+                JournalpostEndretEvent.builder()
+                        .journalpostId(123L)
+                        .journalpostType("N")
+                        .fagomrade("FOR")
+                        .journalpostStatus("M")
+                        .operation("U")
+                        .columnsChanged(columnsChanged)
+                        .build());
     }
 
     @Test

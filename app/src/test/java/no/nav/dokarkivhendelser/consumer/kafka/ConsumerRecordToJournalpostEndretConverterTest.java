@@ -1,13 +1,11 @@
 package no.nav.dokarkivhendelser.consumer.kafka;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.common.header.Header;
-import org.apache.kafka.common.header.Headers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,20 +18,24 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class ConsumerRecordToJournalpostEndretConverterTest {
 
     @Mock
-    private ConsumerRecord<?, byte[]> consumerRecordMock;
+    private ConsumerRecord<?, Map> consumerRecordMock;
 
     @InjectMocks
     private ConsumerRecordToJournalpostEndretConverter converter;
 
     @Before
     public void before() throws Exception {
-        Header tracking = mock(Header.class);
-        when(tracking.value()).thenReturn("123".getBytes(UTF_8));
-        Headers headers = mock(Headers.class);
-        when(headers.lastHeader("journalpostId")).thenReturn(tracking);
+        LinkedHashMap<Object, Object> values = new LinkedHashMap<>();
+        LinkedHashMap<Object, Object> after = new LinkedHashMap<>();
+        LinkedHashMap<Object, Object> before = new LinkedHashMap<>();
 
-        when(consumerRecordMock.headers()).thenReturn(headers);
-        when(consumerRecordMock.value()).thenReturn(new byte[]{0});
+        after.put("JOURNALPOST_ID", Integer.valueOf(123));
+        values.put("after", after);
+
+        before.put("JOURNALPOST_ID", Integer.valueOf(123));
+        values.put("before", before);
+
+        when(consumerRecordMock.value()).thenReturn(values);
 
     }
 
@@ -45,6 +47,7 @@ public class ConsumerRecordToJournalpostEndretConverterTest {
     public void convert() throws Exception {
         JournalpostEndretEvent event = converter.convert(consumerRecordMock);
         assertEquals(123L, (long) event.getJournalpostId());
+        assertEquals(1, event.columnsChanged.size());
     }
 
 }

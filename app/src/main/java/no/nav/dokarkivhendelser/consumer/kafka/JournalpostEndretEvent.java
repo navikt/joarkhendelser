@@ -1,5 +1,7 @@
 package no.nav.dokarkivhendelser.consumer.kafka;
 
+import java.util.Set;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,8 +13,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class JournalpostEndretEvent {
     Long journalpostId;
-    byte[] innhold;
-    /**
-     * Fylles inn når vi ser hva som kommer fra Golden Gate
-     */
+    String fagomrade;
+    String journalpostStatus;
+    String journalpostType;
+    String operation;
+    Set<String> columnsChanged;
 }
+

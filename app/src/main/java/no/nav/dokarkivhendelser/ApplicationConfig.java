@@ -8,8 +8,5 @@ import no.nav.dokarkivhendelser.config.KafkaConfig;
 
 @ComponentScan
 @EnableAutoConfiguration
-@Import({
-        KafkaConfig.class
-})
 public class ApplicationConfig {
 }
