@@ -46,6 +46,7 @@ public class JournalpostEndretListenerTest {
                         .operation("U")
                         .columnsChanged(columnsChanged)
                         .build());
+        when(consumerRecordMock.topic()).thenReturn("privat-dok-journalpostEndret-v1-t6");
     }
 
     @Test
