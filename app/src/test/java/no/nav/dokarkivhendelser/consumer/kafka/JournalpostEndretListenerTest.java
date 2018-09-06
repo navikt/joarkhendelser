@@ -1,5 +1,6 @@
 package no.nav.dokarkivhendelser.consumer.kafka;
 
+import static no.nav.dokarkivhendelser.consumer.kafka.JoarkSchema.JOURNALPOST;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,6 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RunWith(MockitoJUnitRunner.class)
 public class JournalpostEndretListenerTest {
 
@@ -23,13 +26,16 @@ public class JournalpostEndretListenerTest {
     @Mock
     private ConsumerRecordToJournalpostEndretConverter converterMock;
 
+    @Mock
+    Slf4j log;
+
     @InjectMocks
     private JournalpostEndretListener listener;
 
     @Before
     public void before() throws Exception {
         HashSet<String> columnsChanged = new HashSet<>();
-        columnsChanged.add("T_JOURNALPOST");
+        columnsChanged.add(JOURNALPOST);
 
         when(converterMock.convert(any(ConsumerRecord.class))).thenReturn(
                 JournalpostEndretEvent.builder()
@@ -43,7 +49,13 @@ public class JournalpostEndretListenerTest {
     }
 
     @Test
-    public void onMessage() throws Exception {
+    public void onUpdateMessage() throws Exception {
+        listener.onMessage(consumerRecordMock);
+        verify(converterMock).convert(consumerRecordMock);
+    }
+
+    @Test
+    public void onCreatedMessage() throws Exception {
         listener.onMessage(consumerRecordMock);
         verify(converterMock).convert(consumerRecordMock);
     }

@@ -17,6 +17,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class ConsumerRecordToJournalpostEndretConverterTest {
 
+    LinkedHashMap<Object, Object> values = new LinkedHashMap<>();
+    LinkedHashMap<Object, Object> after = new LinkedHashMap<>();
+    LinkedHashMap<Object, Object> before = new LinkedHashMap<>();
+
+    private Long JOURNALPOST_ID = 123L;
+
     @Mock
     private ConsumerRecord<?, Map> consumerRecordMock;
 
@@ -25,17 +31,6 @@ public class ConsumerRecordToJournalpostEndretConverterTest {
 
     @Before
     public void before() throws Exception {
-        LinkedHashMap<Object, Object> values = new LinkedHashMap<>();
-        LinkedHashMap<Object, Object> after = new LinkedHashMap<>();
-        LinkedHashMap<Object, Object> before = new LinkedHashMap<>();
-
-        after.put("JOURNALPOST_ID", Integer.valueOf(123));
-        values.put("after", after);
-
-        before.put("JOURNALPOST_ID", Integer.valueOf(123));
-        values.put("before", before);
-
-        when(consumerRecordMock.value()).thenReturn(values);
 
     }
 
@@ -43,11 +38,57 @@ public class ConsumerRecordToJournalpostEndretConverterTest {
     public void tearDown() throws Exception {
     }
 
-    @Test
-    public void convert() throws Exception {
-        JournalpostEndretEvent event = converter.convert(consumerRecordMock);
-        assertEquals(123L, (long) event.getJournalpostId());
-        assertEquals(1, event.columnsChanged.size());
+    private LinkedHashMap<String, Object> createAfterValues() {
+        LinkedHashMap<String, Object> valuesAfter = new LinkedHashMap<>();
+
+        valuesAfter.put("JOURNALPOST_ID", Math.toIntExact(JOURNALPOST_ID));
+        valuesAfter.put("K_JOURNALPOST_T", "I");
+        valuesAfter.put("K_FAGOMRADE", "DAG");
+        valuesAfter.put("K_JOURNAL_S", "M");
+
+        return valuesAfter;
     }
 
+    private LinkedHashMap<String, Object> createbeforeValues() {
+        LinkedHashMap<String, Object> valuesAfter = new LinkedHashMap<>();
+
+        valuesAfter.put("JOURNALPOST_ID", Math.toIntExact(JOURNALPOST_ID));
+        valuesAfter.put("K_JOURNALPOST_T", "I");
+        valuesAfter.put("K_FAGOMRADE", "FOR");
+        valuesAfter.put("K_JOURNAL_S", "M");
+
+        return valuesAfter;
+    }
+
+    @Test
+    public void convertUpdateOperation() throws Exception {
+        values.clear();
+        values.put("op_type", "U");
+
+        after.put("JOURNALPOST_ID", Math.toIntExact(JOURNALPOST_ID));
+        values.put("before", createbeforeValues());
+        values.put("after", createAfterValues());
+
+        when(consumerRecordMock.value()).thenReturn(values);
+        JournalpostEndretEvent event = converter.convert(consumerRecordMock);
+        assertEquals(123L, (long) event.getJournalpostId());
+        assertEquals(4, event.columnsChanged.size());
+    }
+
+    @Test
+    public void convertCreateOperation() throws Exception {
+        values.clear();
+        values.put("op_type", "C");
+
+        values.put("after", createAfterValues());
+
+        when(consumerRecordMock.value()).thenReturn(values);
+        JournalpostEndretEvent event = converter.convert(consumerRecordMock);
+        assertEquals(123L, (long) event.getJournalpostId());
+        assertEquals(4, event.columnsChanged.size());
+        assertEquals("C", event.getOperation());
+        assertEquals("M", event.getJournalpostStatus());
+        assertEquals("DAG", event.getFagomrade());
+        assertEquals("I", event.getJournalpostType());
+    }
 }
