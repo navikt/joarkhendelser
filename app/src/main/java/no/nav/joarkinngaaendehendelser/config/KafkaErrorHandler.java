@@ -1,4 +1,4 @@
-package no.nav.dokarkivhendelser.config;
+package no.nav.joarkinngaaendehendelser.config;
 
 import java.util.List;
 import org.apache.kafka.clients.consumer.Consumer;

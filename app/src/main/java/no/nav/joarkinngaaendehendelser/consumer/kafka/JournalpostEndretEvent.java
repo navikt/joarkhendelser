@@ -1,4 +1,4 @@
-package no.nav.dokarkivhendelser.consumer.kafka;
+package no.nav.joarkinngaaendehendelser.consumer.kafka;
 
 import java.util.Set;
 
@@ -12,11 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class JournalpostEndretEvent {
-    Long journalpostId;
-    String fagomrade;
-    String journalpostStatus;
-    String journalpostType;
     String operation;
+    Long journalpostId;
+    String fagomradeBefore;
+    String fagomradeAfter;
+    String journalpostStatus;
     Set<String> columnsChanged;
 }
-

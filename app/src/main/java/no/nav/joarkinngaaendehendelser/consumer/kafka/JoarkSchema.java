@@ -1,4 +1,4 @@
-package no.nav.dokarkivhendelser.consumer.kafka;
+package no.nav.joarkinngaaendehendelser.consumer.kafka;
 
 /**
  * @author Martin Burheim Tingstad, Visma Consulting.
@@ -9,5 +9,9 @@ public class JoarkSchema {
     public static String K_FAGOMRADE = "K_FAGOMRADE";
     public static String K_JOURNALPOST_T = "K_JOURNALPOST_T";
     public static String K_JOURNAL_S = "K_JOURNAL_S";
+
+    public static String JOURNALFORT = "J";
+    public static String INNGAAENDE = "I";
+    public static String UTGAR = "U";
 
 }

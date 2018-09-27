@@ -1,4 +1,4 @@
-package no.nav.dokarkivhendelser.nais;
+package no.nav.joarkinngaaendehendelser.nais;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

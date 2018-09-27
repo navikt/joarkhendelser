@@ -1,4 +1,4 @@
-package no.nav.dokarkivhendelser.metrics;
+package no.nav.joarkinngaaendehendelser.metrics;
 
 import io.micrometer.core.annotation.Incubating;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -39,7 +39,7 @@ public class DokMetricsAspect {
         this.tagsBasedOnJoinpoint = tagsBasedOnJoinpoint;
     }
 
-    @Around("execution (@no.nav.dokarkivhendelser.metrics.Metrics * *.*(..))")
+    @Around("execution (@no.nav.joarkinngaaendehendelser.metrics.Metrics * *.*(..))")
     public Object incrementMetrics(ProceedingJoinPoint pjp) throws Throwable {
         Method method = ((MethodSignature) pjp.getSignature()).getMethod();
         Metrics timed = method.getAnnotation(Metrics.class);

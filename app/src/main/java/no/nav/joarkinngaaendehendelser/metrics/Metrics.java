@@ -1,4 +1,4 @@
-package no.nav.dokarkivhendelser.metrics;
+package no.nav.joarkinngaaendehendelser.metrics;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;

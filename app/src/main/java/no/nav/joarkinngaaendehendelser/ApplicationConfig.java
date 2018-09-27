@@ -1,4 +1,4 @@
-package no.nav.dokarkivhendelser;
+package no.nav.joarkinngaaendehendelser;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -6,7 +6,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 import io.micrometer.core.instrument.MeterRegistry;
-import no.nav.dokarkivhendelser.metrics.DokMetricsAspect;
+import no.nav.joarkinngaaendehendelser.metrics.DokMetricsAspect;
 
 @ComponentScan
 @EnableAutoConfiguration
