@@ -1,4 +1,4 @@
-package no.nav.joarkinngaaendehendelser.producer.inngaaendejournalpost;
+package no.nav.joarkinngaaendehendelser.producer;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Hendelse {
+public class InngaaendeHendelse {
     Long journalpostId;
     String fagomradeBefore;
     String fagomradeAfter;

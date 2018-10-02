@@ -25,15 +25,11 @@ public class ConsumerRecordToJournalpostEndretConverter {
     private Set<String> columns_changed;
     private String operation;
 
-    private boolean prepareAndCheckInngaaendeEvent(ConsumerRecord<?, ?> record) {
+    private void prepareEvent(ConsumerRecord<?, ?> record) {
         values = (LinkedHashMap) record.value();
         operation = get((LinkedHashMap<String,String>) values, OPERATION_TYPE);
 
         after = (LinkedHashMap) values.get("after");
-        if(!INNGAAENDE.equalsIgnoreCase(get((LinkedHashMap<String,String>) after, K_JOURNALPOST_T))) {
-            return false;
-        }
-
         columns_changed = new HashSet<String>(after.keySet());
 
         // Only for UPDATE-operations
@@ -41,24 +37,22 @@ public class ConsumerRecordToJournalpostEndretConverter {
             before = (LinkedHashMap) values.get("before");
             columns_changed.retainAll(before.keySet());
         }
-        return true;
     }
 
     public JournalpostEndretEvent convert(ConsumerRecord<?, ?> record) {
-        if(!prepareAndCheckInngaaendeEvent(record)) {
-            return null;
-        }
+        prepareEvent(record);
 
         Long journalpostId = getJournalpostId();
+
+        List<String> fagomrader = hentKolonneVerdier(K_FAGOMRADE);
 
         return JournalpostEndretEvent.builder()
                 .journalpostId(journalpostId)
                 .operation(operation)
-                .fagomradeBefore(hentKolonneVerdier(K_FAGOMRADE).get(0))
-                .fagomradeAfter(columns_changed.contains(K_FAGOMRADE) ?
-                        hentKolonneVerdier(K_FAGOMRADE).get(1) :
-                        hentKolonneVerdier(K_FAGOMRADE).get(0))
-                .journalpostStatus(hentKolonneVerdier(K_JOURNAL_S).get(0))
+                .fagomradeBefore(fagomrader.get(0))
+                .fagomradeAfter(fagomrader.get(1))
+                .journalpostStatus(hentKolonneVerdier(K_JOURNAL_S).get(1))
+                .journalposttype(hentKolonneVerdier(K_JOURNALPOST_T).get(1))
                 .columnsChanged(columns_changed)
                 .build();
     }
@@ -86,9 +80,15 @@ public class ConsumerRecordToJournalpostEndretConverter {
             if(StringUtils.isNotEmpty(value)) {
                 verdier.add(value);
             }
+            else {
+                verdier.add("");
+            }
             value = get((LinkedHashMap<String,String>) after, key);
             if(StringUtils.isNotEmpty(value)) {
                 verdier.add(value);
+            }
+            else {
+                verdier.add("");
             }
             return verdier;
         }

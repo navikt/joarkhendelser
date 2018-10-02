@@ -3,21 +3,22 @@ package no.nav.joarkinngaaendehendelser.producer;
 import java.util.concurrent.ExecutionException;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 import no.nav.joarkinngaaendehendelser.consumer.kafka.JournalpostEndretEvent;
-import no.nav.joarkinngaaendehendelser.producer.inngaaendejournalpost.Hendelse;
 
 @Slf4j
-public abstract class CommonInngaaendeEventProducer {
+public class InngaaendeHendelsePublisher {
 
     @Autowired
     private KafkaTemplate<Object, Object> kafkaTemplate;
 
-    public abstract void publish(JournalpostEndretEvent event);
+    @Value("${inngaaendeJournalpost.topic}")
+    private String topic;
 
-    protected void sendEventToTopic(JournalpostEndretEvent event, String topic) {
+    public void publish(JournalpostEndretEvent event) {
         ProducerRecord<Object, Object> producerRecord = new ProducerRecord<>(
                 topic,
                 null,
@@ -33,9 +34,9 @@ public abstract class CommonInngaaendeEventProducer {
 
     }
 
-    protected Hendelse map(JournalpostEndretEvent event) {
+    private InngaaendeHendelse map(JournalpostEndretEvent event) {
         return
-                Hendelse.builder()
+                InngaaendeHendelse.builder()
                         .fagomradeAfter(event.getFagomradeAfter())
                         .fagomradeBefore(event.getFagomradeBefore())
                         .journalpostId(event.getJournalpostId())

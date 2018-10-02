@@ -81,7 +81,6 @@ public class ConsumerRecordToJournalpostEndretConverterTest {
     }
 
     @Test
-    @Ignore
     public void convertCreateOperation() throws Exception {
         values.clear();
         values.put("op_type", "C");
@@ -95,5 +94,6 @@ public class ConsumerRecordToJournalpostEndretConverterTest {
         assertEquals("C", event.getOperation());
         assertEquals("M", event.getJournalpostStatus());
         assertEquals("DAG", event.getFagomradeAfter());
+        assertEquals("", event.getFagomradeBefore());
     }
 }

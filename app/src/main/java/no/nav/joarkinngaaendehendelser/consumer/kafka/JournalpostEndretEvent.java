@@ -17,5 +17,6 @@ public class JournalpostEndretEvent {
     String fagomradeBefore;
     String fagomradeAfter;
     String journalpostStatus;
+    String journalposttype;
     Set<String> columnsChanged;
 }
