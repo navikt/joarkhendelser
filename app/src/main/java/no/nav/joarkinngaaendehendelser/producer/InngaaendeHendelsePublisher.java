@@ -15,7 +15,7 @@ public class InngaaendeHendelsePublisher {
     @Autowired
     private KafkaTemplate<Object, Object> kafkaTemplate;
 
-    @Value("${inngaaendeJournalpost.topic}")
+    @Value("${inngaaendeJournalpostEndret.topic}")
     private String topic;
 
     public void publish(JournalpostEndretEvent event) {
