@@ -13,10 +13,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class JournalpostEndretEvent {
     String operation;
-    Long journalpostId;
+    String journalpostId;
     String fagomradeBefore;
     String fagomradeAfter;
-    String journalpostStatus;
+    String journalpostStatusBefore;
+    String journalpostStatusAfter;
     String journalposttype;
+    String mottaksKanal;
+    String kanalReferanseId;
     Set<String> columnsChanged;
+    String timestamp;
 }

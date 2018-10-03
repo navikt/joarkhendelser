@@ -10,9 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InngaaendeHendelse {
-    Long journalpostId;
+    String hendelsesId;
+    String versjon;
+    InngaaendeHendelsesType hendelsesType;
+    String journalpostId;
+    String journalpostStatus;
     String fagomradeBefore;
     String fagomradeAfter;
-    String journalpostStatus;
     String journalpostType;
+    String mottaksKanal;
+    String kanalReferanseId;
 }

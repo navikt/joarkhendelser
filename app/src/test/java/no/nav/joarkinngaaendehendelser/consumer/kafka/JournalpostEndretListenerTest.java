@@ -1,16 +1,15 @@
 package no.nav.joarkinngaaendehendelser.consumer.kafka;
 
+import static no.nav.joarkinngaaendehendelser.consumer.kafka.JournalpostStatus.INNGAAENDE;
 import static no.nav.joarkinngaaendehendelser.consumer.kafka.JoarkSchema.JOURNALPOST;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.HashSet;
 import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -24,10 +23,10 @@ import no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelsePublisher;
 public class JournalpostEndretListenerTest {
 
     @Mock
-    private ConsumerRecord<?, Map> consumerRecordMock;
+    private ConsumerRecord<?, byte[]> consumerRecordMock;
 
     @Mock
-    private ConsumerRecordToJournalpostEndretConverter converterMock;
+    private ConsumerRecordAsJsonConverter converterMock;
 
     @Mock
     private InngaaendeHendelsePublisher publisher;
@@ -46,9 +45,10 @@ public class JournalpostEndretListenerTest {
 
         when(converterMock.convert(any(ConsumerRecord.class))).thenReturn(
                 JournalpostEndretEvent.builder()
-                        .journalpostId(123L)
+                        .journalpostId("123")
                         .fagomradeBefore("FOR")
-                        .journalpostStatus("M")
+                        .journalpostStatusAfter("M")
+                        .journalposttype(INNGAAENDE)
                         .operation("U")
                         .columnsChanged(columnsChanged)
                         .build());

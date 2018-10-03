@@ -1,5 +1,6 @@
 package no.nav.joarkinngaaendehendelser.consumer.kafka;
 
+import static no.nav.joarkinngaaendehendelser.consumer.kafka.JournalpostStatus.INNGAAENDE;
 import static no.nav.joarkinngaaendehendelser.metrics.MetricLabels.JOARK_INNGAAENDE_HENDELSE_JOURNALPOST_ENDRET;
 
 import java.util.Map;
@@ -18,19 +19,19 @@ import no.nav.joarkinngaaendehendelser.metrics.Metrics;
 public class JournalpostEndretListener {
 
     @Autowired
-    private ConsumerRecordToJournalpostEndretConverter converter;
+    private ConsumerRecordAsJsonConverter converter;
 
     @Autowired
     private InngaaendeHendelsePublisher publisher;
 
     @KafkaListener(topics = "${journalpostEndret.topic}")
     @Metrics(value = JOARK_INNGAAENDE_HENDELSE_JOURNALPOST_ENDRET, percentiles = {0.5, 0.95}, logExceptions = false)
-    public void onMessage(ConsumerRecord<?, Map> record) {
+    public void onMessage(ConsumerRecord<?, byte[]> record) {
         long start = System.currentTimeMillis();
         try {
             log.debug("Received event from topic: [{}]", record.topic());
             JournalpostEndretEvent event = converter.convert(record);
-            if(event != null) {
+            if(event != null && INNGAAENDE.equalsIgnoreCase(event.getJournalposttype())) {
                 log.info("Got {}-operation for journalpostId:{}. Fagomrader {}",
                         event.getOperation(), event.getJournalpostId(),
                         event.getFagomradeBefore() + " -> " + event
