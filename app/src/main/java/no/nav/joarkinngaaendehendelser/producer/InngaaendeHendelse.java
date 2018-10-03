@@ -15,9 +15,10 @@ public class InngaaendeHendelse {
     InngaaendeHendelsesType hendelsesType;
     String journalpostId;
     String journalpostStatus;
-    String fagomradeBefore;
-    String fagomradeAfter;
+    String temaGammelt;
+    String temaNytt;
     String journalpostType;
     String mottaksKanal;
     String kanalReferanseId;
+    Long timestamp;
 }

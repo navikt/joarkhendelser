@@ -19,7 +19,7 @@ public class InngaaendeHendelsePublisherTest {
                 .journalpostStatusAfter("MO")
                 .journalpostStatusBefore("MO")
                 .operation("I")
-                .journalposttype("I")
+                .journalpostType("I")
                 .build();
     }
 
@@ -30,7 +30,7 @@ public class InngaaendeHendelsePublisherTest {
     @Test
     @Ignore
     public void map() throws Exception {
-        InngaaendeHendelse map = new InngaaendeHendelsePublisher().map(journalpostEndretEvent);
+        InngaaendeHendelse map = JournalpostEndretInngaaendeHendelseMapper.map(journalpostEndretEvent);
         assertEquals(MIDLERTIDIG_JOURNALFORT, map.getHendelsesType());
     }
 
@@ -63,5 +63,12 @@ public class InngaaendeHendelsePublisherTest {
     public void shouldNotMapToHendelsesType() {
         // TODO
     }
+
+    @Test
+    @Ignore
+    public void shouldNotPublishWhenEventTypeIsNull() {
+        // TODO
+    }
+
 
 }

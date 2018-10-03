@@ -3,6 +3,9 @@ package no.nav.joarkinngaaendehendelser.consumer.kafka;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -23,6 +26,7 @@ public class ConsumerRecordAsJsonConverterTest {
     LinkedHashMap<Object, Object> before = new LinkedHashMap<>();
 
     private Long JOURNALPOST_ID = 123L;
+    private String timestamp;
 
     @Mock
     private ConsumerRecord<?, Map> consumerRecordMock;
@@ -32,7 +36,8 @@ public class ConsumerRecordAsJsonConverterTest {
 
     @Before
     public void before() throws Exception {
-
+        timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(
+                DateTimeFormatter.ISO_INSTANT);
     }
 
     @After
@@ -65,6 +70,7 @@ public class ConsumerRecordAsJsonConverterTest {
     public void shouldConvertUpdateOperation() throws Exception {
         values.clear();
         values.put("op_type", "U");
+        values.put("op_ts", timestamp);
 
         after.put("JOURNALPOST_ID", Math.toIntExact(JOURNALPOST_ID));
         values.put("before", createBeforeValues());
@@ -84,6 +90,7 @@ public class ConsumerRecordAsJsonConverterTest {
     public void shouldConvertCreateOperation() throws Exception {
         values.clear();
         values.put("op_type", "I");
+        values.put("op_ts", timestamp);
 
         values.put("after", createAfterValues());
 
@@ -103,9 +110,7 @@ public class ConsumerRecordAsJsonConverterTest {
         values.clear();
         values.put("op_type", "U");
 
-
         after.put("JOURNALPOST_ID", Math.toIntExact(JOURNALPOST_ID));
-
 
         // Endre disse til å ha nesten like data før og etter, bortsett fra 1 eller 2 kolonner for å verifisere at vi før rett verdi i assertEquals
         //values.put("before", createBeforeValues());
