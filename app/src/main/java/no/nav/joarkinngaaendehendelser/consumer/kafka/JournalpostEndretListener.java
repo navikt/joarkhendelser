@@ -3,7 +3,6 @@ package no.nav.joarkinngaaendehendelser.consumer.kafka;
 import static no.nav.joarkinngaaendehendelser.consumer.kafka.JournalpostStatus.INNGAAENDE;
 import static no.nav.joarkinngaaendehendelser.metrics.MetricLabels.JOARK_INNGAAENDE_HENDELSE_JOURNALPOST_ENDRET;
 
-import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -26,7 +25,7 @@ public class JournalpostEndretListener {
 
     @KafkaListener(topics = "${journalpostEndret.topic}")
     @Metrics(value = JOARK_INNGAAENDE_HENDELSE_JOURNALPOST_ENDRET, percentiles = {0.5, 0.95}, logExceptions = false)
-    public void onMessage(ConsumerRecord<?, byte[]> record) {
+    public void onMessage(ConsumerRecord<?, ?> record) {
         long start = System.currentTimeMillis();
         try {
             log.debug("Received event from topic: [{}]", record.topic());
