@@ -1,6 +1,4 @@
-package no.nav.joarkinngaaendehendelser.consumer.kafka;
-
-import java.util.Set;
+package no.nav.joarkinngaaendehendelser.producer;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,16 +9,15 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JournalpostEndretEvent {
-    String operation;
+public class InngaaendeHendelse {
+    String hendelsesId;
+    String versjon;
+    InngaaendeHendelsesType hendelsesType;
     String journalpostId;
+    String journalpostStatus;
     String fagomradeBefore;
     String fagomradeAfter;
-    String journalpostStatusBefore;
-    String journalpostStatusAfter;
-    String journalposttype;
+    String journalpostType;
     String mottaksKanal;
     String kanalReferanseId;
-    Set<String> columnsChanged;
-    String timestamp;
 }

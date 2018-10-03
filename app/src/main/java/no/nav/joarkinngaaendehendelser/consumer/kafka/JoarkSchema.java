@@ -9,9 +9,7 @@ public class JoarkSchema {
     public static String K_FAGOMRADE = "K_FAGOMRADE";
     public static String K_JOURNALPOST_T = "K_JOURNALPOST_T";
     public static String K_JOURNAL_S = "K_JOURNAL_S";
-
-    public static String JOURNALFORT = "J";
-    public static String INNGAAENDE = "I";
-    public static String UTGAR = "U";
+    public static String K_MOTTAKS_KANAL = "K_MOTTAKS_KANAL";
+    public static String KANAL_REFERANSE_ID = "KANAL_REFERANSE_ID";
 
 }
