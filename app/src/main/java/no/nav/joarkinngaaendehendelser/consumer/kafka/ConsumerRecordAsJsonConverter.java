@@ -89,7 +89,10 @@ public class ConsumerRecordAsJsonConverter {
     }
 
     private Set<String> getChangedColumns(LinkedHashMap before, LinkedHashMap after) {
-        Set<String> columns_changed = new HashSet<String>(after.keySet());
+        if (before.size() != after.size()) {
+            return after.keySet();
+        }
+        Set<String> columns_changed = new HashSet<String>(before.keySet());
 
         for (Object key : before.keySet()) {
             if (after.get(key).equals(before.get(key))) {
@@ -98,5 +101,4 @@ public class ConsumerRecordAsJsonConverter {
         }
         return columns_changed;
     }
-
 }
