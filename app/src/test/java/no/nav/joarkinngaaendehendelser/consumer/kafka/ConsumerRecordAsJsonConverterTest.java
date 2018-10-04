@@ -1,19 +1,19 @@
 package no.nav.joarkinngaaendehendelser.consumer.kafka;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ConsumerRecordAsJsonConverterTest {
@@ -98,21 +98,16 @@ public class ConsumerRecordAsJsonConverterTest {
     }
 
     @Test
-    @Ignore
     public void shouldProduceCorrectNumberOfColumnsChanged() throws Exception {
         values.clear();
         values.put("op_type", "U");
 
+        values.put("before", createBeforeValues());
+        values.put("after", createAfterValues());
 
-        after.put("JOURNALPOST_ID", Math.toIntExact(JOURNALPOST_ID));
-
-
-        // Endre disse til å ha nesten like data før og etter, bortsett fra 1 eller 2 kolonner for å verifisere at vi før rett verdi i assertEquals
-        //values.put("before", createBeforeValues());
-        //values.put("after", createAfterValues());
         when(consumerRecordMock.value()).thenReturn(values);
         JournalpostEndretEvent event = converter.convert(consumerRecordMock);
-        assertEquals(3, event.columnsChanged.size());
 
+        assertEquals(1, event.columnsChanged.size());
     }
 }
