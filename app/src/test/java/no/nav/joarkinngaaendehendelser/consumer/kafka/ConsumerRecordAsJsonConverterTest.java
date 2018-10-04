@@ -1,13 +1,5 @@
 package no.nav.joarkinngaaendehendelser.consumer.kafka;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
-
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.After;
 import org.junit.Before;
@@ -17,6 +9,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -121,7 +116,6 @@ public class ConsumerRecordAsJsonConverterTest {
         JournalpostEndretEvent event = converter.convert(consumerRecordMock);
 
         assertEquals(1, event.columnsChanged.size());
-
 
 
     }
