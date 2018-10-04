@@ -1,16 +1,9 @@
 package no.nav.joarkinngaaendehendelser.consumer.kafka;
 
-import static no.nav.joarkinngaaendehendelser.consumer.kafka.JournalpostStatus.INNGAAENDE;
-import static no.nav.joarkinngaaendehendelser.consumer.kafka.JoarkSchema.JOURNALPOST_ID;
-import static no.nav.joarkinngaaendehendelser.consumer.kafka.JoarkSchema.KANAL_REFERANSE_ID;
-import static no.nav.joarkinngaaendehendelser.consumer.kafka.JoarkSchema.K_FAGOMRADE;
-import static no.nav.joarkinngaaendehendelser.consumer.kafka.JoarkSchema.K_JOURNALPOST_T;
-import static no.nav.joarkinngaaendehendelser.consumer.kafka.JoarkSchema.K_JOURNAL_S;
-import static no.nav.joarkinngaaendehendelser.consumer.kafka.JoarkSchema.K_MOTTAKS_KANAL;
-import static no.nav.joarkinngaaendehendelser.consumer.kafka.OracleSchema.INSERT_OPERATION;
-import static no.nav.joarkinngaaendehendelser.consumer.kafka.OracleSchema.OPERATION_TIMESTAMP;
-import static no.nav.joarkinngaaendehendelser.consumer.kafka.OracleSchema.OPERATION_TYPE;
-import static no.nav.joarkinngaaendehendelser.consumer.kafka.OracleSchema.UPDATE_OPERATION;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,10 +11,10 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Set;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.stereotype.Component;
+
+import static no.nav.joarkinngaaendehendelser.consumer.kafka.JoarkSchema.*;
+import static no.nav.joarkinngaaendehendelser.consumer.kafka.JournalpostStatus.INNGAAENDE;
+import static no.nav.joarkinngaaendehendelser.consumer.kafka.OracleSchema.*;
 
 /**
  * @author Martin Burheim Tingstad, Visma Consulting.
@@ -42,7 +35,7 @@ public class ConsumerRecordAsJsonConverter {
 
         Long timeStamp = convertOracleTimeStampToLong(timestamp);
 
-        Integer journalpostId = (Integer)(after.get(JOURNALPOST_ID));
+        Integer journalpostId = Integer.parseInt((String)after.get(JOURNALPOST_ID));
 
         // Only for UPDATE-operations
         if (UPDATE_OPERATION.equalsIgnoreCase(operation)) {

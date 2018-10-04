@@ -22,8 +22,8 @@ import static org.mockito.Mockito.when;
 public class ConsumerRecordAsJsonConverterTest {
 
     LinkedHashMap<Object, Object> values = new LinkedHashMap<>();
-    LinkedHashMap<Object, Object> after = new LinkedHashMap<>();
     LinkedHashMap<Object, Object> before = new LinkedHashMap<>();
+    LinkedHashMap<Object, Object> after = new LinkedHashMap<>();
 
     private Long JOURNALPOST_ID = 123L;
     private String timestamp;
@@ -44,16 +44,6 @@ public class ConsumerRecordAsJsonConverterTest {
     public void tearDown() throws Exception {
     }
 
-    private LinkedHashMap<String, Object> createAfterValues() {
-        LinkedHashMap<String, Object> valuesAfter = new LinkedHashMap<>();
-
-        valuesAfter.put("JOURNALPOST_ID", Math.toIntExact(JOURNALPOST_ID));
-        valuesAfter.put("K_JOURNALPOST_T", "I");
-        valuesAfter.put("K_FAGOMRADE", "DAG");
-        valuesAfter.put("K_JOURNAL_S", "M");
-
-        return valuesAfter;
-    }
 
     private LinkedHashMap<String, Object> createBeforeValues() {
         LinkedHashMap<String, Object> valuesBefore = new LinkedHashMap<>();
@@ -66,48 +56,66 @@ public class ConsumerRecordAsJsonConverterTest {
         return valuesBefore;
     }
 
-    private LinkedHashMap<String, Object> createLongAfterValues() {
+
+    private LinkedHashMap<String, Object> createAfterValues() {
         LinkedHashMap<String, Object> valuesAfter = new LinkedHashMap<>();
 
-        valuesAfter.put("JOURNALPOST_ID", "423262338");
-        valuesAfter.put("JOURNALF_ENHET", "0219");
-        valuesAfter.put("OPPRETTET_AV_NAVN", "BJOARK002");
-        valuesAfter.put("DATO_JOURNAL", "2018-09-24 12:21:57.183000000");
-        valuesAfter.put("ANTALL_RETUR", "0");
-        valuesAfter.put("DATO_AVS_RETUR", "null");
-        valuesAfter.put("INNHOLD", "Søknad om barnetrygd");
-        valuesAfter.put("KRAV_TYPE", "null");
-        valuesAfter.put("MERKNAD", "null");
-        valuesAfter.put("FORDELING", "null");
-        valuesAfter.put("ORIGINAL_BESTILT", "0");
-        valuesAfter.put("ENDRET_AV_NAVN", "F_Z990101 E_Z990101");
-        valuesAfter.put("OPPRETTET_AV", "BJOARK002");
-        valuesAfter.put("DATO_ENDRET", "2018-09-24 12:21:57.184000000");
-        valuesAfter.put("ENDRET_AV", "Z990101");
-        valuesAfter.put("DATO_SENDT_PRINT", "null");
-        valuesAfter.put("VERSJON", "2");
-        valuesAfter.put("K_FAGOMRADE", "BAR");
-        valuesAfter.put("K_JOURNAL_S", "J");
-        valuesAfter.put("DATO_OPPRETTET", "2018-09-24 12:19:23.280000000");
-        valuesAfter.put("DATO_DOKUMENT", "null");
-        valuesAfter.put("AVSEND_MOTTAKER", "FORNAVN ETTERNAVN");
-        valuesAfter.put("AVSEND_MOTTAK_ID", "***gammelt_fnr***");
-        valuesAfter.put("JOURNALFORT_AV_NAVN", "SAKSBEHANDLER NORMANN");
-        valuesAfter.put("DATO_MOTTATT", "2018-09-24 00:00:00.000000000");
-        valuesAfter.put("LAND", "null");
-        valuesAfter.put("K_FAKT_DIS_KANAL", "null");
-        valuesAfter.put("ELEKTRONISK_DISTR", "F");
-        valuesAfter.put("DATO_EKSPEDERT", "null");
-        valuesAfter.put("DATO_LEST", "null");
-        valuesAfter.put("MOTTATT_ADRESSAT", "null");
-        valuesAfter.put("OPPRETTET_KILDE_NAVN", "AS36");
+        valuesAfter.put("JOURNALPOST_ID", Math.toIntExact(JOURNALPOST_ID));
         valuesAfter.put("K_JOURNALPOST_T", "I");
-        valuesAfter.put("K_UTSENDINGS_KANAL", "null");
-        valuesAfter.put("K_MOTTAKS_KANAL", "SKAN_NETS");
-        valuesAfter.put("ENDRET_KILDE_NAVN", "FS22");
-        valuesAfter.put("SIGNATUR", "null");
-        valuesAfter.put("KANAL_REFERANSE_ID", "null");
+        valuesAfter.put("K_FAGOMRADE", "DAG");
+        valuesAfter.put("K_JOURNAL_S", "M");
 
+        return valuesAfter;
+    }
+
+    private LinkedHashMap<String, Object> createLongBeforeValues() {
+        LinkedHashMap<String, Object> valuesBefore = new LinkedHashMap<>();
+
+        valuesBefore.put("JOURNALPOST_ID", "423262338");
+        valuesBefore.put("JOURNALF_ENHET", "0219");
+        valuesBefore.put("OPPRETTET_AV_NAVN", "BJOARK002");
+        valuesBefore.put("DATO_JOURNAL", "2018-09-24 12:21:57.183000000");
+        valuesBefore.put("ANTALL_RETUR", "0");
+        valuesBefore.put("DATO_AVS_RETUR", "null");
+        valuesBefore.put("INNHOLD", "Søknad om barnetrygd");
+        valuesBefore.put("KRAV_TYPE", "null");
+        valuesBefore.put("MERKNAD", "null");
+        valuesBefore.put("FORDELING", "null");
+        valuesBefore.put("ORIGINAL_BESTILT", "0");
+        valuesBefore.put("ENDRET_AV_NAVN", "F_Z990101 E_Z990101");
+        valuesBefore.put("OPPRETTET_AV", "BJOARK002");
+        valuesBefore.put("DATO_ENDRET", "2018-09-24 12:21:57.184000000");
+        valuesBefore.put("ENDRET_AV", "Z990101");
+        valuesBefore.put("DATO_SENDT_PRINT", "null");
+        valuesBefore.put("VERSJON", "2");
+        valuesBefore.put("K_FAGOMRADE", "BAR");
+        valuesBefore.put("K_JOURNAL_S", "J");
+        valuesBefore.put("DATO_OPPRETTET", "2018-09-24 12:19:23.280000000");
+        valuesBefore.put("DATO_DOKUMENT", "null");
+        valuesBefore.put("AVSEND_MOTTAKER", "FORNAVN ETTERNAVN");
+        valuesBefore.put("AVSEND_MOTTAK_ID", "***gammelt_fnr***");
+        valuesBefore.put("JOURNALFORT_AV_NAVN", "SAKSBEHANDLER NORMANN");
+        valuesBefore.put("DATO_MOTTATT", "2018-09-24 00:00:00.000000000");
+        valuesBefore.put("LAND", "null");
+        valuesBefore.put("K_FAKT_DIS_KANAL", "null");
+        valuesBefore.put("ELEKTRONISK_DISTR", "F");
+        valuesBefore.put("DATO_EKSPEDERT", "null");
+        valuesBefore.put("DATO_LEST", "null");
+        valuesBefore.put("MOTTATT_ADRESSAT", "null");
+        valuesBefore.put("OPPRETTET_KILDE_NAVN", "AS36");
+        valuesBefore.put("K_JOURNALPOST_T", "I");
+        valuesBefore.put("K_UTSENDINGS_KANAL", "null");
+        valuesBefore.put("K_MOTTAKS_KANAL", "SKAN_NETS");
+        valuesBefore.put("ENDRET_KILDE_NAVN", "FS22");
+        valuesBefore.put("SIGNATUR", "null");
+        valuesBefore.put("KANAL_REFERANSE_ID", "null");
+
+        return valuesBefore;
+    }
+
+    private LinkedHashMap<String, Object> createLongAfterValues() {
+        LinkedHashMap<String, Object> valuesAfter = createLongBeforeValues();
+        valuesAfter.put("K_FAGOMRADE", "FOR");
         return valuesAfter;
     }
 
@@ -163,5 +171,19 @@ public class ConsumerRecordAsJsonConverterTest {
         assertEquals(1, event.columnsChanged.size());
 
 
+    }
+
+    @Test
+    public void shouldProduceCorrectNumberOfColumnsChangedLong() throws Exception {
+        values.clear();
+        values.put("op_type", "U");
+
+        values.put("before", createLongBeforeValues());
+        values.put("after", createLongAfterValues());
+
+        when(consumerRecordMock.value()).thenReturn(values);
+        JournalpostEndretEvent event = converter.convert(consumerRecordMock);
+
+        assertEquals(1, event.columnsChanged.size());
     }
 }
