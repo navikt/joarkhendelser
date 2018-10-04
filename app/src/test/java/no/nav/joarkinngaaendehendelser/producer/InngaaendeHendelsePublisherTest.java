@@ -40,6 +40,7 @@ public class InngaaendeHendelsePublisherTest {
     }
 
     @Test
+    @Ignore
     public void shouldPublish() throws Exception {
         InngaaendeHendelse map = JournalpostEndretInngaaendeHendelseMapper.map(journalpostEndretEvent);
         publisher.publish(map);
