@@ -51,14 +51,14 @@ public class ConsumerRecordAsJsonConverterTest {
     }
 
     private LinkedHashMap<String, Object> createBeforeValues() {
-        LinkedHashMap<String, Object> valuesAfter = new LinkedHashMap<>();
+        LinkedHashMap<String, Object> valuesBefore = new LinkedHashMap<>();
 
-        valuesAfter.put("JOURNALPOST_ID", Math.toIntExact(JOURNALPOST_ID));
-        valuesAfter.put("K_JOURNALPOST_T", "I");
-        valuesAfter.put("K_FAGOMRADE", "FOR");
-        valuesAfter.put("K_JOURNAL_S", "M");
+        valuesBefore.put("JOURNALPOST_ID", Math.toIntExact(JOURNALPOST_ID));
+        valuesBefore.put("K_JOURNALPOST_T", "I");
+        valuesBefore.put("K_FAGOMRADE", "FOR");
+        valuesBefore.put("K_JOURNAL_S", "M");
 
-        return valuesAfter;
+        return valuesBefore;
     }
 
     private LinkedHashMap<String, Object> createLongAfterValues() {
@@ -118,7 +118,7 @@ public class ConsumerRecordAsJsonConverterTest {
         when(consumerRecordMock.value()).thenReturn(values);
         JournalpostEndretEvent event = converter.convert(consumerRecordMock);
         assertEquals("123", event.getJournalpostId());
-        assertEquals(4, event.columnsChanged.size());
+        assertEquals(1, event.columnsChanged.size());
         assertEquals("U", event.getOperation());
         assertEquals("M", event.getJournalpostStatusAfter());
         assertEquals("FOR", event.getFagomradeBefore());
@@ -154,5 +154,8 @@ public class ConsumerRecordAsJsonConverterTest {
         JournalpostEndretEvent event = converter.convert(consumerRecordMock);
 
         assertEquals(1, event.columnsChanged.size());
+
+
+
     }
 }
