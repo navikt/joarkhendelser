@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelsesType.MIDLERTIDIG_JOURNALFORT;
 import static org.junit.Assert.*;
@@ -13,6 +14,10 @@ import no.nav.joarkinngaaendehendelser.consumer.kafka.JournalpostEndretEvent;
 public class InngaaendeHendelsePublisherTest {
 
     JournalpostEndretEvent journalpostEndretEvent;
+
+    @Autowired
+    InngaaendeHendelsePublisher publisher;
+
     @Before
     public void setUp() throws Exception {
         journalpostEndretEvent = JournalpostEndretEvent.builder()
@@ -32,6 +37,13 @@ public class InngaaendeHendelsePublisherTest {
     public void map() throws Exception {
         InngaaendeHendelse map = JournalpostEndretInngaaendeHendelseMapper.map(journalpostEndretEvent);
         assertEquals(MIDLERTIDIG_JOURNALFORT, map.getHendelsesType());
+    }
+
+    @Test
+    public void shouldPublish() throws Exception {
+        InngaaendeHendelse map = JournalpostEndretInngaaendeHendelseMapper.map(journalpostEndretEvent);
+        publisher.publish(map);
+        //assertEquals(MIDLERTIDIG_JOURNALFORT, map.getHendelsesType());
     }
 
     @Test

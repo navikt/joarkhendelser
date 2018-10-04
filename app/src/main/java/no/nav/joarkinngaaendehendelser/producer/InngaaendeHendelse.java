@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class InngaaendeHendelse {
     String hendelsesId;
-    String versjon;
+    Integer versjon;
     String hendelsesType;
-    String journalpostId;
+    Long journalpostId;
     String journalpostStatus;
     String temaGammelt;
     String temaNytt;

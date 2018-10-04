@@ -46,7 +46,7 @@ public class JournalpostEndretListenerTest {
 
         when(converterMock.convert(any(ConsumerRecord.class))).thenReturn(
                 JournalpostEndretEvent.builder()
-                        .journalpostId("123")
+                        .journalpostId(123L)
                         .fagomradeBefore("FOR")
                         .journalpostStatusAfter("M")
                         .journalpostType(INNGAAENDE)

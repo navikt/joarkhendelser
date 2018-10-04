@@ -24,7 +24,7 @@ public class JournalpostEndretInngaaendeHendelseMapper {
         return inngaaendeHendelsesType != null ?
                 InngaaendeHendelse.builder()
                         .hendelsesId(UUID.randomUUID().toString())
-                        .versjon("1")
+                        .versjon(1)
                         .temaNytt(event.getFagomradeAfter())
                         .temaGammelt(event.getFagomradeBefore())
                         .journalpostId(event.getJournalpostId())

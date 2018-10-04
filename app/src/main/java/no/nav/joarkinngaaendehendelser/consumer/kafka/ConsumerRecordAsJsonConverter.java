@@ -58,7 +58,7 @@ public class ConsumerRecordAsJsonConverter {
             columns_changed.retainAll(before.keySet());
 
             return JournalpostEndretEvent.builder()
-                    .journalpostId(journalpostId.toString())
+                    .journalpostId(journalpostId.longValue())
                     .operation(operation)
                     .fagomradeBefore(hentVerdi(before, K_FAGOMRADE))
                     .fagomradeAfter(hentUpdatedVerdi(columns_changed, after, before, K_FAGOMRADE))
@@ -74,7 +74,7 @@ public class ConsumerRecordAsJsonConverter {
 
         if(INSERT_OPERATION.equalsIgnoreCase(operation)) {
             return JournalpostEndretEvent.builder()
-                    .journalpostId(journalpostId.toString())
+                    .journalpostId(journalpostId.longValue())
                     .operation(operation)
                     .fagomradeBefore("")
                     .fagomradeAfter(hentVerdi(after, K_FAGOMRADE))
@@ -89,7 +89,7 @@ public class ConsumerRecordAsJsonConverter {
         }
         log.warn("Received unknown operation for journalpost "+journalpostId);
         return JournalpostEndretEvent.builder()
-                .journalpostId(journalpostId.toString())
+                .journalpostId(journalpostId.longValue())
                 .build();
     }
 
