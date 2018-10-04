@@ -61,6 +61,51 @@ public class ConsumerRecordAsJsonConverterTest {
         return valuesAfter;
     }
 
+    private LinkedHashMap<String, Object> createLongAfterValues() {
+        LinkedHashMap<String, Object> valuesAfter = new LinkedHashMap<>();
+
+        valuesAfter.put("JOURNALPOST_ID", "423262338");
+        valuesAfter.put("JOURNALF_ENHET", "0219");
+        valuesAfter.put("OPPRETTET_AV_NAVN", "BJOARK002");
+        valuesAfter.put("DATO_JOURNAL", "2018-09-24 12:21:57.183000000");
+        valuesAfter.put("ANTALL_RETUR", "0");
+        valuesAfter.put("DATO_AVS_RETUR", "null");
+        valuesAfter.put("INNHOLD", "Søknad om barnetrygd");
+        valuesAfter.put("KRAV_TYPE", "null");
+        valuesAfter.put("MERKNAD", "null");
+        valuesAfter.put("FORDELING", "null");
+        valuesAfter.put("ORIGINAL_BESTILT", "0");
+        valuesAfter.put("ENDRET_AV_NAVN", "F_Z990101 E_Z990101");
+        valuesAfter.put("OPPRETTET_AV", "BJOARK002");
+        valuesAfter.put("DATO_ENDRET", "2018-09-24 12:21:57.184000000");
+        valuesAfter.put("ENDRET_AV", "Z990101");
+        valuesAfter.put("DATO_SENDT_PRINT", "null");
+        valuesAfter.put("VERSJON", "2");
+        valuesAfter.put("K_FAGOMRADE", "BAR");
+        valuesAfter.put("K_JOURNAL_S", "J");
+        valuesAfter.put("DATO_OPPRETTET", "2018-09-24 12:19:23.280000000");
+        valuesAfter.put("DATO_DOKUMENT", "null");
+        valuesAfter.put("AVSEND_MOTTAKER", "FORNAVN ETTERNAVN");
+        valuesAfter.put("AVSEND_MOTTAK_ID", "***gammelt_fnr***");
+        valuesAfter.put("JOURNALFORT_AV_NAVN", "SAKSBEHANDLER NORMANN");
+        valuesAfter.put("DATO_MOTTATT", "2018-09-24 00:00:00.000000000");
+        valuesAfter.put("LAND", "null");
+        valuesAfter.put("K_FAKT_DIS_KANAL", "null");
+        valuesAfter.put("ELEKTRONISK_DISTR", "F");
+        valuesAfter.put("DATO_EKSPEDERT", "null");
+        valuesAfter.put("DATO_LEST", "null");
+        valuesAfter.put("MOTTATT_ADRESSAT", "null");
+        valuesAfter.put("OPPRETTET_KILDE_NAVN", "AS36");
+        valuesAfter.put("K_JOURNALPOST_T", "I");
+        valuesAfter.put("K_UTSENDINGS_KANAL", "null");
+        valuesAfter.put("K_MOTTAKS_KANAL", "SKAN_NETS");
+        valuesAfter.put("ENDRET_KILDE_NAVN", "FS22");
+        valuesAfter.put("SIGNATUR", "null");
+        valuesAfter.put("KANAL_REFERANSE_ID", "null");
+
+        return valuesAfter;
+    }
+
     @Test
     public void shouldConvertUpdateOperation() throws Exception {
         values.clear();
