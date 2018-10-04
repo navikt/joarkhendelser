@@ -32,7 +32,7 @@ public class JournalpostEndretInngaaendeHendelseMapper {
                         .mottaksKanal(event.getMottaksKanal())
                         .journalpostStatus(event.getJournalpostStatusAfter())
                         .journalpostType(event.getJournalpostType())
-                        .hendelsesType(inngaaendeHendelsesType)
+                        .hendelsesType(inngaaendeHendelsesType.toString())
                         .timestamp(event.getTimestamp())
                         .build() : null;
     }

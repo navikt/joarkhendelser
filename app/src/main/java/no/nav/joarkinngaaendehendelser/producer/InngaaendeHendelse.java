@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class InngaaendeHendelse {
     String hendelsesId;
     String versjon;
-    InngaaendeHendelsesType hendelsesType;
+    String hendelsesType;
     String journalpostId;
     String journalpostStatus;
     String temaGammelt;
