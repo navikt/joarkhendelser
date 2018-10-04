@@ -3,17 +3,21 @@ package no.nav.joarkinngaaendehendelser.consumer.kafka;
 import static no.nav.joarkinngaaendehendelser.consumer.kafka.JournalpostStatus.INNGAAENDE;
 import static no.nav.joarkinngaaendehendelser.metrics.MetricLabels.JOARK_INNGAAENDE_HENDELSE_JOURNALPOST_ENDRET;
 
-import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
+import no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelse;
 import no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelsePublisher;
 
 import no.nav.joarkinngaaendehendelser.metrics.Metrics;
+import no.nav.joarkinngaaendehendelser.producer.JournalpostEndretInngaaendeHendelseMapper;
 
+/**
+ * @author Martin Burheim Tingstad, Visma Consulting.
+ */
 @Slf4j
 @Component
 public class JournalpostEndretListener {
@@ -26,22 +30,18 @@ public class JournalpostEndretListener {
 
     @KafkaListener(topics = "${journalpostEndret.topic}")
     @Metrics(value = JOARK_INNGAAENDE_HENDELSE_JOURNALPOST_ENDRET, percentiles = {0.5, 0.95}, logExceptions = false)
-    public void onMessage(ConsumerRecord<?, byte[]> record) {
+    public void onMessage(ConsumerRecord<?, ?> record) {
         long start = System.currentTimeMillis();
         try {
-            log.debug("Received event from topic: [{}]", record.topic());
             JournalpostEndretEvent event = converter.convert(record);
-            if(event != null && INNGAAENDE.equalsIgnoreCase(event.getJournalposttype())) {
-                log.info("Got {}-operation for journalpostId:{}. Fagomrader {}",
-                        event.getOperation(), event.getJournalpostId(),
-                        event.getFagomradeBefore() + " -> " + event
-                                .getFagomradeAfter());
-                log.info("Columns changed: {}",
-                        event.getColumnsChanged().toString());
-                publisher.publish(event);
-            }
-            else {
-                log.info("Event is not inngaaende");
+            log.info("Received {}-event for journalpost {} on topic: {}", event.getOperation(), event.getJournalpostId(), record.topic());
+
+            if(INNGAAENDE.equalsIgnoreCase(event.getJournalpostType())) {
+                InngaaendeHendelse hendelse = JournalpostEndretInngaaendeHendelseMapper.map(event);
+                if(hendelse != null) {
+                    publisher.publish(hendelse);
+                    log.info("Publisert hendelse "+hendelse.getHendelsesType()+" for journalpost "+hendelse.getJournalpostId());
+                }
             }
         }
         catch (Exception e) {

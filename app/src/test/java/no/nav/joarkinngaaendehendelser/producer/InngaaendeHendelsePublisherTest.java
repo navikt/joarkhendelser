@@ -69,4 +69,11 @@ public class InngaaendeHendelsePublisherTest {
         assertNull(publisher.map(journalpostEndretEvent));
     }
 
+    @Test
+    @Ignore
+    public void shouldNotPublishWhenEventTypeIsNull() {
+        // TODO
+    }
+
+
 }

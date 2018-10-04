@@ -4,11 +4,11 @@ package no.nav.joarkinngaaendehendelser.consumer.kafka;
  * @author Martin Burheim Tingstad, Visma Consulting.
  */
 public class JournalpostStatus {
-    public static String MOTTATT = "MO";
-    public static String MIDLERTIDIG = "M";
-    public static String JOURNALFORT = "J";
-    public static String INNGAAENDE = "I";
-    public static String UTGAR = "U";
-    public static String UKJENTBRUKER = "UB";
-    public static String DOKUMENTOPPLASTING = "OD";
+    public static final String MOTTATT = "MO";
+    public static final String MIDLERTIDIG = "M";
+    public static final String JOURNALFORT = "J";
+    public static final String INNGAAENDE = "I";
+    public static final String UTGAR = "U";
+    public static final String UKJENTBRUKER = "UB";
+    public static final String DOKUMENTOPPLASTING = "OD";
 }

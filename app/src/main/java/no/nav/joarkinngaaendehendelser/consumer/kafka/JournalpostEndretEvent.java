@@ -18,9 +18,9 @@ public class JournalpostEndretEvent {
     String fagomradeAfter;
     String journalpostStatusBefore;
     String journalpostStatusAfter;
-    String journalposttype;
+    String journalpostType;
     String mottaksKanal;
     String kanalReferanseId;
     Set<String> columnsChanged;
-    String timestamp;
+    Long timestamp;
 }
