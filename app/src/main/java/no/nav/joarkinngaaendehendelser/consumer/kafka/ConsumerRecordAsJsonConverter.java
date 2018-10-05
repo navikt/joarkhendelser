@@ -46,6 +46,8 @@ public class ConsumerRecordAsJsonConverter {
         Set<String> columns_changed = new HashSet<String>(after.keySet());
         Integer journalpostId = (Integer)(after.get(JOURNALPOST_ID));
 
+        log.info("Received {}-event for journalpost {} on topic: {}", operation, journalpostId, record.topic());
+
         // Only for UPDATE-operations
         if(UPDATE_OPERATION.equalsIgnoreCase(operation)) {
             LinkedHashMap before = (LinkedHashMap) values.get("before");

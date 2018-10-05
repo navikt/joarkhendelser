@@ -13,8 +13,8 @@ import org.apache.avro.message.SchemaStore;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -***gammelt_fnr***15581270L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"InngaaendeHendelseRecord\",\"namespace\":\"joark\",\"fields\":[{\"name\":\"hendelsesId\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"versjon\",\"type\":\"int\"},{\"name\":\"hendelsesType\",\"type\":\"string\"},{\"name\":\"journalpostId\",\"type\":\"long\"},{\"name\":\"journalpostStatus\",\"type\":\"string\"},{\"name\":\"temaGammelt\",\"type\":\"string\"},{\"name\":\"temaNytt\",\"type\":\"string\"},{\"name\":\"journalpostType\",\"type\":\"string\"},{\"name\":\"mottaksKanal\",\"type\":\"string\"},{\"name\":\"kanalReferanseId\",\"type\":\"string\"}]}");
+  private static final long serialVersionUID = ***gammelt_fnr***22223889L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"InngaaendeHendelseRecord\",\"namespace\":\"no.nav.joarkinngaaendehendelser.producer\",\"fields\":[{\"name\":\"hendelsesId\",\"type\":\"string\"},{\"name\":\"versjon\",\"type\":\"int\"},{\"name\":\"hendelsesType\",\"type\":\"string\"},{\"name\":\"journalpostId\",\"type\":\"long\"},{\"name\":\"journalpostStatus\",\"type\":\"string\"},{\"name\":\"temaGammelt\",\"type\":\"string\"},{\"name\":\"temaNytt\",\"type\":\"string\"},{\"name\":\"mottaksKanal\",\"type\":\"string\"},{\"name\":\"kanalReferanseId\",\"type\":\"string\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -52,14 +52,12 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
   }
 
   @Deprecated public java.lang.CharSequence hendelsesId;
-  @Deprecated public long timestamp;
   @Deprecated public int versjon;
   @Deprecated public java.lang.CharSequence hendelsesType;
   @Deprecated public long journalpostId;
   @Deprecated public java.lang.CharSequence journalpostStatus;
   @Deprecated public java.lang.CharSequence temaGammelt;
   @Deprecated public java.lang.CharSequence temaNytt;
-  @Deprecated public java.lang.CharSequence journalpostType;
   @Deprecated public java.lang.CharSequence mottaksKanal;
   @Deprecated public java.lang.CharSequence kanalReferanseId;
 
@@ -73,27 +71,23 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
   /**
    * All-args constructor.
    * @param hendelsesId The new value for hendelsesId
-   * @param timestamp The new value for timestamp
    * @param versjon The new value for versjon
    * @param hendelsesType The new value for hendelsesType
    * @param journalpostId The new value for journalpostId
    * @param journalpostStatus The new value for journalpostStatus
    * @param temaGammelt The new value for temaGammelt
    * @param temaNytt The new value for temaNytt
-   * @param journalpostType The new value for journalpostType
    * @param mottaksKanal The new value for mottaksKanal
    * @param kanalReferanseId The new value for kanalReferanseId
    */
-  public InngaaendeHendelseRecord(java.lang.CharSequence hendelsesId, java.lang.Long timestamp, java.lang.Integer versjon, java.lang.CharSequence hendelsesType, java.lang.Long journalpostId, java.lang.CharSequence journalpostStatus, java.lang.CharSequence temaGammelt, java.lang.CharSequence temaNytt, java.lang.CharSequence journalpostType, java.lang.CharSequence mottaksKanal, java.lang.CharSequence kanalReferanseId) {
+  public InngaaendeHendelseRecord(java.lang.CharSequence hendelsesId, java.lang.Integer versjon, java.lang.CharSequence hendelsesType, java.lang.Long journalpostId, java.lang.CharSequence journalpostStatus, java.lang.CharSequence temaGammelt, java.lang.CharSequence temaNytt, java.lang.CharSequence mottaksKanal, java.lang.CharSequence kanalReferanseId) {
     this.hendelsesId = hendelsesId;
-    this.timestamp = timestamp;
     this.versjon = versjon;
     this.hendelsesType = hendelsesType;
     this.journalpostId = journalpostId;
     this.journalpostStatus = journalpostStatus;
     this.temaGammelt = temaGammelt;
     this.temaNytt = temaNytt;
-    this.journalpostType = journalpostType;
     this.mottaksKanal = mottaksKanal;
     this.kanalReferanseId = kanalReferanseId;
   }
@@ -103,16 +97,14 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
   public java.lang.Object get(int field$) {
     switch (field$) {
     case 0: return hendelsesId;
-    case 1: return timestamp;
-    case 2: return versjon;
-    case 3: return hendelsesType;
-    case 4: return journalpostId;
-    case 5: return journalpostStatus;
-    case 6: return temaGammelt;
-    case 7: return temaNytt;
-    case 8: return journalpostType;
-    case 9: return mottaksKanal;
-    case 10: return kanalReferanseId;
+    case 1: return versjon;
+    case 2: return hendelsesType;
+    case 3: return journalpostId;
+    case 4: return journalpostStatus;
+    case 5: return temaGammelt;
+    case 6: return temaNytt;
+    case 7: return mottaksKanal;
+    case 8: return kanalReferanseId;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -122,16 +114,14 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
   public void put(int field$, java.lang.Object value$) {
     switch (field$) {
     case 0: hendelsesId = (java.lang.CharSequence)value$; break;
-    case 1: timestamp = (java.lang.Long)value$; break;
-    case 2: versjon = (java.lang.Integer)value$; break;
-    case 3: hendelsesType = (java.lang.CharSequence)value$; break;
-    case 4: journalpostId = (java.lang.Long)value$; break;
-    case 5: journalpostStatus = (java.lang.CharSequence)value$; break;
-    case 6: temaGammelt = (java.lang.CharSequence)value$; break;
-    case 7: temaNytt = (java.lang.CharSequence)value$; break;
-    case 8: journalpostType = (java.lang.CharSequence)value$; break;
-    case 9: mottaksKanal = (java.lang.CharSequence)value$; break;
-    case 10: kanalReferanseId = (java.lang.CharSequence)value$; break;
+    case 1: versjon = (java.lang.Integer)value$; break;
+    case 2: hendelsesType = (java.lang.CharSequence)value$; break;
+    case 3: journalpostId = (java.lang.Long)value$; break;
+    case 4: journalpostStatus = (java.lang.CharSequence)value$; break;
+    case 5: temaGammelt = (java.lang.CharSequence)value$; break;
+    case 6: temaNytt = (java.lang.CharSequence)value$; break;
+    case 7: mottaksKanal = (java.lang.CharSequence)value$; break;
+    case 8: kanalReferanseId = (java.lang.CharSequence)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -150,22 +140,6 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
    */
   public void setHendelsesId(java.lang.CharSequence value) {
     this.hendelsesId = value;
-  }
-
-  /**
-   * Gets the value of the 'timestamp' field.
-   * @return The value of the 'timestamp' field.
-   */
-  public java.lang.Long getTimestamp() {
-    return timestamp;
-  }
-
-  /**
-   * Sets the value of the 'timestamp' field.
-   * @param value the value to set.
-   */
-  public void setTimestamp(java.lang.Long value) {
-    this.timestamp = value;
   }
 
   /**
@@ -265,22 +239,6 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
   }
 
   /**
-   * Gets the value of the 'journalpostType' field.
-   * @return The value of the 'journalpostType' field.
-   */
-  public java.lang.CharSequence getJournalpostType() {
-    return journalpostType;
-  }
-
-  /**
-   * Sets the value of the 'journalpostType' field.
-   * @param value the value to set.
-   */
-  public void setJournalpostType(java.lang.CharSequence value) {
-    this.journalpostType = value;
-  }
-
-  /**
    * Gets the value of the 'mottaksKanal' field.
    * @return The value of the 'mottaksKanal' field.
    */
@@ -316,8 +274,8 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
    * Creates a new InngaaendeHendelseRecord RecordBuilder.
    * @return A new InngaaendeHendelseRecord RecordBuilder
    */
-  public static InngaaendeHendelseRecord.Builder newBuilder() {
-    return new InngaaendeHendelseRecord.Builder();
+  public static no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder newBuilder() {
+    return new no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder();
   }
 
   /**
@@ -325,8 +283,8 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
    * @param other The existing builder to copy.
    * @return A new InngaaendeHendelseRecord RecordBuilder
    */
-  public static InngaaendeHendelseRecord.Builder newBuilder(InngaaendeHendelseRecord.Builder other) {
-    return new InngaaendeHendelseRecord.Builder(other);
+  public static no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder newBuilder(no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder other) {
+    return new no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder(other);
   }
 
   /**
@@ -334,8 +292,8 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
    * @param other The existing instance to copy.
    * @return A new InngaaendeHendelseRecord RecordBuilder
    */
-  public static InngaaendeHendelseRecord.Builder newBuilder(InngaaendeHendelseRecord other) {
-    return new InngaaendeHendelseRecord.Builder(other);
+  public static no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder newBuilder(no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord other) {
+    return new no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder(other);
   }
 
   /**
@@ -345,14 +303,12 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
     implements org.apache.avro.data.RecordBuilder<InngaaendeHendelseRecord> {
 
     private java.lang.CharSequence hendelsesId;
-    private long timestamp;
     private int versjon;
     private java.lang.CharSequence hendelsesType;
     private long journalpostId;
     private java.lang.CharSequence journalpostStatus;
     private java.lang.CharSequence temaGammelt;
     private java.lang.CharSequence temaNytt;
-    private java.lang.CharSequence journalpostType;
     private java.lang.CharSequence mottaksKanal;
     private java.lang.CharSequence kanalReferanseId;
 
@@ -365,51 +321,43 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
      * Creates a Builder by copying an existing Builder.
      * @param other The existing Builder to copy.
      */
-    private Builder(InngaaendeHendelseRecord.Builder other) {
+    private Builder(no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder other) {
       super(other);
       if (isValidValue(fields()[0], other.hendelsesId)) {
         this.hendelsesId = data().deepCopy(fields()[0].schema(), other.hendelsesId);
         fieldSetFlags()[0] = true;
       }
-      if (isValidValue(fields()[1], other.timestamp)) {
-        this.timestamp = data().deepCopy(fields()[1].schema(), other.timestamp);
+      if (isValidValue(fields()[1], other.versjon)) {
+        this.versjon = data().deepCopy(fields()[1].schema(), other.versjon);
         fieldSetFlags()[1] = true;
       }
-      if (isValidValue(fields()[2], other.versjon)) {
-        this.versjon = data().deepCopy(fields()[2].schema(), other.versjon);
+      if (isValidValue(fields()[2], other.hendelsesType)) {
+        this.hendelsesType = data().deepCopy(fields()[2].schema(), other.hendelsesType);
         fieldSetFlags()[2] = true;
       }
-      if (isValidValue(fields()[3], other.hendelsesType)) {
-        this.hendelsesType = data().deepCopy(fields()[3].schema(), other.hendelsesType);
+      if (isValidValue(fields()[3], other.journalpostId)) {
+        this.journalpostId = data().deepCopy(fields()[3].schema(), other.journalpostId);
         fieldSetFlags()[3] = true;
       }
-      if (isValidValue(fields()[4], other.journalpostId)) {
-        this.journalpostId = data().deepCopy(fields()[4].schema(), other.journalpostId);
+      if (isValidValue(fields()[4], other.journalpostStatus)) {
+        this.journalpostStatus = data().deepCopy(fields()[4].schema(), other.journalpostStatus);
         fieldSetFlags()[4] = true;
       }
-      if (isValidValue(fields()[5], other.journalpostStatus)) {
-        this.journalpostStatus = data().deepCopy(fields()[5].schema(), other.journalpostStatus);
+      if (isValidValue(fields()[5], other.temaGammelt)) {
+        this.temaGammelt = data().deepCopy(fields()[5].schema(), other.temaGammelt);
         fieldSetFlags()[5] = true;
       }
-      if (isValidValue(fields()[6], other.temaGammelt)) {
-        this.temaGammelt = data().deepCopy(fields()[6].schema(), other.temaGammelt);
+      if (isValidValue(fields()[6], other.temaNytt)) {
+        this.temaNytt = data().deepCopy(fields()[6].schema(), other.temaNytt);
         fieldSetFlags()[6] = true;
       }
-      if (isValidValue(fields()[7], other.temaNytt)) {
-        this.temaNytt = data().deepCopy(fields()[7].schema(), other.temaNytt);
+      if (isValidValue(fields()[7], other.mottaksKanal)) {
+        this.mottaksKanal = data().deepCopy(fields()[7].schema(), other.mottaksKanal);
         fieldSetFlags()[7] = true;
       }
-      if (isValidValue(fields()[8], other.journalpostType)) {
-        this.journalpostType = data().deepCopy(fields()[8].schema(), other.journalpostType);
+      if (isValidValue(fields()[8], other.kanalReferanseId)) {
+        this.kanalReferanseId = data().deepCopy(fields()[8].schema(), other.kanalReferanseId);
         fieldSetFlags()[8] = true;
-      }
-      if (isValidValue(fields()[9], other.mottaksKanal)) {
-        this.mottaksKanal = data().deepCopy(fields()[9].schema(), other.mottaksKanal);
-        fieldSetFlags()[9] = true;
-      }
-      if (isValidValue(fields()[10], other.kanalReferanseId)) {
-        this.kanalReferanseId = data().deepCopy(fields()[10].schema(), other.kanalReferanseId);
-        fieldSetFlags()[10] = true;
       }
     }
 
@@ -417,51 +365,43 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
      * Creates a Builder by copying an existing InngaaendeHendelseRecord instance
      * @param other The existing instance to copy.
      */
-    private Builder(InngaaendeHendelseRecord other) {
+    private Builder(no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord other) {
             super(SCHEMA$);
       if (isValidValue(fields()[0], other.hendelsesId)) {
         this.hendelsesId = data().deepCopy(fields()[0].schema(), other.hendelsesId);
         fieldSetFlags()[0] = true;
       }
-      if (isValidValue(fields()[1], other.timestamp)) {
-        this.timestamp = data().deepCopy(fields()[1].schema(), other.timestamp);
+      if (isValidValue(fields()[1], other.versjon)) {
+        this.versjon = data().deepCopy(fields()[1].schema(), other.versjon);
         fieldSetFlags()[1] = true;
       }
-      if (isValidValue(fields()[2], other.versjon)) {
-        this.versjon = data().deepCopy(fields()[2].schema(), other.versjon);
+      if (isValidValue(fields()[2], other.hendelsesType)) {
+        this.hendelsesType = data().deepCopy(fields()[2].schema(), other.hendelsesType);
         fieldSetFlags()[2] = true;
       }
-      if (isValidValue(fields()[3], other.hendelsesType)) {
-        this.hendelsesType = data().deepCopy(fields()[3].schema(), other.hendelsesType);
+      if (isValidValue(fields()[3], other.journalpostId)) {
+        this.journalpostId = data().deepCopy(fields()[3].schema(), other.journalpostId);
         fieldSetFlags()[3] = true;
       }
-      if (isValidValue(fields()[4], other.journalpostId)) {
-        this.journalpostId = data().deepCopy(fields()[4].schema(), other.journalpostId);
+      if (isValidValue(fields()[4], other.journalpostStatus)) {
+        this.journalpostStatus = data().deepCopy(fields()[4].schema(), other.journalpostStatus);
         fieldSetFlags()[4] = true;
       }
-      if (isValidValue(fields()[5], other.journalpostStatus)) {
-        this.journalpostStatus = data().deepCopy(fields()[5].schema(), other.journalpostStatus);
+      if (isValidValue(fields()[5], other.temaGammelt)) {
+        this.temaGammelt = data().deepCopy(fields()[5].schema(), other.temaGammelt);
         fieldSetFlags()[5] = true;
       }
-      if (isValidValue(fields()[6], other.temaGammelt)) {
-        this.temaGammelt = data().deepCopy(fields()[6].schema(), other.temaGammelt);
+      if (isValidValue(fields()[6], other.temaNytt)) {
+        this.temaNytt = data().deepCopy(fields()[6].schema(), other.temaNytt);
         fieldSetFlags()[6] = true;
       }
-      if (isValidValue(fields()[7], other.temaNytt)) {
-        this.temaNytt = data().deepCopy(fields()[7].schema(), other.temaNytt);
+      if (isValidValue(fields()[7], other.mottaksKanal)) {
+        this.mottaksKanal = data().deepCopy(fields()[7].schema(), other.mottaksKanal);
         fieldSetFlags()[7] = true;
       }
-      if (isValidValue(fields()[8], other.journalpostType)) {
-        this.journalpostType = data().deepCopy(fields()[8].schema(), other.journalpostType);
+      if (isValidValue(fields()[8], other.kanalReferanseId)) {
+        this.kanalReferanseId = data().deepCopy(fields()[8].schema(), other.kanalReferanseId);
         fieldSetFlags()[8] = true;
-      }
-      if (isValidValue(fields()[9], other.mottaksKanal)) {
-        this.mottaksKanal = data().deepCopy(fields()[9].schema(), other.mottaksKanal);
-        fieldSetFlags()[9] = true;
-      }
-      if (isValidValue(fields()[10], other.kanalReferanseId)) {
-        this.kanalReferanseId = data().deepCopy(fields()[10].schema(), other.kanalReferanseId);
-        fieldSetFlags()[10] = true;
       }
     }
 
@@ -478,7 +418,7 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * @param value The value of 'hendelsesId'.
       * @return This builder.
       */
-    public InngaaendeHendelseRecord.Builder setHendelsesId(java.lang.CharSequence value) {
+    public no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder setHendelsesId(java.lang.CharSequence value) {
       validate(fields()[0], value);
       this.hendelsesId = value;
       fieldSetFlags()[0] = true;
@@ -498,47 +438,9 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * Clears the value of the 'hendelsesId' field.
       * @return This builder.
       */
-    public InngaaendeHendelseRecord.Builder clearHendelsesId() {
+    public no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder clearHendelsesId() {
       hendelsesId = null;
       fieldSetFlags()[0] = false;
-      return this;
-    }
-
-    /**
-      * Gets the value of the 'timestamp' field.
-      * @return The value.
-      */
-    public java.lang.Long getTimestamp() {
-      return timestamp;
-    }
-
-    /**
-      * Sets the value of the 'timestamp' field.
-      * @param value The value of 'timestamp'.
-      * @return This builder.
-      */
-    public InngaaendeHendelseRecord.Builder setTimestamp(long value) {
-      validate(fields()[1], value);
-      this.timestamp = value;
-      fieldSetFlags()[1] = true;
-      return this;
-    }
-
-    /**
-      * Checks whether the 'timestamp' field has been set.
-      * @return True if the 'timestamp' field has been set, false otherwise.
-      */
-    public boolean hasTimestamp() {
-      return fieldSetFlags()[1];
-    }
-
-
-    /**
-      * Clears the value of the 'timestamp' field.
-      * @return This builder.
-      */
-    public InngaaendeHendelseRecord.Builder clearTimestamp() {
-      fieldSetFlags()[1] = false;
       return this;
     }
 
@@ -555,10 +457,10 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * @param value The value of 'versjon'.
       * @return This builder.
       */
-    public InngaaendeHendelseRecord.Builder setVersjon(int value) {
-      validate(fields()[2], value);
+    public no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder setVersjon(int value) {
+      validate(fields()[1], value);
       this.versjon = value;
-      fieldSetFlags()[2] = true;
+      fieldSetFlags()[1] = true;
       return this;
     }
 
@@ -567,7 +469,7 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * @return True if the 'versjon' field has been set, false otherwise.
       */
     public boolean hasVersjon() {
-      return fieldSetFlags()[2];
+      return fieldSetFlags()[1];
     }
 
 
@@ -575,8 +477,8 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * Clears the value of the 'versjon' field.
       * @return This builder.
       */
-    public InngaaendeHendelseRecord.Builder clearVersjon() {
-      fieldSetFlags()[2] = false;
+    public no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder clearVersjon() {
+      fieldSetFlags()[1] = false;
       return this;
     }
 
@@ -593,10 +495,10 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * @param value The value of 'hendelsesType'.
       * @return This builder.
       */
-    public InngaaendeHendelseRecord.Builder setHendelsesType(java.lang.CharSequence value) {
-      validate(fields()[3], value);
+    public no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder setHendelsesType(java.lang.CharSequence value) {
+      validate(fields()[2], value);
       this.hendelsesType = value;
-      fieldSetFlags()[3] = true;
+      fieldSetFlags()[2] = true;
       return this;
     }
 
@@ -605,7 +507,7 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * @return True if the 'hendelsesType' field has been set, false otherwise.
       */
     public boolean hasHendelsesType() {
-      return fieldSetFlags()[3];
+      return fieldSetFlags()[2];
     }
 
 
@@ -613,9 +515,9 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * Clears the value of the 'hendelsesType' field.
       * @return This builder.
       */
-    public InngaaendeHendelseRecord.Builder clearHendelsesType() {
+    public no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder clearHendelsesType() {
       hendelsesType = null;
-      fieldSetFlags()[3] = false;
+      fieldSetFlags()[2] = false;
       return this;
     }
 
@@ -632,10 +534,10 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * @param value The value of 'journalpostId'.
       * @return This builder.
       */
-    public InngaaendeHendelseRecord.Builder setJournalpostId(long value) {
-      validate(fields()[4], value);
+    public no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder setJournalpostId(long value) {
+      validate(fields()[3], value);
       this.journalpostId = value;
-      fieldSetFlags()[4] = true;
+      fieldSetFlags()[3] = true;
       return this;
     }
 
@@ -644,7 +546,7 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * @return True if the 'journalpostId' field has been set, false otherwise.
       */
     public boolean hasJournalpostId() {
-      return fieldSetFlags()[4];
+      return fieldSetFlags()[3];
     }
 
 
@@ -652,8 +554,8 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * Clears the value of the 'journalpostId' field.
       * @return This builder.
       */
-    public InngaaendeHendelseRecord.Builder clearJournalpostId() {
-      fieldSetFlags()[4] = false;
+    public no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder clearJournalpostId() {
+      fieldSetFlags()[3] = false;
       return this;
     }
 
@@ -670,10 +572,10 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * @param value The value of 'journalpostStatus'.
       * @return This builder.
       */
-    public InngaaendeHendelseRecord.Builder setJournalpostStatus(java.lang.CharSequence value) {
-      validate(fields()[5], value);
+    public no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder setJournalpostStatus(java.lang.CharSequence value) {
+      validate(fields()[4], value);
       this.journalpostStatus = value;
-      fieldSetFlags()[5] = true;
+      fieldSetFlags()[4] = true;
       return this;
     }
 
@@ -682,7 +584,7 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * @return True if the 'journalpostStatus' field has been set, false otherwise.
       */
     public boolean hasJournalpostStatus() {
-      return fieldSetFlags()[5];
+      return fieldSetFlags()[4];
     }
 
 
@@ -690,9 +592,9 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * Clears the value of the 'journalpostStatus' field.
       * @return This builder.
       */
-    public InngaaendeHendelseRecord.Builder clearJournalpostStatus() {
+    public no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder clearJournalpostStatus() {
       journalpostStatus = null;
-      fieldSetFlags()[5] = false;
+      fieldSetFlags()[4] = false;
       return this;
     }
 
@@ -709,10 +611,10 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * @param value The value of 'temaGammelt'.
       * @return This builder.
       */
-    public InngaaendeHendelseRecord.Builder setTemaGammelt(java.lang.CharSequence value) {
-      validate(fields()[6], value);
+    public no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder setTemaGammelt(java.lang.CharSequence value) {
+      validate(fields()[5], value);
       this.temaGammelt = value;
-      fieldSetFlags()[6] = true;
+      fieldSetFlags()[5] = true;
       return this;
     }
 
@@ -721,7 +623,7 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * @return True if the 'temaGammelt' field has been set, false otherwise.
       */
     public boolean hasTemaGammelt() {
-      return fieldSetFlags()[6];
+      return fieldSetFlags()[5];
     }
 
 
@@ -729,9 +631,9 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * Clears the value of the 'temaGammelt' field.
       * @return This builder.
       */
-    public InngaaendeHendelseRecord.Builder clearTemaGammelt() {
+    public no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder clearTemaGammelt() {
       temaGammelt = null;
-      fieldSetFlags()[6] = false;
+      fieldSetFlags()[5] = false;
       return this;
     }
 
@@ -748,10 +650,10 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * @param value The value of 'temaNytt'.
       * @return This builder.
       */
-    public InngaaendeHendelseRecord.Builder setTemaNytt(java.lang.CharSequence value) {
-      validate(fields()[7], value);
+    public no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder setTemaNytt(java.lang.CharSequence value) {
+      validate(fields()[6], value);
       this.temaNytt = value;
-      fieldSetFlags()[7] = true;
+      fieldSetFlags()[6] = true;
       return this;
     }
 
@@ -760,7 +662,7 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * @return True if the 'temaNytt' field has been set, false otherwise.
       */
     public boolean hasTemaNytt() {
-      return fieldSetFlags()[7];
+      return fieldSetFlags()[6];
     }
 
 
@@ -768,48 +670,9 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * Clears the value of the 'temaNytt' field.
       * @return This builder.
       */
-    public InngaaendeHendelseRecord.Builder clearTemaNytt() {
+    public no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder clearTemaNytt() {
       temaNytt = null;
-      fieldSetFlags()[7] = false;
-      return this;
-    }
-
-    /**
-      * Gets the value of the 'journalpostType' field.
-      * @return The value.
-      */
-    public java.lang.CharSequence getJournalpostType() {
-      return journalpostType;
-    }
-
-    /**
-      * Sets the value of the 'journalpostType' field.
-      * @param value The value of 'journalpostType'.
-      * @return This builder.
-      */
-    public InngaaendeHendelseRecord.Builder setJournalpostType(java.lang.CharSequence value) {
-      validate(fields()[8], value);
-      this.journalpostType = value;
-      fieldSetFlags()[8] = true;
-      return this;
-    }
-
-    /**
-      * Checks whether the 'journalpostType' field has been set.
-      * @return True if the 'journalpostType' field has been set, false otherwise.
-      */
-    public boolean hasJournalpostType() {
-      return fieldSetFlags()[8];
-    }
-
-
-    /**
-      * Clears the value of the 'journalpostType' field.
-      * @return This builder.
-      */
-    public InngaaendeHendelseRecord.Builder clearJournalpostType() {
-      journalpostType = null;
-      fieldSetFlags()[8] = false;
+      fieldSetFlags()[6] = false;
       return this;
     }
 
@@ -826,10 +689,10 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * @param value The value of 'mottaksKanal'.
       * @return This builder.
       */
-    public InngaaendeHendelseRecord.Builder setMottaksKanal(java.lang.CharSequence value) {
-      validate(fields()[9], value);
+    public no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder setMottaksKanal(java.lang.CharSequence value) {
+      validate(fields()[7], value);
       this.mottaksKanal = value;
-      fieldSetFlags()[9] = true;
+      fieldSetFlags()[7] = true;
       return this;
     }
 
@@ -838,7 +701,7 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * @return True if the 'mottaksKanal' field has been set, false otherwise.
       */
     public boolean hasMottaksKanal() {
-      return fieldSetFlags()[9];
+      return fieldSetFlags()[7];
     }
 
 
@@ -846,9 +709,9 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * Clears the value of the 'mottaksKanal' field.
       * @return This builder.
       */
-    public InngaaendeHendelseRecord.Builder clearMottaksKanal() {
+    public no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder clearMottaksKanal() {
       mottaksKanal = null;
-      fieldSetFlags()[9] = false;
+      fieldSetFlags()[7] = false;
       return this;
     }
 
@@ -865,10 +728,10 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * @param value The value of 'kanalReferanseId'.
       * @return This builder.
       */
-    public InngaaendeHendelseRecord.Builder setKanalReferanseId(java.lang.CharSequence value) {
-      validate(fields()[10], value);
+    public no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder setKanalReferanseId(java.lang.CharSequence value) {
+      validate(fields()[8], value);
       this.kanalReferanseId = value;
-      fieldSetFlags()[10] = true;
+      fieldSetFlags()[8] = true;
       return this;
     }
 
@@ -877,7 +740,7 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * @return True if the 'kanalReferanseId' field has been set, false otherwise.
       */
     public boolean hasKanalReferanseId() {
-      return fieldSetFlags()[10];
+      return fieldSetFlags()[8];
     }
 
 
@@ -885,9 +748,9 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       * Clears the value of the 'kanalReferanseId' field.
       * @return This builder.
       */
-    public InngaaendeHendelseRecord.Builder clearKanalReferanseId() {
+    public no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord.Builder clearKanalReferanseId() {
       kanalReferanseId = null;
-      fieldSetFlags()[10] = false;
+      fieldSetFlags()[8] = false;
       return this;
     }
 
@@ -897,16 +760,14 @@ public class InngaaendeHendelseRecord extends org.apache.avro.specific.SpecificR
       try {
         InngaaendeHendelseRecord record = new InngaaendeHendelseRecord();
         record.hendelsesId = fieldSetFlags()[0] ? this.hendelsesId : (java.lang.CharSequence) defaultValue(fields()[0]);
-        record.timestamp = fieldSetFlags()[1] ? this.timestamp : (java.lang.Long) defaultValue(fields()[1]);
-        record.versjon = fieldSetFlags()[2] ? this.versjon : (java.lang.Integer) defaultValue(fields()[2]);
-        record.hendelsesType = fieldSetFlags()[3] ? this.hendelsesType : (java.lang.CharSequence) defaultValue(fields()[3]);
-        record.journalpostId = fieldSetFlags()[4] ? this.journalpostId : (java.lang.Long) defaultValue(fields()[4]);
-        record.journalpostStatus = fieldSetFlags()[5] ? this.journalpostStatus : (java.lang.CharSequence) defaultValue(fields()[5]);
-        record.temaGammelt = fieldSetFlags()[6] ? this.temaGammelt : (java.lang.CharSequence) defaultValue(fields()[6]);
-        record.temaNytt = fieldSetFlags()[7] ? this.temaNytt : (java.lang.CharSequence) defaultValue(fields()[7]);
-        record.journalpostType = fieldSetFlags()[8] ? this.journalpostType : (java.lang.CharSequence) defaultValue(fields()[8]);
-        record.mottaksKanal = fieldSetFlags()[9] ? this.mottaksKanal : (java.lang.CharSequence) defaultValue(fields()[9]);
-        record.kanalReferanseId = fieldSetFlags()[10] ? this.kanalReferanseId : (java.lang.CharSequence) defaultValue(fields()[10]);
+        record.versjon = fieldSetFlags()[1] ? this.versjon : (java.lang.Integer) defaultValue(fields()[1]);
+        record.hendelsesType = fieldSetFlags()[2] ? this.hendelsesType : (java.lang.CharSequence) defaultValue(fields()[2]);
+        record.journalpostId = fieldSetFlags()[3] ? this.journalpostId : (java.lang.Long) defaultValue(fields()[3]);
+        record.journalpostStatus = fieldSetFlags()[4] ? this.journalpostStatus : (java.lang.CharSequence) defaultValue(fields()[4]);
+        record.temaGammelt = fieldSetFlags()[5] ? this.temaGammelt : (java.lang.CharSequence) defaultValue(fields()[5]);
+        record.temaNytt = fieldSetFlags()[6] ? this.temaNytt : (java.lang.CharSequence) defaultValue(fields()[6]);
+        record.mottaksKanal = fieldSetFlags()[7] ? this.mottaksKanal : (java.lang.CharSequence) defaultValue(fields()[7]);
+        record.kanalReferanseId = fieldSetFlags()[8] ? this.kanalReferanseId : (java.lang.CharSequence) defaultValue(fields()[8]);
         return record;
       } catch (java.lang.Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);

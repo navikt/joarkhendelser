@@ -17,7 +17,6 @@ public class InngaaendeHendelse {
     String journalpostStatus;
     String temaGammelt;
     String temaNytt;
-    String journalpostType;
     String mottaksKanal;
     String kanalReferanseId;
     Long timestamp;
