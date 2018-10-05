@@ -35,7 +35,8 @@ public class ConsumerRecordAsJsonConverter {
 
         Long timeStamp = convertOracleTimeStampToLong(timestamp);
 
-        Integer journalpostId = Integer.parseInt((String)after.get(JOURNALPOST_ID));
+//        Integer journalpostId = Integer.parseInt((String)after.get(JOURNALPOST_ID));
+        Integer journalpostId = (Integer) after.get(JOURNALPOST_ID);
 
         // Only for UPDATE-operations
         if (UPDATE_OPERATION.equalsIgnoreCase(operation)) {
