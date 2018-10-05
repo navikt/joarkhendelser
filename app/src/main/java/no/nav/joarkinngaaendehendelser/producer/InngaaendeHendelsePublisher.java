@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 public class InngaaendeHendelsePublisher {
 
     @Autowired
-    private KafkaTemplate<Long, InngaaendeHendelseRecord> kafkaTemplate;
+    private KafkaTemplate<String, InngaaendeHendelseRecord> kafkaTemplate;
 
     @Value("${inngaaendeJournalpostEndret.topic}")
     private String topic;
@@ -76,11 +76,11 @@ public class InngaaendeHendelsePublisher {
         record.put("kanalReferanseId", hendelse.getKanalReferanseId());
         */
 
-        ProducerRecord<Long, InngaaendeHendelseRecord> producerRecord = new ProducerRecord<>(
+        ProducerRecord<String, InngaaendeHendelseRecord> producerRecord = new ProducerRecord<>(
             topic,
             null,
             hendelse.getTimestamp(),
-            hendelse.getJournalpostId(),
+            hendelse.getJournalpostId().toString(),
             record);
 
         try {
