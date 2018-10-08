@@ -35,9 +35,8 @@ public class JournalpostEndretListener {
         long start = System.currentTimeMillis();
         try {
             JournalpostEndretEvent event = converter.convert(record);
-            log.info("Received {}-event for journalpost {} on topic: {}", event.getOperation(), event.getJournalpostId(), record
-                    .topic());
-            if (INNGAAENDE.equalsIgnoreCase(event.getJournalpostType())) {
+
+            if(event != null && INNGAAENDE.equalsIgnoreCase(event.getJournalpostType())) {
                 InngaaendeHendelse hendelse = JournalpostEndretInngaaendeHendelseMapper.map(event);
 
                 publisher.publish(hendelse);

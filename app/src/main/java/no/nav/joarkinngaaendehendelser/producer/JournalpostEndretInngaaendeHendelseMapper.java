@@ -24,15 +24,14 @@ public class JournalpostEndretInngaaendeHendelseMapper {
         return inngaaendeHendelsesType != null ?
                 InngaaendeHendelse.builder()
                         .hendelsesId(UUID.randomUUID().toString())
-                        .versjon("1")
+                        .versjon(1)
                         .temaNytt(event.getFagomradeAfter())
                         .temaGammelt(event.getFagomradeBefore())
                         .journalpostId(event.getJournalpostId())
                         .kanalReferanseId(event.getKanalReferanseId())
                         .mottaksKanal(event.getMottaksKanal())
                         .journalpostStatus(event.getJournalpostStatusAfter())
-                        .journalpostType(event.getJournalpostType())
-                        .hendelsesType(inngaaendeHendelsesType)
+                        .hendelsesType(inngaaendeHendelsesType.toString())
                         .timestamp(event.getTimestamp())
                         .build() : null;
     }

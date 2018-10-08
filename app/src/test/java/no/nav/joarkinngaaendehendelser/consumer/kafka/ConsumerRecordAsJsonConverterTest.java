@@ -131,7 +131,7 @@ public class ConsumerRecordAsJsonConverterTest {
 
         when(consumerRecordMock.value()).thenReturn(values);
         JournalpostEndretEvent event = converter.convert(consumerRecordMock);
-        assertEquals("123", event.getJournalpostId());
+        assertEquals((Long)123L, event.getJournalpostId());
         assertEquals(1, event.columnsChanged.size());
         assertEquals("U", event.getOperation());
         assertEquals("M", event.getJournalpostStatusAfter());
@@ -149,7 +149,7 @@ public class ConsumerRecordAsJsonConverterTest {
 
         when(consumerRecordMock.value()).thenReturn(values);
         JournalpostEndretEvent event = converter.convert(consumerRecordMock);
-        assertEquals("123", event.getJournalpostId());
+        assertEquals((Long)123L, event.getJournalpostId());
         assertEquals(4, event.columnsChanged.size());
         assertEquals("I", event.getOperation());
         assertEquals("M", event.getJournalpostStatusAfter());

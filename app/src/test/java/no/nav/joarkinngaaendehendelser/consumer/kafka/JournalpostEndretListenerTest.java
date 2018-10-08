@@ -3,6 +3,7 @@ package no.nav.joarkinngaaendehendelser.consumer.kafka;
 import static no.nav.joarkinngaaendehendelser.consumer.kafka.JournalpostStatus.INNGAAENDE;
 import static no.nav.joarkinngaaendehendelser.consumer.kafka.JoarkSchema.JOURNALPOST;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -15,8 +16,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.Logger;
 
-import lombok.extern.slf4j.Slf4j;
 import no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelse;
 import no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelsePublisher;
 
@@ -33,7 +34,7 @@ public class JournalpostEndretListenerTest {
     private InngaaendeHendelsePublisher publisher;
 
     @Mock
-    Slf4j log;
+    Logger log;
 
     @InjectMocks
     private JournalpostEndretListener listener;
@@ -46,14 +47,13 @@ public class JournalpostEndretListenerTest {
 
         when(converterMock.convert(any(ConsumerRecord.class))).thenReturn(
                 JournalpostEndretEvent.builder()
-                        .journalpostId("123")
+                        .journalpostId(123L)
                         .fagomradeBefore("FOR")
                         .journalpostStatusAfter("M")
                         .journalpostType(INNGAAENDE)
                         .operation("U")
                         .columnsChanged(columnsChanged)
                         .build());
-        when(consumerRecordMock.topic()).thenReturn("privat-dok-journalpostEndret-v1-t6");
     }
 
     @Test
@@ -68,6 +68,7 @@ public class JournalpostEndretListenerTest {
         listener.onMessage(consumerRecordMock);
         verify(converterMock).convert(consumerRecordMock);
         verify(publisher).publish(any(InngaaendeHendelse.class));
+        verify(log, times(1)).info(any());
     }
 
 }
