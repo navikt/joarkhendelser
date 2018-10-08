@@ -6,7 +6,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.kafka.core.KafkaTemplate;
 
-import static no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelsesType.*;
+import static no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelsesType.ENDELIG_JOURNALFORT;
+import static no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelsesType.JOURNALPOST_UTGATT;
+import static no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelsesType.MIDLERTIDIG_JOURNALFORT;
+import static no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelsesType.TEMA_ENDRET;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 

@@ -11,6 +11,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Method;
 import java.util.function.Function;
@@ -23,6 +24,9 @@ import java.util.function.Function;
 @Incubating(since = "1.0.0")
 @Slf4j
 public class DokMetricsAspect {
+
+    @Autowired
+    private MeterRegistry meterRegistry;
 
     private final MeterRegistry registry;
     private final Function<ProceedingJoinPoint, Iterable<Tag>> tagsBasedOnJoinpoint;
