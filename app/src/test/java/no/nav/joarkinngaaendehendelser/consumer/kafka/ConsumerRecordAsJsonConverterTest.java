@@ -71,7 +71,7 @@ public class ConsumerRecordAsJsonConverterTest {
     private LinkedHashMap<String, Object> createLongBeforeValues() {
         LinkedHashMap<String, Object> valuesBefore = new LinkedHashMap<>();
 
-        valuesBefore.put("JOURNALPOST_ID", "423262338");
+        valuesBefore.put("JOURNALPOST_ID", 423262338);
         valuesBefore.put("JOURNALF_ENHET", "0219");
         valuesBefore.put("OPPRETTET_AV_NAVN", "BJOARK002");
         valuesBefore.put("DATO_JOURNAL", "2018-09-24 12:21:57.183000000");

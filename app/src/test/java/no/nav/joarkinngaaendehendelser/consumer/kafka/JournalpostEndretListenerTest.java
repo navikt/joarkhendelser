@@ -39,7 +39,6 @@ public class JournalpostEndretListenerTest {
     @InjectMocks
     private JournalpostEndretListener listener;
 
-
     @Before
     public void before() throws Exception {
         HashSet<String> columnsChanged = new HashSet<>();
@@ -49,6 +48,7 @@ public class JournalpostEndretListenerTest {
                 JournalpostEndretEvent.builder()
                         .journalpostId(123L)
                         .fagomradeBefore("FOR")
+                        .fagomradeAfter("BAR")
                         .journalpostStatusAfter("M")
                         .journalpostType(INNGAAENDE)
                         .operation("U")
@@ -62,8 +62,8 @@ public class JournalpostEndretListenerTest {
         verify(converterMock).convert(consumerRecordMock);
     }
 
-    @Test
     @Ignore
+    @Test
     public void onCreatedMessage() throws Exception {
         listener.onMessage(consumerRecordMock);
         verify(converterMock).convert(consumerRecordMock);

@@ -38,9 +38,8 @@ public class JournalpostEndretListener {
 
             if(event != null && INNGAAENDE.equalsIgnoreCase(event.getJournalpostType())) {
                 InngaaendeHendelse hendelse = JournalpostEndretInngaaendeHendelseMapper.map(event);
-
-                publisher.publish(hendelse);
                 if (hendelse != null) {
+                    publisher.publish(hendelse);
                     meterRegistry.counter("Inngaaendehendelser", "type", hendelse.getHendelsesType().toString()).increment();
                     log.info("Publisert hendelse " + hendelse.getHendelsesType() + " for journalpost " + hendelse.getJournalpostId());
                 }
