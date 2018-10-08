@@ -1,18 +1,13 @@
 package no.nav.joarkinngaaendehendelser.producer;
 
-import static com.sun.javaws.JnlpxArgs.verify;
-
-import org.apache.kafka.clients.producer.Producer;
+import no.nav.joarkinngaaendehendelser.consumer.kafka.JournalpostEndretEvent;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
-import static org.mockito.ArgumentMatchers.any;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import no.nav.joarkinngaaendehendelser.consumer.kafka.JournalpostEndretEvent;
 import org.springframework.kafka.core.KafkaTemplate;
 
 public class InngaaendeHendelsePublisherTest {
@@ -47,6 +42,7 @@ public class InngaaendeHendelsePublisherTest {
     public void shouldPublish() throws Exception {
         InngaaendeHendelse map = JournalpostEndretInngaaendeHendelseMapper.map(journalpostEndretEvent);
         publisher.publish(map);
+
 //        verify(kafkaTemplate).send(producerRecord);
         //assertEquals(MIDLERTIDIG_JOURNALFORT, map.getHendelsesType());
     }
