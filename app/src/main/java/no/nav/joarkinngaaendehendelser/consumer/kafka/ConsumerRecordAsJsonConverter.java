@@ -50,32 +50,32 @@ public class ConsumerRecordAsJsonConverter {
         // Only for UPDATE-operations
         if (UPDATE_OPERATION.equalsIgnoreCase(operation)) {
             LinkedHashMap before = (LinkedHashMap) values.get("before");
-            Set<String> columns_changed = getChangedColumns(before, after);
 
             // Not relevant for us
             if (!INNGAAENDE.equalsIgnoreCase(hentVerdi(before, K_JOURNALPOST_T))) {
                 return null;
             }
 
-            columns_changed.retainAll(before.keySet());
+            Set<String> columnsChanged = getChangedColumns(before, after);
+            columnsChanged.retainAll(before.keySet());
 
             return JournalpostEndretEvent.builder()
                     .journalpostId(journalpostId.longValue())
                     .operation(operation)
                     .fagomradeBefore(hentVerdi(before, K_FAGOMRADE))
-                    .fagomradeAfter(hentUpdatedVerdi(columns_changed, after, before, K_FAGOMRADE))
+                    .fagomradeAfter(hentUpdatedVerdi(columnsChanged, after, before, K_FAGOMRADE))
                     .journalpostStatusBefore(hentVerdi(before, K_JOURNAL_S))
-                    .journalpostStatusAfter(hentUpdatedVerdi(columns_changed, after, before, K_JOURNAL_S))
-                    .journalpostType(hentUpdatedVerdi(columns_changed, after, before, K_JOURNALPOST_T))
-                    .mottaksKanal(hentUpdatedVerdi(columns_changed, after, before, K_MOTTAKS_KANAL))
-                    .kanalReferanseId(hentUpdatedVerdi(columns_changed, after, before, KANAL_REFERANSE_ID))
-                    .columnsChanged(columns_changed)
+                    .journalpostStatusAfter(hentUpdatedVerdi(columnsChanged, after, before, K_JOURNAL_S))
+                    .journalpostType(hentUpdatedVerdi(columnsChanged, after, before, K_JOURNALPOST_T))
+                    .mottaksKanal(hentUpdatedVerdi(columnsChanged, after, before, K_MOTTAKS_KANAL))
+                    .kanalReferanseId(hentUpdatedVerdi(columnsChanged, after, before, KANAL_REFERANSE_ID))
+                    .columnsChanged(columnsChanged)
                     .timestamp(timeStamp)
                     .build();
         }
 
         if (INSERT_OPERATION.equalsIgnoreCase(operation)) {
-            Set<String> columns_changed = new HashSet<String>(after.keySet());
+            Set<String> columnsChanged = new HashSet<>(after.keySet());
             return JournalpostEndretEvent.builder()
                     .journalpostId(journalpostId.longValue())
                     .operation(operation)
@@ -86,7 +86,7 @@ public class ConsumerRecordAsJsonConverter {
                     .journalpostType(hentVerdi(after, K_JOURNALPOST_T))
                     .mottaksKanal(hentVerdi(after, K_MOTTAKS_KANAL))
                     .kanalReferanseId(hentVerdi(after, KANAL_REFERANSE_ID))
-                    .columnsChanged(columns_changed)
+                    .columnsChanged(columnsChanged)
                     .timestamp(timeStamp)
                     .build();
         }
@@ -135,13 +135,13 @@ public class ConsumerRecordAsJsonConverter {
         if (before.size() != after.size()) {
             return after.keySet();
         }
-        Set<String> columns_changed = new HashSet<String>(before.keySet());
+        Set<String> columnsChanged = new HashSet<>(before.keySet());
 
         for (Object key : before.keySet()) {
             if (after.get(key).equals(before.get(key))) {
-                columns_changed.remove(key);
+                columnsChanged.remove(key);
             }
         }
-        return columns_changed;
+        return columnsChanged;
     }
 }
