@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="false" debug="false">
+
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%date [%-5level] [%.7thread] %logger{1} -- %message%n</pattern>
+		</encoder>
+	</appender>
+
+	<root level="INFO">
+		<!--<appender-ref ref="CONSOLE"/>-->
+	</root>
+
+	<logger name="no.nav.joarkinngaaendehendelser" level="INFO"/>
+
+	<logger name="org.apache.kafka" level="DEBUG"/>
+
+	<logger name="org.springframework.kafka" level="INFO"/>
+
+	<logger name="io.confluent.kafka" level="INFO"/>
+
+</configuration>
