@@ -10,8 +10,8 @@ import static no.nav.joarkinngaaendehendelser.consumer.kafka.OracleSchema.INSERT
 import static no.nav.joarkinngaaendehendelser.consumer.kafka.OracleSchema.UPDATE_OPERATION;
 
 import java.util.UUID;
-import org.apache.commons.lang.StringUtils;
 
+import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
 import no.nav.joarkinngaaendehendelser.consumer.kafka.JournalpostEndretEvent;
 
 /**

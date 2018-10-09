@@ -18,7 +18,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Set;
-import org.apache.commons.lang.StringUtils;
+
+import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.stereotype.Component;
 
