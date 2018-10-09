@@ -34,7 +34,7 @@ public class JournalpostEndretListener {
     public void onMessage(ConsumerRecord<?, ?> record) {
         long start = System.currentTimeMillis();
         try {
-            JournalpostEndretEvent event = converter.convert(record);
+            JournalpostEndretEvent event = converter.convertRecordToEvent(record);
 
             if(event != null && INNGAAENDE.equalsIgnoreCase(event.getJournalpostType())) {
                 InngaaendeHendelse hendelse = JournalpostEndretInngaaendeHendelseMapper.map(event);

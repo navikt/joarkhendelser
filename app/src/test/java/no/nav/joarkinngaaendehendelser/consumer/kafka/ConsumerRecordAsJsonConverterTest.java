@@ -130,7 +130,7 @@ public class ConsumerRecordAsJsonConverterTest {
         values.put("after", createAfterValues());
 
         when(consumerRecordMock.value()).thenReturn(values);
-        JournalpostEndretEvent event = converter.convert(consumerRecordMock);
+        JournalpostEndretEvent event = converter.convertRecordToEvent(consumerRecordMock);
         assertEquals((Long)123L, event.getJournalpostId());
         assertEquals(1, event.columnsChanged.size());
         assertEquals("U", event.getOperation());
@@ -148,7 +148,7 @@ public class ConsumerRecordAsJsonConverterTest {
         values.put("after", createAfterValues());
 
         when(consumerRecordMock.value()).thenReturn(values);
-        JournalpostEndretEvent event = converter.convert(consumerRecordMock);
+        JournalpostEndretEvent event = converter.convertRecordToEvent(consumerRecordMock);
         assertEquals((Long)123L, event.getJournalpostId());
         assertEquals(4, event.columnsChanged.size());
         assertEquals("I", event.getOperation());
@@ -166,7 +166,7 @@ public class ConsumerRecordAsJsonConverterTest {
         values.put("after", createAfterValues());
 
         when(consumerRecordMock.value()).thenReturn(values);
-        JournalpostEndretEvent event = converter.convert(consumerRecordMock);
+        JournalpostEndretEvent event = converter.convertRecordToEvent(consumerRecordMock);
 
         assertEquals(1, event.columnsChanged.size());
 
@@ -182,7 +182,7 @@ public class ConsumerRecordAsJsonConverterTest {
         values.put("after", createLongAfterValues());
 
         when(consumerRecordMock.value()).thenReturn(values);
-        JournalpostEndretEvent event = converter.convert(consumerRecordMock);
+        JournalpostEndretEvent event = converter.convertRecordToEvent(consumerRecordMock);
 
         assertEquals(1, event.columnsChanged.size());
     }

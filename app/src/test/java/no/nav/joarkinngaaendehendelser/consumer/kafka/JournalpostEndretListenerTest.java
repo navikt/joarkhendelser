@@ -44,7 +44,7 @@ public class JournalpostEndretListenerTest {
         HashSet<String> columnsChanged = new HashSet<>();
         columnsChanged.add(JOURNALPOST);
 
-        when(converterMock.convert(any(ConsumerRecord.class))).thenReturn(
+        when(converterMock.convertRecordToEvent(any(ConsumerRecord.class))).thenReturn(
                 JournalpostEndretEvent.builder()
                         .journalpostId(123L)
                         .fagomradeBefore("FOR")
@@ -59,14 +59,14 @@ public class JournalpostEndretListenerTest {
     @Test
     public void onUpdateMessage() throws Exception {
         listener.onMessage(consumerRecordMock);
-        verify(converterMock).convert(consumerRecordMock);
+        verify(converterMock).convertRecordToEvent(consumerRecordMock);
     }
 
     @Ignore
     @Test
     public void onCreatedMessage() throws Exception {
         listener.onMessage(consumerRecordMock);
-        verify(converterMock).convert(consumerRecordMock);
+        verify(converterMock).convertRecordToEvent(consumerRecordMock);
         verify(publisher).publish(any(InngaaendeHendelse.class));
         verify(log, times(1)).info(any());
     }

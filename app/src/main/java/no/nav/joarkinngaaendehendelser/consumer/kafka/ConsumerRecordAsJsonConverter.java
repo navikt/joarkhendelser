@@ -34,7 +34,7 @@ public class ConsumerRecordAsJsonConverter {
     private String template = "yyyy-MM-dd HH:mm:ss.SSSSSS";
     final SimpleDateFormat dateFormat = new SimpleDateFormat(template);
 
-    public JournalpostEndretEvent convert(ConsumerRecord<?, ?> record) {
+    public JournalpostEndretEvent convertRecordToEvent(ConsumerRecord<?, ?> record) {
         LinkedHashMap values = (LinkedHashMap) record.value();
         LinkedHashMap after = (LinkedHashMap) values.get("after");
 
@@ -47,53 +47,57 @@ public class ConsumerRecordAsJsonConverter {
 
         log.info("Received {}-event for journalpost {} on topic: {}", operation, journalpostId, record.topic());
 
+        JournalpostEndretEvent event;
+
         // Only for UPDATE-operations
         if (UPDATE_OPERATION.equalsIgnoreCase(operation)) {
             LinkedHashMap before = (LinkedHashMap) values.get("before");
 
             // Not relevant for us
-            if (!INNGAAENDE.equalsIgnoreCase(hentVerdi(before, K_JOURNALPOST_T))) {
-                return null;
+            if (!INNGAAENDE.equalsIgnoreCase(getVerdi(before, K_JOURNALPOST_T))) {
+                event = null;
+            } else {
+                Set<String> columnsChanged = getChangedColumns(before, after);
+                columnsChanged.retainAll(before.keySet());
+
+                event = JournalpostEndretEvent.builder()
+                        .journalpostId(journalpostId.longValue())
+                        .operation(operation)
+                        .fagomradeBefore(getVerdi(before, K_FAGOMRADE))
+                        .fagomradeAfter(getUpdatedVerdi(columnsChanged, after, before, K_FAGOMRADE))
+                        .journalpostStatusBefore(getVerdi(before, K_JOURNAL_S))
+                        .journalpostStatusAfter(getUpdatedVerdi(columnsChanged, after, before, K_JOURNAL_S))
+                        .journalpostType(getUpdatedVerdi(columnsChanged, after, before, K_JOURNALPOST_T))
+                        .mottaksKanal(getUpdatedVerdi(columnsChanged, after, before, K_MOTTAKS_KANAL))
+                        .kanalReferanseId(getUpdatedVerdi(columnsChanged, after, before, KANAL_REFERANSE_ID))
+                        .columnsChanged(columnsChanged)
+                        .timestamp(timeStamp)
+                        .build();
             }
-
-            Set<String> columnsChanged = getChangedColumns(before, after);
-            columnsChanged.retainAll(before.keySet());
-
-            return JournalpostEndretEvent.builder()
-                    .journalpostId(journalpostId.longValue())
-                    .operation(operation)
-                    .fagomradeBefore(hentVerdi(before, K_FAGOMRADE))
-                    .fagomradeAfter(hentUpdatedVerdi(columnsChanged, after, before, K_FAGOMRADE))
-                    .journalpostStatusBefore(hentVerdi(before, K_JOURNAL_S))
-                    .journalpostStatusAfter(hentUpdatedVerdi(columnsChanged, after, before, K_JOURNAL_S))
-                    .journalpostType(hentUpdatedVerdi(columnsChanged, after, before, K_JOURNALPOST_T))
-                    .mottaksKanal(hentUpdatedVerdi(columnsChanged, after, before, K_MOTTAKS_KANAL))
-                    .kanalReferanseId(hentUpdatedVerdi(columnsChanged, after, before, KANAL_REFERANSE_ID))
-                    .columnsChanged(columnsChanged)
-                    .timestamp(timeStamp)
-                    .build();
-        }
-
-        if (INSERT_OPERATION.equalsIgnoreCase(operation)) {
+        } else if (INSERT_OPERATION.equalsIgnoreCase(operation)) {
             Set<String> columnsChanged = new HashSet<>(after.keySet());
-            return JournalpostEndretEvent.builder()
+            event = JournalpostEndretEvent.builder()
                     .journalpostId(journalpostId.longValue())
                     .operation(operation)
                     .fagomradeBefore("")
-                    .fagomradeAfter(hentVerdi(after, K_FAGOMRADE))
+                    .fagomradeAfter(getVerdi(after, K_FAGOMRADE))
                     .journalpostStatusBefore("")
-                    .journalpostStatusAfter(hentVerdi(after, K_JOURNAL_S))
-                    .journalpostType(hentVerdi(after, K_JOURNALPOST_T))
-                    .mottaksKanal(hentVerdi(after, K_MOTTAKS_KANAL))
-                    .kanalReferanseId(hentVerdi(after, KANAL_REFERANSE_ID))
+                    .journalpostStatusAfter(getVerdi(after, K_JOURNAL_S))
+                    .journalpostType(getVerdi(after, K_JOURNALPOST_T))
+                    .mottaksKanal(getVerdi(after, K_MOTTAKS_KANAL))
+                    .kanalReferanseId(getVerdi(after, KANAL_REFERANSE_ID))
                     .columnsChanged(columnsChanged)
                     .timestamp(timeStamp)
                     .build();
+        } else {
+            log.warn("Received unknown operation for journalpost " + journalpostId);
+            event = JournalpostEndretEvent.builder()
+                    .journalpostId(journalpostId.longValue())
+                    .build();
         }
-        log.warn("Received unknown operation for journalpost " + journalpostId);
-        return JournalpostEndretEvent.builder()
-                .journalpostId(journalpostId.longValue())
-                .build();
+
+        return event;
+
     }
 
     private Long convertOracleTimeStampToLong(String timestamp) {
@@ -111,15 +115,15 @@ public class ConsumerRecordAsJsonConverter {
         return timeStamp;
     }
 
-    private String hentUpdatedVerdi(Set<String> columnsChanged, LinkedHashMap after, LinkedHashMap before, String key) {
+    private String getUpdatedVerdi(Set<String> columnsChanged, LinkedHashMap after, LinkedHashMap before, String key) {
         if (columnsChanged.contains(key)) {
-            return hentVerdi(after, key);
+            return getVerdi(after, key);
         } else {
-            return hentVerdi(before, key);
+            return getVerdi(before, key);
         }
     }
 
-    private String hentVerdi(LinkedHashMap map, String key) {
+    private String getVerdi(LinkedHashMap map, String key) {
         String value = get((LinkedHashMap<String, String>) map, key);
         return StringUtils.isNotEmpty(value) ? value : "";
     }
