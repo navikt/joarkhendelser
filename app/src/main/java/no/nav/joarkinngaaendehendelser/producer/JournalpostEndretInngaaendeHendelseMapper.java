@@ -9,8 +9,9 @@ import static no.nav.joarkinngaaendehendelser.consumer.kafka.JournalpostStatus.U
 import static no.nav.joarkinngaaendehendelser.consumer.kafka.OracleSchema.INSERT_OPERATION;
 import static no.nav.joarkinngaaendehendelser.consumer.kafka.OracleSchema.UPDATE_OPERATION;
 
+import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
 import no.nav.joarkinngaaendehendelser.consumer.kafka.JournalpostEndretEvent;
-import org.apache.commons.lang.StringUtils;
+
 
 import java.util.UUID;
 
