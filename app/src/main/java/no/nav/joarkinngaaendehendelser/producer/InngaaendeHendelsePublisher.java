@@ -44,8 +44,7 @@ public class InngaaendeHendelsePublisher {
 
         try {
             kafkaTemplate.send(producerRecord).get();
-        }
-        catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             log.warn("Failed to send message to kafka. Topic: " + topic, e.getMessage());
         }
 

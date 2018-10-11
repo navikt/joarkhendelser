@@ -16,5 +16,4 @@
         <appender-ref ref="CONSOLE"/>
     </logger>
 
-
 </configuration>

@@ -1,22 +1,27 @@
 package no.nav.joarkinngaaendehendelser.producer;
 
+import no.nav.joarkinngaaendehendelser.consumer.kafka.JournalpostEndretEvent;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelsesType.MIDLERTIDIG_JOURNALFORT;
-import static org.junit.Assert.*;
-
-import no.nav.joarkinngaaendehendelser.consumer.kafka.JournalpostEndretEvent;
+import org.springframework.kafka.core.KafkaTemplate;
 
 public class InngaaendeHendelsePublisherTest {
 
     JournalpostEndretEvent journalpostEndretEvent;
 
+    @Mock
+    ProducerRecord<String, InngaaendeHendelseRecord> producerRecord;
+
     @Autowired
     InngaaendeHendelsePublisher publisher;
+
+    @Mock
+    private KafkaTemplate<String, InngaaendeHendelseRecord> kafkaTemplate;
 
     @Before
     public void setUp() throws Exception {
@@ -34,54 +39,11 @@ public class InngaaendeHendelsePublisherTest {
 
     @Test
     @Ignore
-    public void map() throws Exception {
-        InngaaendeHendelse map = JournalpostEndretInngaaendeHendelseMapper.map(journalpostEndretEvent);
-        assertEquals(MIDLERTIDIG_JOURNALFORT, map.getHendelsesType());
-    }
-
-    @Test
-    @Ignore
     public void shouldPublish() throws Exception {
         InngaaendeHendelse map = JournalpostEndretInngaaendeHendelseMapper.map(journalpostEndretEvent);
         publisher.publish(map);
+
+//        verify(kafkaTemplate).send(producerRecord);
         //assertEquals(MIDLERTIDIG_JOURNALFORT, map.getHendelsesType());
     }
-
-    @Test
-    @Ignore
-    public void shouldFinnMidlertidigJournalførtHendelsesType() {
-        // TODO
-    }
-
-    @Test
-    @Ignore
-    public void shouldFinnTemaEndretHendelsesType() {
-        // TODO
-    }
-
-    @Test
-    @Ignore
-    public void shouldFinnEndeligJournalførtHendelsesType() {
-        // TODO
-    }
-
-    @Test
-    @Ignore
-    public void shouldFinnJournalfpostUgåttHendelsesType() {
-        // TODO
-    }
-
-    @Test
-    @Ignore
-    public void shouldNotMapToHendelsesType() {
-        // TODO
-    }
-
-    @Test
-    @Ignore
-    public void shouldNotPublishWhenEventTypeIsNull() {
-        // TODO
-    }
-
-
 }
