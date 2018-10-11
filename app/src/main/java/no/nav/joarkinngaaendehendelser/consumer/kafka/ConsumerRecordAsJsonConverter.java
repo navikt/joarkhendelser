@@ -6,14 +6,12 @@ import static no.nav.joarkinngaaendehendelser.consumer.kafka.JoarkSchema.K_FAGOM
 import static no.nav.joarkinngaaendehendelser.consumer.kafka.JoarkSchema.K_JOURNALPOST_T;
 import static no.nav.joarkinngaaendehendelser.consumer.kafka.JoarkSchema.K_JOURNAL_S;
 import static no.nav.joarkinngaaendehendelser.consumer.kafka.JoarkSchema.K_MOTTAKS_KANAL;
-import static no.nav.joarkinngaaendehendelser.consumer.kafka.JournalpostStatus.INNGAAENDE;
 import static no.nav.joarkinngaaendehendelser.consumer.kafka.OracleSchema.INSERT_OPERATION;
 import static no.nav.joarkinngaaendehendelser.consumer.kafka.OracleSchema.OPERATION_TIMESTAMP;
 import static no.nav.joarkinngaaendehendelser.consumer.kafka.OracleSchema.OPERATION_TYPE;
 import static no.nav.joarkinngaaendehendelser.consumer.kafka.OracleSchema.UPDATE_OPERATION;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +21,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Set;
+
+import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
 
 /**
  * @author Martin Burheim Tingstad, Visma Consulting.
