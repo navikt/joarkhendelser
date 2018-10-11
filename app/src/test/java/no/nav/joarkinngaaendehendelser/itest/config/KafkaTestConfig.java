@@ -16,13 +16,13 @@ public class KafkaTestConfig {
 	@Value("${journalpostEndret.topic}")
 	private String journalpostEndretTopic;
 
-	@Value("${inngaaendeJournalpostEndret.topic}")
-	private String inngaaendeJournalpostEndretTopic;
+	@Value("${journalfoeringHendelse-v1.topic}")
+	private String journalfoeringTopic;
 
 	@Bean
 	@Order(1)
 	public KafkaEmbedded kafkaEmbedded() {
-		KafkaEmbedded embedded = new KafkaEmbedded(1, true, 1, inngaaendeJournalpostEndretTopic, journalpostEndretTopic);
+		KafkaEmbedded embedded = new KafkaEmbedded(1, true, 1, journalfoeringTopic, journalpostEndretTopic);
 		embedded.setKafkaPorts(60172);
 		embedded.brokerProperty("offsets.topic.replication.factor", (short) 1);
 		embedded.brokerProperty("transaction.state.log.replication.factor", (short) 1);

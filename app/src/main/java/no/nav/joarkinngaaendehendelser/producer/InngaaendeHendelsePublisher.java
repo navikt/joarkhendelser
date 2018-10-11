@@ -19,7 +19,7 @@ public class InngaaendeHendelsePublisher {
     @Autowired
     private KafkaTemplate<String, InngaaendeHendelseRecord> kafkaTemplate;
 
-    @Value("${inngaaendeJournalpostEndret.topic}")
+    @Value("${journalfoeringHendelse-v1.topic}")
     private String topic;
 
     public void publish(InngaaendeHendelse hendelse) {
