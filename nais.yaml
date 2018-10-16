@@ -38,6 +38,10 @@ fasitResources:
     propertyMap:
       url: spring.kafka.properties.schema.registry.url
   - alias: journalfoeringHendelse-v1.topic
-    resourceType: topic
+    resourceType: BaseUrl
+    propertyMap:
+      url: journalfoeringHendelse-v1.topic
   - alias: journalpostEndret.topic
-    resourceType: topic
+    resourceType: BaseUrl
+    propertyMap:
+      url: journalpostEndret.topic
