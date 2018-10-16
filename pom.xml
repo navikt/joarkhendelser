@@ -40,6 +40,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <!-- Default argLine used by surefire and other plugins -->
+        <argLine>-Xmx512m</argLine>
 
         <lombok.version>1.16.22</lombok.version>
         <confluent.version>4.1.1</confluent.version>
