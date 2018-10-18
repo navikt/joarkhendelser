@@ -5,7 +5,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord;
+
+import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -42,7 +43,7 @@ public class JoarkInngaaendeHendelserIT extends AbstractIT {
 		sendToTopic(record);
 
 		await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
-			List<ConsumerRecord<String, InngaaendeHendelseRecord>> records = KafkaTestUtils.getRecords(consumer).records(new TopicPartition(UT_TOPIC, 0));
+			List<ConsumerRecord<String, JournalfoeringHendelseRecord>> records = KafkaTestUtils.getRecords(consumer).records(new TopicPartition(UT_TOPIC, 0));
 			assertThat(records, hasSize(1));
 		});
 	}

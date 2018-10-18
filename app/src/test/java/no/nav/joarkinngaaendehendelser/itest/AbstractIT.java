@@ -6,7 +6,7 @@ import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
 import io.confluent.kafka.serializers.KafkaJsonSerializer;
 import no.nav.joarkinngaaendehendelser.Application;
 import no.nav.joarkinngaaendehendelser.itest.utils.CustomAvroDeserializer;
-import no.nav.joarkinngaaendehendelser.producer.InngaaendeHendelseRecord;
+import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -40,13 +40,10 @@ public abstract class AbstractIT {
 
 	static final String INN_TOPIC = "test-inn-topic";
 	static final String UT_TOPIC = "test-ut-topic";
-
-	KafkaTemplate<Object, Object> kafkaTemplate;
-
-	KafkaConsumer<String, InngaaendeHendelseRecord> consumer;
-
 	@Autowired
 	protected KafkaEmbedded kafkaEmbedded;
+	KafkaTemplate<Object, Object> kafkaTemplate;
+	KafkaConsumer<String, JournalfoeringHendelseRecord> consumer;
 
 	ProducerFactory<Object, Object> producerFactory() {
 		Map<String, Object> config = new HashMap<>();
