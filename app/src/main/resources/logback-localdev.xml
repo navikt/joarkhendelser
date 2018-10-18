@@ -12,7 +12,19 @@
         <appender-ref ref="CONSOLE"/>
     </root>
 
-    <logger name="no.nav.joarkinngaaendehendelser" level="INFO" additivity="false">
+    <logger name="no.nav.joarkinngaaendehendelser" level="DEBUG" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <logger name="org.apache.kafka" level="INFO" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <logger name="io.confluent.kafka.serializers" level="INFO" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <logger name="org.springframework.kafka" level="INFO" additivity="false">
         <appender-ref ref="CONSOLE"/>
     </logger>
 
