@@ -11,7 +11,7 @@
 		<!--<appender-ref ref="CONSOLE"/>-->
 	</root>
 
-	<logger name="no.nav.joarkinngaaendehendelser" level="INFO"/>
+	<logger name="no.nav.joarkjournalfoeringhendelser" level="INFO"/>
 
 	<logger name="org.apache.kafka" level="DEBUG"/>
 

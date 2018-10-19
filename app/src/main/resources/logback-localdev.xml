@@ -12,7 +12,7 @@
         <appender-ref ref="CONSOLE"/>
     </root>
 
-    <logger name="no.nav.joarkinngaaendehendelser" level="INFO" additivity="false">
+    <logger name="no.nav.joarkjournalfoeringhendelser" level="INFO" additivity="false">
         <appender-ref ref="CONSOLE"/>
     </logger>
 

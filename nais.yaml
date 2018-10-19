@@ -1,4 +1,4 @@
-image: "docker.adeo.no:5000/dok/joarkinngaaendehendelser"
+image: "docker.adeo.no:5000/dok/joarkjournalfoeringhendelser"
 replicas:
   min: 1
   max: 2
@@ -24,7 +24,7 @@ fasitResources:
   used:
   - alias: securityTokenService
     resourceType: baseurl
-  - alias: srvjoarkinngaaendehendelser
+  - alias: srvjoarkjournalfoeringhendelser
     resourceType: credential
     propertyMap:
       username: serviceuser.username

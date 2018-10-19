@@ -1,5 +1,5 @@
 {
-  "namespace" : "no.nav.joarkinngaaendehendelser.producer",
+  "namespace" : "no.nav.joarkjournalfoeringhendelser.producer",
   "type" : "record",
   "name" : "InngaaendeHendelseRecord",
   "fields" : [
