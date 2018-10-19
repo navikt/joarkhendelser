@@ -11,7 +11,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Method;
 import java.util.function.Function;
@@ -25,44 +24,41 @@ import java.util.function.Function;
 @Slf4j
 public class DokMetricsAspect {
 
-    @Autowired
-    private MeterRegistry meterRegistry;
+	private final MeterRegistry registry;
+	private final Function<ProceedingJoinPoint, Iterable<Tag>> tagsBasedOnJoinpoint;
 
-    private final MeterRegistry registry;
-    private final Function<ProceedingJoinPoint, Iterable<Tag>> tagsBasedOnJoinpoint;
+	public DokMetricsAspect(MeterRegistry registry) {
+		this(registry, pjp ->
+				Tags.of("class", pjp.getStaticPart().getSignature().getDeclaringTypeName(),
+						"method", pjp.getStaticPart().getSignature().getName())
+		);
+	}
 
-    public DokMetricsAspect(MeterRegistry registry) {
-        this(registry, pjp ->
-                Tags.of("class", pjp.getStaticPart().getSignature().getDeclaringTypeName(),
-                        "method", pjp.getStaticPart().getSignature().getName())
-        );
-    }
+	public DokMetricsAspect(MeterRegistry registry, Function<ProceedingJoinPoint, Iterable<Tag>> tagsBasedOnJoinpoint) {
+		this.registry = registry;
+		this.tagsBasedOnJoinpoint = tagsBasedOnJoinpoint;
+	}
 
-    public DokMetricsAspect(MeterRegistry registry, Function<ProceedingJoinPoint, Iterable<Tag>> tagsBasedOnJoinpoint) {
-        this.registry = registry;
-        this.tagsBasedOnJoinpoint = tagsBasedOnJoinpoint;
-    }
+	@Around("execution (@no.nav.joarkinngaaendehendelser.metrics.Metrics * *.*(..))")
+	public Object incrementMetrics(ProceedingJoinPoint pjp) throws Throwable {
+		Method method = ((MethodSignature) pjp.getSignature()).getMethod();
+		Metrics timed = method.getAnnotation(Metrics.class);
 
-    @Around("execution (@no.nav.joarkinngaaendehendelser.metrics.Metrics * *.*(..))")
-    public Object incrementMetrics(ProceedingJoinPoint pjp) throws Throwable {
-        Method method = ((MethodSignature) pjp.getSignature()).getMethod();
-        Metrics timed = method.getAnnotation(Metrics.class);
+		if (timed.value().isEmpty()) {
+			return pjp.proceed();
+		}
 
-        if (timed.value().isEmpty()) {
-            return pjp.proceed();
-        }
-
-        Timer.Sample sample = Timer.start(registry);
-        try {
-            return pjp.proceed();
-        } finally {
-            sample.stop(Timer.builder(timed.value())
-                    .description(timed.description().isEmpty() ? null : timed.description())
-                    .tags(timed.extraTags())
-                    .tags(tagsBasedOnJoinpoint.apply(pjp))
-                    .publishPercentileHistogram(timed.histogram())
-                    .publishPercentiles(timed.percentiles().length == 0 ? null : timed.percentiles())
-                    .register(registry));
-        }
-    }
+		Timer.Sample sample = Timer.start(registry);
+		try {
+			return pjp.proceed();
+		} finally {
+			sample.stop(Timer.builder(timed.value())
+					.description(timed.description().isEmpty() ? null : timed.description())
+					.tags(timed.extraTags())
+					.tags(tagsBasedOnJoinpoint.apply(pjp))
+					.publishPercentileHistogram(timed.histogram())
+					.publishPercentiles(timed.percentiles().length == 0 ? null : timed.percentiles())
+					.register(registry));
+		}
+	}
 }

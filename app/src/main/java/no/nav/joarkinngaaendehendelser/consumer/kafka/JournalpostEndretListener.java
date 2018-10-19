@@ -20,33 +20,33 @@ import org.springframework.stereotype.Component;
 @Component
 public class JournalpostEndretListener {
 
-    @Autowired
-    private ConsumerRecordAsJsonConverter converter;
+	@Autowired
+	private ConsumerRecordAsJsonConverter converter;
 
-    @Autowired
-    private InngaaendeHendelsePublisher publisher;
+	@Autowired
+	private InngaaendeHendelsePublisher publisher;
 
-    @Autowired
-    private MeterRegistry meterRegistry;
+	@Autowired
+	private MeterRegistry meterRegistry;
 
-    @KafkaListener(topics = "${journalpostEndret.topic}")
-    @Metrics(value = "dok_request", percentiles = {0.5, 0.95})
-    public void onMessage(ConsumerRecord<?, ?> record) {
-        long start = System.currentTimeMillis();
-        try {
-            JournalpostEndretEvent event = converter.convertRecordToEvent(record);
+	@KafkaListener(topics = "${journalpostEndret.topic}")
+	@Metrics(value = "dok_request", percentiles = {0.5, 0.95})
+	public void onMessage(ConsumerRecord<?, ?> record) {
+		long start = System.currentTimeMillis();
+		try {
+			JournalpostEndretEvent event = converter.convertRecordToEvent(record);
 
-            if(event != null && INNGAAENDE.equalsIgnoreCase(event.getJournalpostType())) {
-                InngaaendeHendelse hendelse = JournalpostEndretInngaaendeHendelseMapper.map(event);
-                if (hendelse != null) {
-                    publisher.publish(hendelse);
-                    meterRegistry.counter("Inngaaendehendelser", "type", hendelse.getHendelsesType()).increment();
-                    log.info("Publisert hendelse " + hendelse.getHendelsesType() + " for journalpost " + hendelse.getJournalpostId());
-                }
-            }
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-        log.debug("handling took " + (System.currentTimeMillis() - start) + " ms");
-    }
+			if (event != null && INNGAAENDE.equalsIgnoreCase(event.getJournalpostType())) {
+				InngaaendeHendelse hendelse = JournalpostEndretInngaaendeHendelseMapper.map(event);
+				if (hendelse != null) {
+					publisher.publish(hendelse);
+					meterRegistry.counter("Inngaaendehendelser", "type", hendelse.getHendelsesType()).increment();
+					log.info("Publisert hendelse " + hendelse.getHendelsesType() + " for journalpost " + hendelse.getJournalpostId());
+				}
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		log.debug("handling took " + (System.currentTimeMillis() - start) + " ms");
+	}
 }

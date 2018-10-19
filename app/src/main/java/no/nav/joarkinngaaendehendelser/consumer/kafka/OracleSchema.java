@@ -4,9 +4,9 @@ package no.nav.joarkinngaaendehendelser.consumer.kafka;
  * @author Martin Burheim Tingstad, Visma Consulting.
  */
 public class OracleSchema {
-    static final String OPERATION_TYPE = "op_type";
-    static final String OPERATION_TIMESTAMP = "op_ts";
-    public static final String INSERT_OPERATION = "I";
-    public static final String UPDATE_OPERATION = "U";
-    public static final String DELETE_OPERATION = "D";
+	public static final String INSERT_OPERATION = "I";
+	public static final String UPDATE_OPERATION = "U";
+	public static final String DELETE_OPERATION = "D";
+	static final String OPERATION_TYPE = "op_type";
+	static final String OPERATION_TIMESTAMP = "op_ts";
 }

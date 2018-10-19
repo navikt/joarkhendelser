@@ -1,19 +1,19 @@
 package no.nav.joarkinngaaendehendelser.producer;
 
 public enum InngaaendeHendelsesType {
-    MIDLERTIDIG_JOURNALFORT("MidlertidigJournalført"),
-    TEMA_ENDRET("TemaEndret"),
-    ENDELIG_JOURNALFORT("EndeligJournalført"),
-    JOURNALPOST_UTGATT("JournalpostUtgått");
+	MIDLERTIDIG_JOURNALFORT("MidlertidigJournalført"),
+	TEMA_ENDRET("TemaEndret"),
+	ENDELIG_JOURNALFORT("EndeligJournalført"),
+	JOURNALPOST_UTGATT("JournalpostUtgått");
 
-    private final String pretty;
+	private final String pretty;
 
-    InngaaendeHendelsesType(String value) {
-        pretty = value;
-    }
+	InngaaendeHendelsesType(String value) {
+		pretty = value;
+	}
 
-    @Override
-    public String toString() {
-        return pretty;
-    }
+	@Override
+	public String toString() {
+		return pretty;
+	}
 }
