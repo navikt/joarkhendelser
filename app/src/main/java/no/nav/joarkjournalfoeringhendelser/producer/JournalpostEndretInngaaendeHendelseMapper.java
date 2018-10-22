@@ -1,5 +1,6 @@
 package no.nav.joarkjournalfoeringhendelser.producer;
 
+import static net.logstash.logback.encoder.org.apache.commons.lang.StringUtils.isNotEmpty;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStatus.INNGAAENDE;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStatus.JOURNALFORT;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStatus.MIDLERTIDIG;
@@ -8,8 +9,11 @@ import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStat
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStatus.UTGAR;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.OracleSchema.INSERT_OPERATION;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.OracleSchema.UPDATE_OPERATION;
+import static no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelsesType.ENDELIG_JOURNALFORT;
+import static no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_UTGATT;
+import static no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelsesType.MIDLERTIDIG_JOURNALFORT;
+import static no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelsesType.TEMA_ENDRET;
 
-import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
 import no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostEndretEvent;
 
 import java.util.UUID;
@@ -42,13 +46,13 @@ public class JournalpostEndretInngaaendeHendelseMapper {
 		if (!isInngaaende(event)) {
 			hendelsesType = null;
 		} else if (isMidlertidigJournalfort(event)) {
-			hendelsesType = InngaaendeHendelsesType.MIDLERTIDIG_JOURNALFORT;
+			hendelsesType = MIDLERTIDIG_JOURNALFORT;
 		} else if (isTemaEndret(event)) {
-			hendelsesType = InngaaendeHendelsesType.TEMA_ENDRET;
+			hendelsesType = TEMA_ENDRET;
 		} else if (isEndeligJournalfort(event)) {
-			hendelsesType = InngaaendeHendelsesType.ENDELIG_JOURNALFORT;
+			hendelsesType = ENDELIG_JOURNALFORT;
 		} else if (isJournalpostUtgatt(event)) {
-			hendelsesType = InngaaendeHendelsesType.JOURNALPOST_UTGATT;
+			hendelsesType = JOURNALPOST_UTGATT;
 		}
 
 		return hendelsesType;
@@ -60,13 +64,13 @@ public class JournalpostEndretInngaaendeHendelseMapper {
 	}
 
 	private static boolean isTemaEndret(JournalpostEndretEvent event) {
-		return isUpdateOperation(event) &&
-				hasChangedFagomrade(event);
+		return isUpdateOperation(event) && hasChangedFagomrade(event) &&
+				(isMottatt(event) || isMidlertidig(event));
 	}
 
 	private static boolean isEndeligJournalfort(JournalpostEndretEvent event) {
-		return wasMidlertidig(event) &&
-				isJournalfort(event);
+		return (isInsertOperation(event) && isJournalfort(event)) ||
+				(isUpdateOperation(event) && wasMidlertidig(event) && isJournalfort(event));
 	}
 
 	private static boolean isJournalpostUtgatt(JournalpostEndretEvent event) {
@@ -75,13 +79,13 @@ public class JournalpostEndretInngaaendeHendelseMapper {
 	}
 
 	private static boolean hasChangedFagomrade(JournalpostEndretEvent event) {
-		return StringUtils.isNotEmpty(event.getFagomradeBefore()) &&
-				StringUtils.isNotEmpty(event.getFagomradeAfter()) &&
+		return isNotEmpty(event.getFagomradeBefore()) &&
+				isNotEmpty(event.getFagomradeAfter()) &&
 				!event.getFagomradeBefore().equalsIgnoreCase(event.getFagomradeAfter());
 	}
 
 	private static boolean hasChangedJournalpostStatusToUtgarOrUkjentbruker(JournalpostEndretEvent event) {
-		return StringUtils.isNotEmpty(event.getJournalpostStatusBefore()) &&
+		return isNotEmpty(event.getJournalpostStatusBefore()) &&
 				(UTGAR.equalsIgnoreCase(event.getJournalpostStatusAfter()) || UKJENTBRUKER.equalsIgnoreCase(event.getJournalpostStatusAfter()));
 	}
 
