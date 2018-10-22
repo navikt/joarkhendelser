@@ -6,7 +6,7 @@ import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
 import io.confluent.kafka.serializers.KafkaJsonSerializer;
 import no.nav.joarkjournalfoeringhendelser.Application;
 import no.nav.joarkjournalfoeringhendelser.itest.utils.CustomAvroDeserializer;
-import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelseRecord;
+import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.ProducerConfig;
