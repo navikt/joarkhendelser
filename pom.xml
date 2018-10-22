@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>no.nav.joarkhendelser</groupId>
-    <artifactId>joarkinngaaendehendelser</artifactId>
+    <artifactId>joarkjournalfoeringhendelser</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <name>joarkinngaaendehendelser</name>
+    <name>joarkjournalfoeringhendelser</name>
     <packaging>pom</packaging>
 
     <parent>
