@@ -13,6 +13,8 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +29,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -41,22 +44,21 @@ public abstract class AbstractIT {
 	static final String INN_TOPIC = "test-inn-topic";
 	static final String UT_TOPIC = "test-ut-topic";
 
-	KafkaTemplate<Object, Object> kafkaTemplate;
-
-	KafkaConsumer<String, InngaaendeHendelseRecord> consumer;
+	static KafkaConsumer<String, InngaaendeHendelseRecord> consumer;
 
 	@Autowired
 	protected KafkaEmbedded kafkaEmbedded;
 
-	ProducerFactory<Object, Object> producerFactory() {
-		Map<String, Object> config = new HashMap<>();
-		config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:60172");
-		config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-		config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaJsonSerializer.class.getName());
-		return new DefaultKafkaProducerFactory<>(config);
+	private KafkaTemplate<Object, Object> kafkaTemplate;
+
+	@BeforeClass
+	public static void setUpClass() {
+		// KafkaConsumer for å kunne konsumere meldinger som InngaaendeHendelsePublisher dytter til 'test-ut-topic'
+		consumer = new KafkaConsumer<>(consumerProperties());
+		consumer.subscribe(Collections.singletonList(UT_TOPIC));
 	}
 
-	Map<String, Object> consumerProperties() {
+	private static Map<String, Object> consumerProperties() {
 		Map<String, Object> config = new HashMap<>();
 		config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:60172");
 		config.put(KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG, "true");
@@ -67,6 +69,20 @@ public abstract class AbstractIT {
 		config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, CustomAvroDeserializer.class.getName());
 		config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, CustomAvroDeserializer.class.getName());
 		return config;
+	}
+
+	@Before
+	public void setUp() {
+		// KafkaTemplate for å sende meldinger til 'test-inn-topic' som JournalpostEndretListener skal fange opp.
+		kafkaTemplate = new KafkaTemplate<>(producerFactory());
+	}
+
+	private ProducerFactory<Object, Object> producerFactory() {
+		Map<String, Object> config = new HashMap<>();
+		config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:60172");
+		config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+		config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaJsonSerializer.class.getName());
+		return new DefaultKafkaProducerFactory<>(config);
 	}
 
 	void sendToTopic(ProducerRecord<Object, Object> record) {
