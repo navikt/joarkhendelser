@@ -20,8 +20,7 @@ import org.springframework.kafka.test.utils.KafkaTestUtils;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-
-public class JoarkInngaaendeHendelserIT extends AbstractIT {
+public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 
 	private ProducerRecord<Object, Object> record;
 
@@ -30,7 +29,7 @@ public class JoarkInngaaendeHendelserIT extends AbstractIT {
 	 */
 	@Test
 	public void shouldPublishNewTemaEndretHendelse() throws Exception {
-		JsonNode jsonrecord = classpathToJsonNode("__files/happyPath.json");
+		JsonNode jsonrecord = classpathToJsonNode("__files/tema_endret.json");
 
 		record = new ProducerRecord<>(INN_TOPIC, 0, "key", jsonrecord);
 		sendToTopic(record);
