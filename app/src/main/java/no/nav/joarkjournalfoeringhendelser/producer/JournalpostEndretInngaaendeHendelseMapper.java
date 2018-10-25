@@ -69,8 +69,8 @@ public class JournalpostEndretInngaaendeHendelseMapper {
 	}
 
 	private static boolean isEndeligJournalfort(JournalpostEndretEvent event) {
-		return (isInsertOperation(event) && isJournalfort(event)) ||
-				(isUpdateOperation(event) && wasMidlertidig(event) && isJournalfort(event));
+		return isJournalfort(event) &&
+				((isInsertOperation(event)) || (isUpdateOperation(event) && wasMidlertidig(event)));
 	}
 
 	private static boolean isJournalpostUtgatt(JournalpostEndretEvent event) {
