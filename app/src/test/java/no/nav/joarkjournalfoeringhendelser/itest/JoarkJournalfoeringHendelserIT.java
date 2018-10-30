@@ -10,7 +10,8 @@ import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.assertEquals;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelseRecord;
+
+import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.TopicPartition;
@@ -35,9 +36,9 @@ public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 		sendToTopic(record);
 
 		await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
-			List<ConsumerRecord<String, InngaaendeHendelseRecord>> records = KafkaTestUtils.getRecords(consumer).records(new TopicPartition(UT_TOPIC, 0));
+			List<ConsumerRecord<String, JournalfoeringHendelseRecord>> records = KafkaTestUtils.getRecords(consumer).records(new TopicPartition(UT_TOPIC, 0));
 			assertThat(records, hasSize(1));
-			InngaaendeHendelseRecord utgaaendeRecord = records.get(0).value();
+			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0).value();
 			assertEquals(1L, utgaaendeRecord.getJournalpostId().longValue());
 			assertEquals(TEMA_ENDRET.toString(), utgaaendeRecord.getHendelsesType().toString());
 		});
@@ -54,9 +55,9 @@ public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 		sendToTopic(record);
 
 		await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
-			List<ConsumerRecord<String, InngaaendeHendelseRecord>> records = KafkaTestUtils.getRecords(consumer).records(new TopicPartition(UT_TOPIC, 0));
+			List<ConsumerRecord<String, JournalfoeringHendelseRecord>> records = KafkaTestUtils.getRecords(consumer).records(new TopicPartition(UT_TOPIC, 0));
 			assertThat(records, hasSize(1));
-			InngaaendeHendelseRecord utgaaendeRecord = records.get(0).value();
+			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0).value();
 			assertEquals(1L, utgaaendeRecord.getJournalpostId().longValue());
 			assertEquals(MIDLERTIDIG_JOURNALFORT.toString(), utgaaendeRecord.getHendelsesType().toString());
 		});
@@ -73,9 +74,9 @@ public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 		sendToTopic(record);
 
 		await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
-			List<ConsumerRecord<String, InngaaendeHendelseRecord>> records = KafkaTestUtils.getRecords(consumer).records(new TopicPartition(UT_TOPIC, 0));
+			List<ConsumerRecord<String, JournalfoeringHendelseRecord>> records = KafkaTestUtils.getRecords(consumer).records(new TopicPartition(UT_TOPIC, 0));
 			assertThat(records, hasSize(1));
-			InngaaendeHendelseRecord utgaaendeRecord = records.get(0).value();
+			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0).value();
 			assertEquals(1L, utgaaendeRecord.getJournalpostId().longValue());
 			assertEquals(ENDELIG_JOURNALFORT.toString(), utgaaendeRecord.getHendelsesType().toString());
 		});
@@ -92,9 +93,9 @@ public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 		sendToTopic(record);
 
 		await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
-			List<ConsumerRecord<String, InngaaendeHendelseRecord>> records = KafkaTestUtils.getRecords(consumer).records(new TopicPartition(UT_TOPIC, 0));
+			List<ConsumerRecord<String, JournalfoeringHendelseRecord>> records = KafkaTestUtils.getRecords(consumer).records(new TopicPartition(UT_TOPIC, 0));
 			assertThat(records, hasSize(1));
-			InngaaendeHendelseRecord utgaaendeRecord = records.get(0).value();
+			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0).value();
 			assertEquals(1L, utgaaendeRecord.getJournalpostId().longValue());
 			assertEquals(JOURNALPOST_UTGATT.toString(), utgaaendeRecord.getHendelsesType().toString());
 		});
@@ -111,7 +112,7 @@ public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 		sendToTopic(record);
 
 		await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
-			List<ConsumerRecord<String, InngaaendeHendelseRecord>> records = KafkaTestUtils.getRecords(consumer, 1_000L).records(new TopicPartition(UT_TOPIC, 0));
+			List<ConsumerRecord<String, JournalfoeringHendelseRecord>> records = KafkaTestUtils.getRecords(consumer, 1_000L).records(new TopicPartition(UT_TOPIC, 0));
 			assertThat(records, hasSize(0));
 		});
 	}

@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostEndretEvent;
+import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +28,7 @@ public class InngaaendeHendelsePublisherTest {
 	InngaaendeHendelsePublisher inngaaendeHendelsePublisher;
 
 	@Mock
-	private KafkaTemplate<String, InngaaendeHendelseRecord> kafkaTemplate;
+	private KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate;
 
 	private InngaaendeHendelse hendelse;
 

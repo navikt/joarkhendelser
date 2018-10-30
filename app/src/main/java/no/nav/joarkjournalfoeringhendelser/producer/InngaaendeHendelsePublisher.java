@@ -1,6 +1,7 @@
 package no.nav.joarkjournalfoeringhendelser.producer;
 
 import lombok.extern.slf4j.Slf4j;
+import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,13 +18,13 @@ import java.util.concurrent.ExecutionException;
 public class InngaaendeHendelsePublisher {
 
 	@Autowired
-	private KafkaTemplate<String, InngaaendeHendelseRecord> kafkaTemplate;
+	private KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate;
 
 	@Value("${journalfoeringHendelse-v1.topic}")
 	private String topic;
 
 	public void publish(InngaaendeHendelse hendelse) {
-		InngaaendeHendelseRecord record = new InngaaendeHendelseRecord(
+		JournalfoeringHendelseRecord record = new JournalfoeringHendelseRecord(
 				hendelse.getHendelsesId(),
 				hendelse.getVersjon(),
 				hendelse.getHendelsesType(),
@@ -35,7 +36,7 @@ public class InngaaendeHendelsePublisher {
 				hendelse.getKanalReferanseId()
 		);
 
-		ProducerRecord<String, InngaaendeHendelseRecord> producerRecord = new ProducerRecord<>(
+		ProducerRecord<String, JournalfoeringHendelseRecord> producerRecord = new ProducerRecord<>(
 				topic,
 				null,
 				hendelse.getTimestamp(),
