@@ -76,7 +76,7 @@ public class ConsumerRecordAsJsonConverterTest {
         valuesBefore.put("OPPRETTET_AV_NAVN", "BJOARK002");
         valuesBefore.put("DATO_JOURNAL", "2018-09-24 12:21:57.183000000");
         valuesBefore.put("ANTALL_RETUR", "0");
-        valuesBefore.put("DATO_AVS_RETUR", "null");
+        valuesBefore.put("DATO_AVS_RETUR", null);
         valuesBefore.put("INNHOLD", "Søknad om barnetrygd");
         valuesBefore.put("KRAV_TYPE", "null");
         valuesBefore.put("MERKNAD", "null");
