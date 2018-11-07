@@ -41,7 +41,9 @@ public class JournalpostEndretListener {
 				if (hendelse != null) {
 					publisher.publish(hendelse);
 					meterRegistry.counter("Inngaaendehendelser", "type", hendelse.getHendelsesType()).increment();
-					log.info("Publisert hendelse " + hendelse.getHendelsesType() + " for journalpost " + hendelse.getJournalpostId());
+					log.info("Publisert hendelse " + hendelse.getHendelsesType() +
+							" for journalpost " + hendelse.getJournalpostId() +
+							" og kanalreferanse " + hendelse.getKanalReferanseId());
 				}
 			}
 		} catch (Exception e) {

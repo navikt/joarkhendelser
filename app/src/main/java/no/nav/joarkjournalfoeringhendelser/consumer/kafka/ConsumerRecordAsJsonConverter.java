@@ -45,7 +45,8 @@ public class ConsumerRecordAsJsonConverter {
 
 		Integer journalpostId = (Integer) after.get(JOURNALPOST_ID);
 
-		log.info("Received {}-event for journalpost {} on topic: {}", operation, journalpostId, record.topic());
+		log.info("Received {}-event for journalpost {} on topic: {}",
+				prettyPrintOperationName(operation), journalpostId, record.topic());
 
 		JournalpostEndretEvent event;
 
@@ -99,6 +100,19 @@ public class ConsumerRecordAsJsonConverter {
 		return event;
 
 	}
+
+    private String prettyPrintOperationName(String operation) {
+	    if(operation.equalsIgnoreCase("I")){
+	        return "INSERT";
+        }
+        if(operation.equalsIgnoreCase("U")){
+            return "UPDATE";
+        }
+        if(operation.equalsIgnoreCase("D")){
+            return "DELETE";
+        }
+        return operation;
+    }
 
 	private Long convertOracleTimeStampToLong(String timestamp) {
 		Long timeStamp;
