@@ -102,16 +102,12 @@ public class ConsumerRecordAsJsonConverter {
 	}
 
     private String prettyPrintOperationName(String operation) {
-	    if(operation.equalsIgnoreCase("I")){
-	        return "INSERT";
-        }
-        if(operation.equalsIgnoreCase("U")){
-            return "UPDATE";
-        }
-        if(operation.equalsIgnoreCase("D")){
-            return "DELETE";
-        }
-        return operation;
+		switch (operation) {
+			case "I": return "INSERT";
+			case "U": return "UPDATE";
+			case "D": return "DELETE";
+			default: return operation;
+		}
     }
 
 	private Long convertOracleTimeStampToLong(String timestamp) {
@@ -156,10 +152,8 @@ public class ConsumerRecordAsJsonConverter {
 		Set<String> columnsChanged = new HashSet<>(before.keySet());
 
 		for (Object key : before.keySet()) {
-			if (after.get(key) == null && before.get(key) == null) {
-				columnsChanged.remove(key);
-			}
-			else if (after.get(key).equals(before.get(key))) {
+			if ((after.get(key) == null && before.get(key) == null) ||
+                (after.get(key).equals(before.get(key)))) {
 				columnsChanged.remove(key);
 			}
 		}
