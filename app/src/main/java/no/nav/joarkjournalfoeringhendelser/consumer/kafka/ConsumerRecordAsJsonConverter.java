@@ -45,7 +45,8 @@ public class ConsumerRecordAsJsonConverter {
 
 		Integer journalpostId = (Integer) after.get(JOURNALPOST_ID);
 
-		log.info("Received {}-event for journalpost {} on topic: {}", operation, journalpostId, record.topic());
+		log.info("Received {}-event for journalpost {} on topic: {}",
+				prettyPrintOperationName(operation), journalpostId, record.topic());
 
 		JournalpostEndretEvent event;
 
@@ -100,6 +101,15 @@ public class ConsumerRecordAsJsonConverter {
 
 	}
 
+    private String prettyPrintOperationName(String operation) {
+		switch (operation) {
+			case "I": return "INSERT";
+			case "U": return "UPDATE";
+			case "D": return "DELETE";
+			default: return operation;
+		}
+    }
+
 	private Long convertOracleTimeStampToLong(String timestamp) {
 		Long timeStamp;
 		if (StringUtils.isNotEmpty(timestamp)) {
@@ -142,10 +152,8 @@ public class ConsumerRecordAsJsonConverter {
 		Set<String> columnsChanged = new HashSet<>(before.keySet());
 
 		for (Object key : before.keySet()) {
-			if (after.get(key) == null && before.get(key) == null) {
-				columnsChanged.remove(key);
-			}
-			else if (after.get(key).equals(before.get(key))) {
+			if ((after.get(key) == null && before.get(key) == null) ||
+                (after.get(key).equals(before.get(key)))) {
 				columnsChanged.remove(key);
 			}
 		}
