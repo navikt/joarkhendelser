@@ -26,6 +26,23 @@ public class JournalpostEndretInngaaendeHendelseMapperTest {
 	}
 
 	@Test
+	public void shouldNotMapToMidlertidigJournalførtHendelsesType() {
+		JournalpostEndretEvent journalpostEndretEventMidlertidig = createJournalpostEndretEvent("DAG", "DAG", "MO", "M", "U", "I");
+		InngaaendeHendelse mapMidlertidig = mapper.map(journalpostEndretEventMidlertidig);
+		assertEquals(null, mapMidlertidig);
+	}
+
+	@Test
+	public void shouldMapToMidlertidigJournalførtHendelsesType() {
+		JournalpostEndretEvent journalpostEndretEventMidlertidig = createJournalpostEndretEvent("DAG", "DAG", "OD", "M", "U", "I");
+		InngaaendeHendelse mapMidlertidig = mapper.map(journalpostEndretEventMidlertidig);
+		JournalpostEndretEvent journalpostEndretEventMottatt = createJournalpostEndretEvent(null, "FOR", null, "MO", "I", "I");
+		InngaaendeHendelse mapMottatt = mapper.map(journalpostEndretEventMottatt);
+		assertEquals(MIDLERTIDIG_JOURNALFORT.toString(), mapMottatt.getHendelsesType());
+		assertEquals(MIDLERTIDIG_JOURNALFORT.toString(), mapMidlertidig.getHendelsesType());
+	}
+
+	@Test
 	public void shouldFinnMidlertidigJournalførtHendelsesType() {
 		JournalpostEndretEvent journalpostEndretEventMidlertidig = createJournalpostEndretEvent("DAG", "FOR", "M", "M", "I", "I");
 		InngaaendeHendelse mapMidlertidig = mapper.map(journalpostEndretEventMidlertidig);

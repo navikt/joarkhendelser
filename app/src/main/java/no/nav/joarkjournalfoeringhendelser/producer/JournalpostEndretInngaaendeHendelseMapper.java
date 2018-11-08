@@ -1,6 +1,7 @@
 package no.nav.joarkjournalfoeringhendelser.producer;
 
 import static net.logstash.logback.encoder.org.apache.commons.lang.StringUtils.isNotEmpty;
+import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStatus.OPPLASTINGDOKUMENT;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStatus.INNGAAENDE;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStatus.JOURNALFORT;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStatus.MIDLERTIDIG;
@@ -47,20 +48,24 @@ public class JournalpostEndretInngaaendeHendelseMapper {
 			hendelsesType = null;
 		} else if (isMidlertidigJournalfort(event)) {
 			hendelsesType = MIDLERTIDIG_JOURNALFORT;
-		} else if (isTemaEndret(event)) {
-			hendelsesType = TEMA_ENDRET;
 		} else if (isEndeligJournalfort(event)) {
 			hendelsesType = ENDELIG_JOURNALFORT;
 		} else if (isJournalpostUtgatt(event)) {
 			hendelsesType = JOURNALPOST_UTGATT;
+		} else if (isTemaEndret(event)) {
+			hendelsesType = TEMA_ENDRET;
 		}
 
 		return hendelsesType;
 	}
 
 	private static boolean isMidlertidigJournalfort(JournalpostEndretEvent event) {
-		return isInsertOperation(event) &&
-				(isMottatt(event) || isMidlertidig(event));
+		return (isMottatt(event) || isMidlertidig(event)) &&
+				(isInsertOperation(event) || isUpdateFromOpplastingDokument(event));
+	}
+
+	private static boolean isUpdateFromOpplastingDokument(JournalpostEndretEvent event) {
+		return isUpdateOperation(event) && wasOpplastingDokument(event);
 	}
 
 	private static boolean isTemaEndret(JournalpostEndretEvent event) {
@@ -109,11 +114,19 @@ public class JournalpostEndretInngaaendeHendelseMapper {
 		return MOTTATT.equalsIgnoreCase(event.getJournalpostStatusAfter());
 	}
 
+	private static boolean wasMottatt(JournalpostEndretEvent event) {
+		return MOTTATT.equalsIgnoreCase(event.getJournalpostStatusBefore());
+	}
+
 	private static boolean isMidlertidig(JournalpostEndretEvent event) {
 		return MIDLERTIDIG.equalsIgnoreCase(event.getJournalpostStatusAfter());
 	}
 
 	private static boolean wasMidlertidig(JournalpostEndretEvent event) {
 		return MIDLERTIDIG.equalsIgnoreCase(event.getJournalpostStatusBefore());
+	}
+
+	private static boolean wasOpplastingDokument(JournalpostEndretEvent event) {
+		return OPPLASTINGDOKUMENT.equalsIgnoreCase(event.getJournalpostStatusBefore());
 	}
 }
