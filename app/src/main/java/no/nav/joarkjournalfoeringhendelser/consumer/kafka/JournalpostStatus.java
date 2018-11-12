@@ -10,5 +10,5 @@ public class JournalpostStatus {
 	public static final String INNGAAENDE = "I";
 	public static final String UTGAR = "U";
 	public static final String UKJENTBRUKER = "UB";
-	public static final String DOKUMENTOPPLASTING = "OD";
+	public static final String OPPLASTINGDOKUMENT = "OD";
 }
