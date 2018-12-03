@@ -1,4 +1,4 @@
-image: "docker.adeo.no:5000/dok/joarkjournalfoeringhendelser"
+image: "repo.adeo.no:5443/dok/joarkjournalfoeringhendelser"
 team: teamdokumenthandtering
 replicas:
   min: 1
