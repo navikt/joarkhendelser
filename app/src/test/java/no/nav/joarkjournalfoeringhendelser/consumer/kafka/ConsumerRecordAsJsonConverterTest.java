@@ -174,6 +174,26 @@ public class ConsumerRecordAsJsonConverterTest {
     }
 
     @Test
+    public void shouldAlwaysIncludeTemaBeforeAndAfter() throws Exception {
+        values.clear();
+        values.put("op_type", "U");
+
+        LinkedHashMap<String, Object> beforeValues = createBeforeValues();
+        beforeValues.remove("K_FAGOMRADE");
+        beforeValues.put("INNHOLD", "Test");
+        values.put("before", beforeValues);
+        LinkedHashMap<String, Object> afterValues = createAfterValues();
+        afterValues.remove("K_FAGOMRADE");
+        afterValues.put("INNHOLD", "Test 2");
+        values.put("after", afterValues);
+
+        when(consumerRecordMock.value()).thenReturn(values);
+        JournalpostEndretEvent event = converter.convertRecordToEvent(consumerRecordMock);
+
+        assertEquals(1, event.columnsChanged.size());
+    }
+
+    @Test
     public void shouldProduceCorrectNumberOfColumnsChangedLong() throws Exception {
         values.clear();
         values.put("op_type", "U");

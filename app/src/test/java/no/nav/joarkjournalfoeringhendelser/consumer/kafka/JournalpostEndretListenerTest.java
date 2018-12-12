@@ -47,7 +47,7 @@ public class JournalpostEndretListenerTest {
 	}
 
 	@Test
-	public void shouldPublishEvent() {
+	public void shouldPublishEvent() throws Exception {
 		event = createJournalpostEndretEvent(INNGAAENDE);
 		when(converterMock.convertRecordToEvent(any(ConsumerRecord.class))).thenReturn(event);
 
@@ -60,7 +60,7 @@ public class JournalpostEndretListenerTest {
 	}
 
 	@Test
-	public void shouldNotPublishAnyEventIfJournalpostTypeIsNotInngaaende() {
+	public void shouldNotPublishAnyEventIfJournalpostTypeIsNotInngaaende() throws Exception {
 		event = createJournalpostEndretEvent(UTGAR);
 		when(converterMock.convertRecordToEvent(any(ConsumerRecord.class))).thenReturn(event);
 

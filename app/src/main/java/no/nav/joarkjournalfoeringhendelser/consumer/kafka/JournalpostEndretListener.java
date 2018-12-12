@@ -12,6 +12,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Martin Burheim Tingstad, Visma Consulting.
@@ -43,7 +44,11 @@ public class JournalpostEndretListener {
 					meterRegistry.counter("Inngaaendehendelser", "type", hendelse.getHendelsesType()).increment();
 					log.info("Publisert hendelse " + hendelse.getHendelsesType() +
 							" for journalpost " + hendelse.getJournalpostId() +
-							" og kanalreferanse " + hendelse.getKanalReferanseId());
+							(
+								StringUtils.isEmpty(hendelse.getKanalReferanseId()) ? "." :
+								(" og kanalreferanse " + hendelse.getKanalReferanseId() + ".")
+							)
+					);
 				}
 			}
 		} catch (Exception e) {

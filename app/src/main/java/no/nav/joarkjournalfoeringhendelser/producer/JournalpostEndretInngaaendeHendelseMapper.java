@@ -35,6 +35,7 @@ public class JournalpostEndretInngaaendeHendelseMapper {
 						.journalpostId(event.getJournalpostId())
 						.kanalReferanseId(event.getKanalReferanseId())
 						.mottaksKanal(event.getMottaksKanal())
+						.behandlingsTema(event.getBehandlingsTema())
 						.journalpostStatus(event.getJournalpostStatusAfter())
 						.hendelsesType(inngaaendeHendelsesType.toString())
 						.timestamp(event.getTimestamp())

@@ -42,6 +42,7 @@
     "K_MOTTAKS_KANAL":"SKAN_NETS",
     "ENDRET_KILDE_NAVN":"BRUT001",
     "SIGNATUR":null,
-    "KANAL_REFERANSE_ID":null
+    "KANAL_REFERANSE_ID":null,
+    "K_BEHANDLINGSTEMA":null
   }
 }

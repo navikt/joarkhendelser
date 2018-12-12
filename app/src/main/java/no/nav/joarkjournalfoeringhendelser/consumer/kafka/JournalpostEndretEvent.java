@@ -21,6 +21,7 @@ public class JournalpostEndretEvent {
 	String journalpostType;
 	String mottaksKanal;
 	String kanalReferanseId;
+	String behandlingsTema;
 	Set<String> columnsChanged;
 	Long timestamp;
 }
