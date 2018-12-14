@@ -45,9 +45,14 @@ public class JournalpostEndretListener {
 					log.info("Publisert hendelse " + hendelse.getHendelsesType() +
 							" for journalpost " + hendelse.getJournalpostId() +
 							(
-								StringUtils.isEmpty(hendelse.getKanalReferanseId()) ? "." :
-								(" og kanalreferanse " + hendelse.getKanalReferanseId() + ".")
-							)
+								StringUtils.isEmpty(hendelse.getKanalReferanseId()) ? "" :
+								(", kanalReferanseId " + hendelse.getKanalReferanseId())
+							) +
+							(
+								StringUtils.isEmpty(hendelse.getMottaksKanal()) ? "" :
+								(", mottaksKanal " + hendelse.getMottaksKanal())
+							) +
+							"."
 					);
 				}
 			}
@@ -56,4 +61,5 @@ public class JournalpostEndretListener {
 		}
 		log.debug("handling took " + (System.currentTimeMillis() - start) + " ms");
 	}
+
 }

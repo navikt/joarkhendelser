@@ -42,7 +42,7 @@ public class InngaaendeHendelsePublisherTest {
 	}
 
 	@Test
-	public void shouldPublish() throws Exception {
+	public void shouldPublish() {
 		hendelse = createInngaaendeHendelse();
 		inngaaendeHendelsePublisher.publish(hendelse);
 

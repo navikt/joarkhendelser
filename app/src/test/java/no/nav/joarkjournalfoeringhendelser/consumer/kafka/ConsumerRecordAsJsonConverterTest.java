@@ -35,13 +35,13 @@ public class ConsumerRecordAsJsonConverterTest {
     private ConsumerRecordAsJsonConverter converter;
 
     @Before
-    public void before() throws Exception {
+    public void before() {
         timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(
                 DateTimeFormatter.ISO_INSTANT);
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
 
@@ -120,7 +120,7 @@ public class ConsumerRecordAsJsonConverterTest {
     }
 
     @Test
-    public void shouldConvertUpdateOperation() throws Exception {
+    public void shouldConvertUpdateOperation() {
         values.clear();
         values.put("op_type", "U");
         values.put("op_ts", timestamp);
@@ -140,7 +140,7 @@ public class ConsumerRecordAsJsonConverterTest {
     }
 
     @Test
-    public void shouldConvertCreateOperation() throws Exception {
+    public void shouldConvertCreateOperation() {
         values.clear();
         values.put("op_type", "I");
         values.put("op_ts", timestamp);
@@ -158,7 +158,7 @@ public class ConsumerRecordAsJsonConverterTest {
     }
 
     @Test
-    public void shouldProduceCorrectNumberOfColumnsChanged() throws Exception {
+    public void shouldProduceCorrectNumberOfColumnsChanged() {
         values.clear();
         values.put("op_type", "U");
 
@@ -174,7 +174,7 @@ public class ConsumerRecordAsJsonConverterTest {
     }
 
     @Test
-    public void shouldAlwaysIncludeTemaBeforeAndAfter() throws Exception {
+    public void shouldAlwaysIncludeTemaBeforeAndAfter() {
         values.clear();
         values.put("op_type", "U");
 
@@ -194,7 +194,7 @@ public class ConsumerRecordAsJsonConverterTest {
     }
 
     @Test
-    public void shouldProduceCorrectNumberOfColumnsChangedLong() throws Exception {
+    public void shouldProduceCorrectNumberOfColumnsChangedLong() {
         values.clear();
         values.put("op_type", "U");
 
