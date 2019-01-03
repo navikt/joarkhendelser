@@ -19,7 +19,7 @@ prometheus:
   path: /actuator/prometheus
 resources:
   limits:
-    cpu: 3000m
+    cpu: 1000m
     memory: 1024Mi
 fasitResources:
   used:

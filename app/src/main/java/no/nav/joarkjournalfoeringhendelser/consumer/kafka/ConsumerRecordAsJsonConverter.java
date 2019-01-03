@@ -2,6 +2,7 @@ package no.nav.joarkjournalfoeringhendelser.consumer.kafka;
 
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JoarkSchema.JOURNALPOST_ID;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JoarkSchema.KANAL_REFERANSE_ID;
+import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JoarkSchema.K_BEHANDLINGSTEMA;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JoarkSchema.K_FAGOMRADE;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JoarkSchema.K_JOURNALPOST_T;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JoarkSchema.K_JOURNAL_S;
@@ -45,8 +46,8 @@ public class ConsumerRecordAsJsonConverter {
 
 		Integer journalpostId = (Integer) after.get(JOURNALPOST_ID);
 
-		log.info("Received {}-event for journalpost {} on topic: {}",
-				prettyPrintOperationName(operation), journalpostId, record.topic());
+		log.info("Received {}-event for journalpost {} on topic: {} (Partition: {}, offset: {})",
+				prettyPrintOperationName(operation), journalpostId, record.topic(), record.partition(), record.offset());
 
 		JournalpostEndretEvent event;
 
@@ -71,6 +72,7 @@ public class ConsumerRecordAsJsonConverter {
 						.journalpostType(getUpdatedVerdi(columnsChanged, after, before, K_JOURNALPOST_T))
 						.mottaksKanal(getUpdatedVerdi(columnsChanged, after, before, K_MOTTAKS_KANAL))
 						.kanalReferanseId(getUpdatedVerdi(columnsChanged, after, before, KANAL_REFERANSE_ID))
+						.behandlingsTema(getUpdatedVerdi(columnsChanged, after, before, K_BEHANDLINGSTEMA))
 						.columnsChanged(columnsChanged)
 						.timestamp(timeStamp)
 						.build();
@@ -87,6 +89,7 @@ public class ConsumerRecordAsJsonConverter {
 					.journalpostType(getVerdi(after, K_JOURNALPOST_T))
 					.mottaksKanal(getVerdi(after, K_MOTTAKS_KANAL))
 					.kanalReferanseId(getVerdi(after, KANAL_REFERANSE_ID))
+					.behandlingsTema(getVerdi(after, K_BEHANDLINGSTEMA))
 					.columnsChanged(columnsChanged)
 					.timestamp(timeStamp)
 					.build();

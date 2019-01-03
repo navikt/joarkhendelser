@@ -35,13 +35,13 @@ public class ConsumerRecordAsJsonConverterTest {
     private ConsumerRecordAsJsonConverter converter;
 
     @Before
-    public void before() throws Exception {
+    public void before() {
         timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(
                 DateTimeFormatter.ISO_INSTANT);
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
 
@@ -120,7 +120,7 @@ public class ConsumerRecordAsJsonConverterTest {
     }
 
     @Test
-    public void shouldConvertUpdateOperation() throws Exception {
+    public void shouldConvertUpdateOperation() {
         values.clear();
         values.put("op_type", "U");
         values.put("op_ts", timestamp);
@@ -140,7 +140,7 @@ public class ConsumerRecordAsJsonConverterTest {
     }
 
     @Test
-    public void shouldConvertCreateOperation() throws Exception {
+    public void shouldConvertCreateOperation() {
         values.clear();
         values.put("op_type", "I");
         values.put("op_ts", timestamp);
@@ -158,7 +158,7 @@ public class ConsumerRecordAsJsonConverterTest {
     }
 
     @Test
-    public void shouldProduceCorrectNumberOfColumnsChanged() throws Exception {
+    public void shouldProduceCorrectNumberOfColumnsChanged() {
         values.clear();
         values.put("op_type", "U");
 
@@ -174,7 +174,27 @@ public class ConsumerRecordAsJsonConverterTest {
     }
 
     @Test
-    public void shouldProduceCorrectNumberOfColumnsChangedLong() throws Exception {
+    public void shouldAlwaysIncludeTemaBeforeAndAfter() {
+        values.clear();
+        values.put("op_type", "U");
+
+        LinkedHashMap<String, Object> beforeValues = createBeforeValues();
+        beforeValues.remove("K_FAGOMRADE");
+        beforeValues.put("INNHOLD", "Test");
+        values.put("before", beforeValues);
+        LinkedHashMap<String, Object> afterValues = createAfterValues();
+        afterValues.remove("K_FAGOMRADE");
+        afterValues.put("INNHOLD", "Test 2");
+        values.put("after", afterValues);
+
+        when(consumerRecordMock.value()).thenReturn(values);
+        JournalpostEndretEvent event = converter.convertRecordToEvent(consumerRecordMock);
+
+        assertEquals(1, event.columnsChanged.size());
+    }
+
+    @Test
+    public void shouldProduceCorrectNumberOfColumnsChangedLong() {
         values.clear();
         values.put("op_type", "U");
 

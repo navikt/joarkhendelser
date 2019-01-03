@@ -19,5 +19,6 @@ public class InngaaendeHendelse {
 	String temaNytt;
 	String mottaksKanal;
 	String kanalReferanseId;
+	String behandlingsTema;
 	Long timestamp;
 }
