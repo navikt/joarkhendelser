@@ -46,8 +46,8 @@ public class ConsumerRecordAsJsonConverter {
 
 		Integer journalpostId = (Integer) after.get(JOURNALPOST_ID);
 
-		log.info("Received {}-event for journalpost {} on topic: {}",
-				prettyPrintOperationName(operation), journalpostId, record.topic());
+		log.info("Received {}-event for journalpost {} on topic: {} (Partition: {}, offset: {})",
+				prettyPrintOperationName(operation), journalpostId, record.topic(), record.partition(), record.offset());
 
 		JournalpostEndretEvent event;
 
