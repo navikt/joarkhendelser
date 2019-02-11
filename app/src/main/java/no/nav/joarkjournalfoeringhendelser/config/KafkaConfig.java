@@ -14,7 +14,6 @@ import org.springframework.kafka.transaction.KafkaTransactionManager;
 @EnableKafka
 @Configuration
 public class KafkaConfig {
-	public static final String KAFKA_LISTENER_CONTAINER = "kafkaListenerContainer";
 
 	@Bean("kafkaListenerContainerFactory")
 	ConcurrentKafkaListenerContainerFactory<Object, Object> kafkaListenerFactory(
