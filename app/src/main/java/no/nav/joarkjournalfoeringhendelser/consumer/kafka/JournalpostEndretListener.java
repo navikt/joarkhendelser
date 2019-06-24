@@ -32,7 +32,7 @@ public class JournalpostEndretListener {
 
 	@KafkaListener(topics = "${journalpostEndret.topic}")
 	@Metrics(value = "dok_request", percentiles = {0.5, 0.95})
-	public void onMessage(ConsumerRecord<?, ?> record) {
+	public void onMessage(final ConsumerRecord<?, ?> record) {
 		long start = System.currentTimeMillis();
 		try {
 			JournalpostEndretEvent event = converter.convertRecordToEvent(record);
@@ -57,7 +57,7 @@ public class JournalpostEndretListener {
 				}
 			}
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			log.error(String.format("Feil ved prosessering av endringsmelding: %s. Melding: %s", e.getMessage(), record), e);
 		}
 		log.debug("handling took " + (System.currentTimeMillis() - start) + " ms");
 	}
