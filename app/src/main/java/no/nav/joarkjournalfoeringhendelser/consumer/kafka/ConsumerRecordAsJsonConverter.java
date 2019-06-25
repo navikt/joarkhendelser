@@ -15,6 +15,7 @@ import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.OracleSchema.UP
 
 import lombok.extern.slf4j.Slf4j;
 import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
+import no.nav.joarkjournalfoeringhendelser.config.JoarkJournalfoeringHendelseTechnicalException;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +38,7 @@ public class ConsumerRecordAsJsonConverter {
 
 	public JournalpostEndretEvent convertRecordToEvent(ConsumerRecord<?, ?> record) {
 		LinkedHashMap values = (LinkedHashMap) record.value();
+		LinkedHashMap before = (LinkedHashMap) values.get("before");
 		LinkedHashMap after = (LinkedHashMap) values.get("after");
 
 		String operation = get((LinkedHashMap<String, String>) values, OPERATION_TYPE);
@@ -44,7 +46,12 @@ public class ConsumerRecordAsJsonConverter {
 
 		Long timeStamp = convertOracleTimeStampToLong(timestamp);
 
-		Integer journalpostId = (Integer) after.get(JOURNALPOST_ID);
+		Integer journalpostId = null;
+		if (after != null) {
+			journalpostId = (Integer) after.get(JOURNALPOST_ID);
+		} else if (before != null) {
+			journalpostId = (Integer) before.get(JOURNALPOST_ID);
+		}
 
 		log.info("Received {}-event for journalpost {} on topic: {} (Partition: {}, offset: {})",
 				prettyPrintOperationName(operation), journalpostId, record.topic(), record.partition(), record.offset());
@@ -53,7 +60,16 @@ public class ConsumerRecordAsJsonConverter {
 
 		// Only for UPDATE-operations
 		if (UPDATE_OPERATION.equalsIgnoreCase(operation)) {
-			LinkedHashMap before = (LinkedHashMap) values.get("before");
+			if (before == null) {
+				throw new JoarkJournalfoeringHendelseTechnicalException(String.format(
+						"Record missing before values for journalpost %s (topic: %s, partition: %s, offset: %s)",
+						journalpostId, record.topic(), record.partition(), record.offset()));
+			}
+			if (after == null) {
+				throw new JoarkJournalfoeringHendelseTechnicalException(String.format(
+						"Record missing after values for journalpost %s (topic: %s, partition: %s, offset: %s)",
+						journalpostId, record.topic(), record.partition(), record.offset()));
+			}
 
 			// Not relevant for us
 			if (!INNGAAENDE.equalsIgnoreCase(getVerdi(before, K_JOURNALPOST_T))) {
@@ -78,6 +94,12 @@ public class ConsumerRecordAsJsonConverter {
 						.build();
 			}
 		} else if (INSERT_OPERATION.equalsIgnoreCase(operation)) {
+			if (after == null) {
+				throw new JoarkJournalfoeringHendelseTechnicalException(String.format(
+						"Record missing after values for journalpost %s (topic: %s, partition: %s, offset: %s)",
+						journalpostId, record.topic(), record.partition(), record.offset()));
+			}
+
 			Set<String> columnsChanged = new HashSet<>(after.keySet());
 			event = JournalpostEndretEvent.builder()
 					.journalpostId(journalpostId.longValue())
@@ -94,10 +116,8 @@ public class ConsumerRecordAsJsonConverter {
 					.timestamp(timeStamp)
 					.build();
 		} else {
-			log.warn("Received unknown operation for journalpost " + journalpostId);
-			event = JournalpostEndretEvent.builder()
-					.journalpostId(journalpostId.longValue())
-					.build();
+			log.warn("Received unknown operation {} for journalpost {}", prettyPrintOperationName(operation), journalpostId);
+			event = null;
 		}
 
 		return event;

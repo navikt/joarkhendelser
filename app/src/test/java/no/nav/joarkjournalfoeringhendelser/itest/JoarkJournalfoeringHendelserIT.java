@@ -117,4 +117,20 @@ public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 		});
 	}
 
+	/**
+	 * HVIS man mottar en Delete skal det _ikke_ publiseres noen hendelse til utgaaende topic
+	 */
+	@Test
+	public void shouldNotPublishSlettetEvent() throws Exception {
+		JsonNode jsonrecord = classpathToJsonNode("__files/slettet.json");
+
+		record = new ProducerRecord<>(INN_TOPIC, 0, "key", jsonrecord);
+		sendToTopic(record);
+
+		await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
+			List<ConsumerRecord<String, JournalfoeringHendelseRecord>> records = KafkaTestUtils.getRecords(consumer, 1_000L).records(new TopicPartition(UT_TOPIC, 0));
+			assertThat(records, hasSize(0));
+		});
+	}
+
 }

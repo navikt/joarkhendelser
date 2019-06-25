@@ -4,6 +4,7 @@ import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStat
 
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
+import no.nav.joarkjournalfoeringhendelser.config.JoarkJournalfoeringHendelseTechnicalException;
 import no.nav.joarkjournalfoeringhendelser.metrics.Metrics;
 import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelse;
 import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelsePublisher;
@@ -56,6 +57,8 @@ public class JournalpostEndretListener {
 					);
 				}
 			}
+		} catch (JoarkJournalfoeringHendelseTechnicalException e) {
+			log.error(e.getMessage(), e);
 		} catch (Exception e) {
 			log.error(String.format("Feil ved prosessering av endringsmelding: %s. Melding: %s", e.getMessage(), record), e);
 		}

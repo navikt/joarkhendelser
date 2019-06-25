@@ -1,9 +1,12 @@
 package no.nav.joarkjournalfoeringhendelser.consumer.kafka;
 
+import no.nav.joarkjournalfoeringhendelser.config.JoarkJournalfoeringHendelseTechnicalException;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -16,6 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,6 +37,9 @@ public class ConsumerRecordAsJsonConverterTest {
 
     @InjectMocks
     private ConsumerRecordAsJsonConverter converter;
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Before
     public void before() {
@@ -205,5 +212,58 @@ public class ConsumerRecordAsJsonConverterTest {
         JournalpostEndretEvent event = converter.convertRecordToEvent(consumerRecordMock);
 
         assertEquals(1, event.columnsChanged.size());
+    }
+
+    @Test
+    public void shouldHandleDeleteOperation() {
+        values.clear();
+        values.put("op_type", "D");
+
+        values.put("before", createBeforeValues());
+
+        when(consumerRecordMock.value()).thenReturn(values);
+        JournalpostEndretEvent event = converter.convertRecordToEvent(consumerRecordMock);
+
+        assertNull(event);
+    }
+
+    @Test
+    public void shouldFailWhenNoBeforeValuesForUpdateOperation() {
+        values.clear();
+        values.put("op_type", "U");
+
+        values.put("after", createAfterValues());
+
+        when(consumerRecordMock.value()).thenReturn(values);
+
+        expectedException.expect(JoarkJournalfoeringHendelseTechnicalException.class);
+        expectedException.expectMessage("Record missing before values for journalpost");
+        converter.convertRecordToEvent(consumerRecordMock);
+    }
+
+    @Test
+    public void shouldFailWhenNoAfterValuesForUpdateOperation() {
+        values.clear();
+        values.put("op_type", "U");
+
+        values.put("before", createBeforeValues());
+
+        when(consumerRecordMock.value()).thenReturn(values);
+
+        expectedException.expect(JoarkJournalfoeringHendelseTechnicalException.class);
+        expectedException.expectMessage("Record missing after values for journalpost");
+        converter.convertRecordToEvent(consumerRecordMock);
+    }
+
+    @Test
+    public void shouldFailWhenNoAfterValuesForInsertOperation() {
+        values.clear();
+        values.put("op_type", "I");
+
+        when(consumerRecordMock.value()).thenReturn(values);
+
+        expectedException.expect(JoarkJournalfoeringHendelseTechnicalException.class);
+        expectedException.expectMessage("Record missing after values for journalpost");
+        converter.convertRecordToEvent(consumerRecordMock);
     }
 }
