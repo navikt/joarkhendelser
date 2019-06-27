@@ -4,4 +4,8 @@ public class JoarkJournalfoeringHendelseTechnicalException extends RuntimeExcept
     public JoarkJournalfoeringHendelseTechnicalException(String s, Throwable t) {
         super(s, t);
     }
+
+    public JoarkJournalfoeringHendelseTechnicalException(String s) {
+        super(s);
+    }
 }

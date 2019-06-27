@@ -4,6 +4,7 @@ import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStat
 
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
+import no.nav.joarkjournalfoeringhendelser.config.JoarkJournalfoeringHendelseTechnicalException;
 import no.nav.joarkjournalfoeringhendelser.metrics.Metrics;
 import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelse;
 import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelsePublisher;
@@ -32,7 +33,7 @@ public class JournalpostEndretListener {
 
 	@KafkaListener(topics = "${journalpostEndret.topic}")
 	@Metrics(value = "dok_request", percentiles = {0.5, 0.95})
-	public void onMessage(ConsumerRecord<?, ?> record) {
+	public void onMessage(final ConsumerRecord<?, ?> record) {
 		long start = System.currentTimeMillis();
 		try {
 			JournalpostEndretEvent event = converter.convertRecordToEvent(record);
@@ -56,8 +57,10 @@ public class JournalpostEndretListener {
 					);
 				}
 			}
-		} catch (Exception e) {
+		} catch (JoarkJournalfoeringHendelseTechnicalException e) {
 			log.error(e.getMessage(), e);
+		} catch (Exception e) {
+			log.error(String.format("Feil ved prosessering av endringsmelding: %s. Melding: %s", e.getMessage(), record), e);
 		}
 		log.debug("handling took " + (System.currentTimeMillis() - start) + " ms");
 	}
