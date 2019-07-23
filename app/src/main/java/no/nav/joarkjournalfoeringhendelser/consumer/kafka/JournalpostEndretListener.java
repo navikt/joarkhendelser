@@ -10,6 +10,7 @@ import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelse;
 import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelsePublisher;
 import no.nav.joarkjournalfoeringhendelser.producer.JournalpostEndretInngaaendeHendelseMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.common.errors.TopicAuthorizationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -59,6 +60,9 @@ public class JournalpostEndretListener {
 			}
 		} catch (JoarkJournalfoeringHendelseTechnicalException e) {
 			log.error(e.getMessage(), e);
+			if(e.getCause() != null && e.getCause() instanceof TopicAuthorizationException) {
+				throw (TopicAuthorizationException) e.getCause();
+			}
 		} catch (Exception e) {
 			log.error(String.format("Feil ved prosessering av endringsmelding: %s. Melding: %s", e.getMessage(), record), e);
 		}

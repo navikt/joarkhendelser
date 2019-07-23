@@ -5,6 +5,7 @@ import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord;
 import no.nav.joarkjournalfoeringhendelser.config.JoarkJournalfoeringHendelseTechnicalException;
 
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.errors.TopicAuthorizationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaProducerException;
@@ -49,14 +50,8 @@ public class InngaaendeHendelsePublisher {
 				hendelse.getJournalpostId().toString(),
 				record);
 
-		ListenableFuture<SendResult<String, JournalfoeringHendelseRecord>> send;
-		try {
-			send = kafkaTemplate.send(producerRecord);
-		} catch (Exception e) {
-		    log.warn("Logging exception of class "+e.getClass().getName());
-			log.warn("Not authenticated to publish to topic '" + topic + "'", e.getMessage());
-			throw new JoarkJournalfoeringHendelseTechnicalException("Not authenticated to publish to topic '" + topic + "'", e);
-		}
+		ListenableFuture<SendResult<String, JournalfoeringHendelseRecord>> send =
+				kafkaTemplate.send(producerRecord);
 
         try {
             SendResult<String, JournalfoeringHendelseRecord> sendResult = send.get();
@@ -66,15 +61,17 @@ public class InngaaendeHendelsePublisher {
                 log.info("Published to offset " + sendResult.getRecordMetadata().offset());
                 log.info("Published to offset " + sendResult.getRecordMetadata().topic());
             }
-        } catch (InterruptedException | ExecutionException e) {
-			log.warn("Cause: "+e.getCause().getClass().getName());
+		} catch (ExecutionException e) {
+        	if(e.getCause() != null && e.getCause() instanceof KafkaProducerException) {
+				KafkaProducerException ee = (KafkaProducerException) e.getCause();
+				if(ee.getCause() != null && ee.getCause() instanceof TopicAuthorizationException) {
+					log.warn("Not authenticated to publish to topic '" + topic + "'", ee.getCause().getMessage());
+					throw new JoarkJournalfoeringHendelseTechnicalException("Not authenticated to publish to topic '" + topic + "'", ee.getCause());
+				}
+			}
+        } catch (InterruptedException e) {
             log.warn("Failed to send message to kafka. Topic: " + topic, e.getMessage());
             throw new JoarkJournalfoeringHendelseTechnicalException("Failed to send message to kafka. Topic: " + topic, e);
-        } catch (KafkaProducerException e) {
-        	log.warn("Root cause: "+e.getRootCause().getClass().getName());
-			log.warn("Failed to send message to kafka. Topic: " + topic, e.getMessage());
-			throw new JoarkJournalfoeringHendelseTechnicalException("Failed to send message to kafka. Topic: " + topic, e);
 		}
-
     }
 }
