@@ -51,22 +51,23 @@ public class InngaaendeHendelsePublisher {
 		ListenableFuture<SendResult<String, JournalfoeringHendelseRecord>> send;
 		try {
 			send = kafkaTemplate.send(producerRecord);
-			try {
-				SendResult<String, JournalfoeringHendelseRecord> sendResult = send.get();
-
-				if(log.isDebugEnabled()) {
-					log.info("Published to partittion " + sendResult.getRecordMetadata().partition());
-					log.info("Published to offset " + sendResult.getRecordMetadata().offset());
-					log.info("Published to offset " + sendResult.getRecordMetadata().topic());
-				}
-			} catch (InterruptedException | ExecutionException e) {
-				log.warn("Failed to send message to kafka. Topic: " + topic, e.getMessage());
-				throw new JoarkJournalfoeringHendelseTechnicalException("Failed to send message to kafka. Topic: " + topic, e);
-			}
-
 		} catch (Exception e) {
+		    log.warn("Logging exception of class "+e.getClass().getName());
 			log.warn("Not authenticated to publish to topic '" + topic + "'", e.getMessage());
 			throw new JoarkJournalfoeringHendelseTechnicalException("Not authenticated to publish to topic '" + topic + "'", e);
 		}
-	}
+
+        try {
+            SendResult<String, JournalfoeringHendelseRecord> sendResult = send.get();
+
+            if(log.isDebugEnabled()) {
+                log.info("Published to partittion " + sendResult.getRecordMetadata().partition());
+                log.info("Published to offset " + sendResult.getRecordMetadata().offset());
+                log.info("Published to offset " + sendResult.getRecordMetadata().topic());
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            log.warn("Failed to send message to kafka. Topic: " + topic, e.getMessage());
+            throw new JoarkJournalfoeringHendelseTechnicalException("Failed to send message to kafka. Topic: " + topic, e);
+        }
+    }
 }
