@@ -7,6 +7,7 @@ import no.nav.joarkjournalfoeringhendelser.config.JoarkJournalfoeringHendelseTec
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaProducerException;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
@@ -66,8 +67,14 @@ public class InngaaendeHendelsePublisher {
                 log.info("Published to offset " + sendResult.getRecordMetadata().topic());
             }
         } catch (InterruptedException | ExecutionException e) {
+			log.warn("Cause: "+e.getCause().getClass().getName());
             log.warn("Failed to send message to kafka. Topic: " + topic, e.getMessage());
             throw new JoarkJournalfoeringHendelseTechnicalException("Failed to send message to kafka. Topic: " + topic, e);
-        }
+        } catch (KafkaProducerException e) {
+        	log.warn("Root cause: "+e.getRootCause().getClass().getName());
+			log.warn("Failed to send message to kafka. Topic: " + topic, e.getMessage());
+			throw new JoarkJournalfoeringHendelseTechnicalException("Failed to send message to kafka. Topic: " + topic, e);
+		}
+
     }
 }
