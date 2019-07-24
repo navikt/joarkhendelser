@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.listener.ContainerAwareErrorHandler;
 import org.springframework.kafka.listener.ContainerStoppingErrorHandler;
 import org.springframework.kafka.listener.MessageListenerContainer;
 import org.springframework.kafka.listener.SeekToCurrentErrorHandler;
@@ -21,17 +20,27 @@ import java.util.List;
 public class KafkaErrorHandler extends SeekToCurrentErrorHandler {
 
 	private static final ContainerStoppingErrorHandler STOPPING_ERROR_HANDLER = new ContainerStoppingErrorHandler();
+	private static final int TIMEOUT = 30;
 
 	@Autowired
 	KafkaErrorCounter counter;
 
-//	@Override
-//	public void handle(Exception e, List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer, MessageListenerContainer container) {
+	@Override
+	public void handle(Exception e, List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer, MessageListenerContainer container) {
+		try {
+			log.info("Venter i {} sekunder før vi prøver på nytt", TIMEOUT);
+			Thread.sleep(Duration.ofSeconds(TIMEOUT).toMillis());
+		} catch (Exception exception) {
+			log.error("Feil oppstod ved venting i " + TIMEOUT + " sekunder", exception);
+		}
+
+		super.handle(e, records, consumer, container);
+
 //		records.stream()
 //				.map(ConsumerRecord::topic)
 //				.findAny()
 //				.ifPresent(topic -> scheduleRestart(e, records, consumer, container, topic));
-//	}
+	}
 
 	@SuppressWarnings({"pmd:DoNotUseThreads", "fb-contrib:SEC_SIDE_EFFECT_CONSTRUCTOR"})
 	private void scheduleRestart(Exception e, List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer, MessageListenerContainer container, String topic) {
@@ -55,7 +64,6 @@ public class KafkaErrorHandler extends SeekToCurrentErrorHandler {
 
 		log.warn("Stopper kafka container for {}", topic);
 		if(container.isRunning()) {
-
 			STOPPING_ERROR_HANDLER.handle(e, records, consumer, container);
 		}
 	}
