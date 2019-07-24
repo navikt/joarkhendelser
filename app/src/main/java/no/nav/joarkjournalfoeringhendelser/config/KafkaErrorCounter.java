@@ -14,9 +14,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 @ApplicationScope
 public class KafkaErrorCounter {
 
-    private AtomicInteger counter = new AtomicInteger(0);
+    private static AtomicInteger counter = new AtomicInteger(0);
 
     public int incrementAndGet() {
+        log.info("{} supplying a new count value", this.toString());
         return counter.incrementAndGet();
     }
 

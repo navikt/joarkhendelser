@@ -38,6 +38,7 @@ public class KafkaErrorHandler implements ContainerAwareErrorHandler {
 			try {
 				int retryNumber = counter.incrementAndGet();
 				int sleepIntervalInSeconds = ((Double)(Math.pow(2, retryNumber))).intValue();
+				log.info("Thread sleep for {} seconds", sleepIntervalInSeconds);
 				Thread.sleep(Duration.ofSeconds(sleepIntervalInSeconds).toMillis());
 				log.warn("Forsøk {}: Starter kafka container for {}", retryNumber, topic);
 				container.start();
