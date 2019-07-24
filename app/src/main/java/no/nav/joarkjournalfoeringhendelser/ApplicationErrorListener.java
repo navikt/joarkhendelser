@@ -13,8 +13,8 @@ public class ApplicationErrorListener implements ApplicationListener<Application
             log.error(event.getException().getClass().getName() + " occured");
             log.error(event.getException().getMessage(), event.getException());
             log.error("STOPPING APPLICATION!!");
-            event.getApplicationContext().close();
-            System.exit(-1);
+            //event.getApplicationContext().close();
+            //System.exit(-1);
         }
     }
 }

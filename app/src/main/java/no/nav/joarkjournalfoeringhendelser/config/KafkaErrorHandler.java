@@ -20,8 +20,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class KafkaErrorHandler implements ContainerAwareErrorHandler {
 
 	private static final ContainerStoppingErrorHandler STOPPING_ERROR_HANDLER = new ContainerStoppingErrorHandler();
+	private static final long UNIT = Duration.ofSeconds(5).toMillis();
 
-	private AtomicInteger counter = new AtomicInteger(0);
+	private AtomicInteger counter = new AtomicInteger(1);
 
 	@Override
 	public void handle(Exception e, List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer, MessageListenerContainer container) {
@@ -35,10 +36,8 @@ public class KafkaErrorHandler implements ContainerAwareErrorHandler {
 	private void scheduleRestart(Exception e, List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer, MessageListenerContainer container, String topic) {
 		new Thread(() -> {
 			try {
-				long slow = Duration.ofHours(3).toMillis();
-				long fast = Duration.ofSeconds(20).toMillis();
-				Thread.sleep((counter.get() > 10) ? slow : fast * counter.getAndIncrement());
-				log.warn("Starter kafka container for {}", topic);
+				Thread.sleep(UNIT * ((Double)(Math.pow(2, counter.getAndIncrement()))).longValue());
+				log.warn("Forsøk {}: Starter kafka container for {}", counter.get(), topic);
 				container.start();
 				counter.set(0);
 			} catch (Exception exception) {
