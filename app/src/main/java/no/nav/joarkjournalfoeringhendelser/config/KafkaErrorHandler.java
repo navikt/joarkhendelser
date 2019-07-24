@@ -54,8 +54,8 @@ public class KafkaErrorHandler implements ContainerAwareErrorHandler {
 
 		log.warn("Stopper kafka container for {}", topic);
 		if(container.isRunning()) {
-			container.stop();
-			//STOPPING_ERROR_HANDLER.handle(e, records, consumer, container);
+			//container.stop();
+			STOPPING_ERROR_HANDLER.handle(e, records, consumer, container);
 		}
 	}
 }
