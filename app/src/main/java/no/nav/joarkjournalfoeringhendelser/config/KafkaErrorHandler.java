@@ -3,6 +3,7 @@ package no.nav.joarkjournalfoeringhendelser.config;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.listener.ContainerAwareErrorHandler;
 import org.springframework.kafka.listener.ContainerStoppingErrorHandler;
 import org.springframework.kafka.listener.MessageListenerContainer;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Martin Burheim Tingstad, Visma Consulting
@@ -20,9 +20,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class KafkaErrorHandler implements ContainerAwareErrorHandler {
 
 	private static final ContainerStoppingErrorHandler STOPPING_ERROR_HANDLER = new ContainerStoppingErrorHandler();
-	private static final long UNIT = Duration.ofSeconds(5).toMillis();
 
-	private AtomicInteger counter = new AtomicInteger(1);
+	@Autowired
+	KafkaErrorCounter counter;
 
 	@Override
 	public void handle(Exception e, List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer, MessageListenerContainer container) {
@@ -36,10 +36,12 @@ public class KafkaErrorHandler implements ContainerAwareErrorHandler {
 	private void scheduleRestart(Exception e, List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer, MessageListenerContainer container, String topic) {
 		new Thread(() -> {
 			try {
-				Thread.sleep(UNIT * ((Double)(Math.pow(2, counter.getAndIncrement()))).longValue());
-				log.warn("Forsøk {}: Starter kafka container for {}", counter.get(), topic);
+				int retryNumber = counter.incrementAndGet();
+				int sleepIntervalInSeconds = ((Double)(Math.pow(2, retryNumber))).intValue();
+				Thread.sleep(Duration.ofSeconds(sleepIntervalInSeconds).toMillis());
+				log.warn("Forsøk {}: Starter kafka container for {}", retryNumber, topic);
 				container.start();
-				counter.set(0);
+				counter.reset();
 			} catch (Exception exception) {
 				log.error("Feil oppstod ved venting og oppstart av kafka container", exception);
 			}
