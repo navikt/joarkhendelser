@@ -36,19 +36,26 @@ public class KafkaErrorHandler implements ContainerAwareErrorHandler {
 	private void scheduleRestart(Exception e, List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer, MessageListenerContainer container, String topic) {
 		new Thread(() -> {
 			try {
+				Thread.sleep(Duration.ofSeconds(5).toMillis());
 				int retryNumber = counter.incrementAndGet();
 				int sleepIntervalInSeconds = ((Double)(Math.pow(2, retryNumber))).intValue();
 				log.info("Thread sleep for {} seconds", sleepIntervalInSeconds);
 				Thread.sleep(Duration.ofSeconds(sleepIntervalInSeconds).toMillis());
 				log.warn("Forsøk {}: Starter kafka container for {}", retryNumber, topic);
 				container.start();
-				counter.reset();
+				Thread.sleep(Duration.ofSeconds(5).toMillis());
+				if(container.isRunning()) {
+					counter.reset();
+				}
 			} catch (Exception exception) {
 				log.error("Feil oppstod ved venting og oppstart av kafka container", exception);
 			}
 		}).start();
 
 		log.warn("Stopper kafka container for {}", topic);
-		STOPPING_ERROR_HANDLER.handle(e, records, consumer, container);
+		if(container.isRunning()) {
+			container.stop();
+			//STOPPING_ERROR_HANDLER.handle(e, records, consumer, container);
+		}
 	}
 }
