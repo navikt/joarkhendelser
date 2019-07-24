@@ -63,6 +63,7 @@ public class JournalpostEndretListener {
 			if(e.getCause() != null && e.getCause() instanceof TopicAuthorizationException) {
 				throw (TopicAuthorizationException) e.getCause();
 			}
+			throw e;
 		} catch (Exception e) {
 			log.error(String.format("Feil ved prosessering av endringsmelding: %s. Melding: %s", e.getMessage(), record), e);
 		}

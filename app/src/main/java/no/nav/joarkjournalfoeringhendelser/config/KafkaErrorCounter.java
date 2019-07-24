@@ -18,7 +18,11 @@ public class KafkaErrorCounter {
 
     public int incrementAndGet() {
         log.info("{} supplying a new count value", this.toString());
-        return counter.incrementAndGet();
+        log.info("{} supplying a new count value", counter.toString());
+        log.info("Before increment: {}", counter.get());
+        int newValue = counter.incrementAndGet();
+        log.info("After increment: {}", counter.get());
+        return newValue;
     }
 
     public void reset() {
