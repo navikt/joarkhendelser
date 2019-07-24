@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.listener.ContainerAwareErrorHandler;
 import org.springframework.kafka.listener.ContainerStoppingErrorHandler;
 import org.springframework.kafka.listener.MessageListenerContainer;
+import org.springframework.kafka.listener.SeekToCurrentErrorHandler;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
@@ -17,20 +18,20 @@ import java.util.List;
  */
 @Component
 @Slf4j
-public class KafkaErrorHandler implements ContainerAwareErrorHandler {
+public class KafkaErrorHandler extends SeekToCurrentErrorHandler {
 
 	private static final ContainerStoppingErrorHandler STOPPING_ERROR_HANDLER = new ContainerStoppingErrorHandler();
 
 	@Autowired
 	KafkaErrorCounter counter;
 
-	@Override
-	public void handle(Exception e, List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer, MessageListenerContainer container) {
-		records.stream()
-				.map(ConsumerRecord::topic)
-				.findAny()
-				.ifPresent(topic -> scheduleRestart(e, records, consumer, container, topic));
-	}
+//	@Override
+//	public void handle(Exception e, List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer, MessageListenerContainer container) {
+//		records.stream()
+//				.map(ConsumerRecord::topic)
+//				.findAny()
+//				.ifPresent(topic -> scheduleRestart(e, records, consumer, container, topic));
+//	}
 
 	@SuppressWarnings({"pmd:DoNotUseThreads", "fb-contrib:SEC_SIDE_EFFECT_CONSTRUCTOR"})
 	private void scheduleRestart(Exception e, List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer, MessageListenerContainer container, String topic) {
@@ -54,7 +55,7 @@ public class KafkaErrorHandler implements ContainerAwareErrorHandler {
 
 		log.warn("Stopper kafka container for {}", topic);
 		if(container.isRunning()) {
-			//container.stop();
+
 			STOPPING_ERROR_HANDLER.handle(e, records, consumer, container);
 		}
 	}
