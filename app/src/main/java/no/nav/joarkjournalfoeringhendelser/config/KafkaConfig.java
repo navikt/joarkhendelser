@@ -19,11 +19,9 @@ public class KafkaConfig {
 	ConcurrentKafkaListenerContainerFactory<Object, Object> kafkaListenerFactory(
 			ConcurrentKafkaListenerContainerFactoryConfigurer configurer,
 			ConsumerFactory<Object, Object> kafkaConsumerFactory,
-			KafkaErrorHandler errorHandler,
 			KafkaTransactionManager<?, ?> transactionManager) {
 
 		ConcurrentKafkaListenerContainerFactory<Object, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
-		factory.setErrorHandler(errorHandler);
 		factory.getContainerProperties().setTransactionManager(transactionManager);
 		configurer.configure(factory, kafkaConsumerFactory);
 		factory.setConcurrency(6);

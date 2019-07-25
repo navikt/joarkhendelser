@@ -60,6 +60,7 @@ public class JournalpostEndretListener {
 			}
 		} catch (JoarkJournalfoeringHendelseTechnicalException e) {
 			if(e.getCause() != null && e.getCause() instanceof TopicAuthorizationException) {
+				log.warn("Failed to commit offset {} on partition {}", record.offset(), record.partition());
 				throw (TopicAuthorizationException) e.getCause();
 			}
 			throw e;
