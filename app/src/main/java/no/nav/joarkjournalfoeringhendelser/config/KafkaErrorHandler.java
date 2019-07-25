@@ -25,6 +25,10 @@ public class KafkaErrorHandler extends SeekToCurrentErrorHandler {
 	@Autowired
 	KafkaErrorCounter counter;
 
+	public KafkaErrorHandler() {
+	    super(null, -1);
+    }
+
 	@Override
 	public void handle(Exception e, List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer, MessageListenerContainer container) {
 		try {
