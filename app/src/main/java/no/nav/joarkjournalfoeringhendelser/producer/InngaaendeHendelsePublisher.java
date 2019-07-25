@@ -30,7 +30,7 @@ public class InngaaendeHendelsePublisher {
 	@Value("${journalfoeringHendelse-v1.topic}")
 	private String topic;
 
-	private static final long DURATION = Duration.ofSeconds(10).toMillis();
+	private static final long DURATION = Duration.ofSeconds(20).toMillis();
 
 	public void publish(InngaaendeHendelse hendelse) throws JoarkJournalfoeringHendelseTechnicalException {
 		JournalfoeringHendelseRecord record = new JournalfoeringHendelseRecord(
