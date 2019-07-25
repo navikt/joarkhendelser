@@ -59,7 +59,6 @@ public class JournalpostEndretListener {
 				}
 			}
 		} catch (JoarkJournalfoeringHendelseTechnicalException e) {
-			log.error(e.getMessage(), e);
 			if(e.getCause() != null && e.getCause() instanceof TopicAuthorizationException) {
 				throw (TopicAuthorizationException) e.getCause();
 			}
