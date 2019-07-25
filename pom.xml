@@ -51,7 +51,7 @@
         <avro.version>1.8.2</avro.version>
 		<awaitility.version>3.0.0</awaitility.version>
         <dok-journalfoering-hendelse-v1.version>0.0.3</dok-journalfoering-hendelse-v1.version>
-
+        <start-class>no.nav.joarkjournalfoeringhendelser.Application</start-class>
 	</properties>
 
     <dependencyManagement>
