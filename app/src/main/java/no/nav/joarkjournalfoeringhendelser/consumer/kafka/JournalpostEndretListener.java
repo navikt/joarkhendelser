@@ -14,7 +14,10 @@ import org.apache.kafka.common.errors.TopicAuthorizationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+
+import java.time.Duration;
 
 /**
  * @author Martin Burheim Tingstad, Visma Consulting.
@@ -32,8 +35,11 @@ public class JournalpostEndretListener {
 	@Autowired
 	private MeterRegistry meterRegistry;
 
+	private static final long DURATION = Duration.ofSeconds(20).toMillis();
+
 	@KafkaListener(topics = "${journalpostEndret.topic}")
 	@Metrics(value = "dok_request", percentiles = {0.5, 0.95})
+	@Transactional
 	public void onMessage(final ConsumerRecord<?, ?> record) {
 		long start = System.currentTimeMillis();
 		try {
@@ -61,6 +67,10 @@ public class JournalpostEndretListener {
 		} catch (JoarkJournalfoeringHendelseTechnicalException e) {
 			if(e.getCause() != null && e.getCause() instanceof TopicAuthorizationException) {
 				log.warn("Failed to commit offset {} on partition {}", record.offset(), record.partition());
+				log.warn("Waiting 20 seconds to try again");
+				try {
+					Thread.sleep(DURATION);
+				} catch (InterruptedException e1) {}
 				throw (TopicAuthorizationException) e.getCause();
 			}
 			throw e;
