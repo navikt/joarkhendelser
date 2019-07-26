@@ -22,8 +22,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class KafkaErrorHandler implements ContainerAwareErrorHandler {
 
-	private static final ContainerStoppingErrorHandler STOPPING_ERROR_HANDLER = new ContainerStoppingErrorHandler();
-
 	public static final AtomicInteger authorizationErrorCounter = new AtomicInteger(0);
 	private final MeterRegistry meterRegistry;
 
@@ -36,25 +34,14 @@ public class KafkaErrorHandler implements ContainerAwareErrorHandler {
 		log.warn("KafkaContainer feilet med feilmelding={}", e.getMessage(), e);
 		meterRegistry.counter("dok_exception", "type", "technical");
 		if (e instanceof AuthenticationException || e instanceof AuthorizationException) {
-			log.warn("Forsøker å restarte Kafka container for {}", String.join(", ", container.getContainerProperties().getTopics()));
 			authorizationErrorCounter.incrementAndGet();
-			scheduleRestart(e, records, consumer, container);
+			try {
+				log.warn("Venter for 20 sekunder før nytt forsøk med kobling mot topic {}", String.join(", ", container.getContainerProperties().getTopics()));
+				Thread.sleep(Duration.ofSeconds(20).toMillis());
+			} catch (InterruptedException ex) {
+				log.error("Feil oppstod ved venting", ex);
+			}
 		}
 	}
 
-	@SuppressWarnings({"pmd:DoNotUseThreads", "fb-contrib:SEC_SIDE_EFFECT_CONSTRUCTOR"})
-	private void scheduleRestart(Exception e, List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer, MessageListenerContainer container) {
-		new Thread(() -> {
-			try {
-				Thread.sleep(Duration.ofSeconds(10).toMillis());
-				log.warn("Starter kafka container for {}", String.join(", ", container.getContainerProperties().getTopics()));
-				container.start();
-			} catch (Exception exception) {
-				log.error("Feil oppstod ved venting og oppstart av kafka container", exception);
-			}
-		}).start();
-
-		log.warn("Stopper kafka container for {}", String.join(", ", container.getContainerProperties().getTopics()));
-		STOPPING_ERROR_HANDLER.handle(e, records, consumer, container);
-	}
 }

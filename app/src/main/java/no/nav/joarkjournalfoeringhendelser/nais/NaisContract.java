@@ -27,6 +27,13 @@ public class NaisContract {
 		Gauge.builder("dok_app_is_ready", isReady, AtomicInteger::get).register(meterRegistry);
 	}
 
+	//TODO: Brukes bare for testing, fjern før prod
+	@GetMapping("/increment")
+	public void increment(){
+		authorizationErrorCounter.incrementAndGet();
+		log.info("Har økt errorCounter til {}", authorizationErrorCounter.get());
+	}
+
 	@GetMapping("/isAlive")
 	public ResponseEntity isAlive() {
 		if (authorizationErrorCounter.get()>5){
