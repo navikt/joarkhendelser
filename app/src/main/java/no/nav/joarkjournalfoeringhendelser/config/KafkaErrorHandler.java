@@ -32,7 +32,7 @@ public class KafkaErrorHandler implements ContainerAwareErrorHandler {
 	@Override
 	public void handle(Exception e, List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer, MessageListenerContainer container) {
 		log.warn("KafkaContainer feilet med feilmelding={}", e.getMessage(), e);
-		meterRegistry.counter("dok_exception", "type", "technical");
+		meterRegistry.counter("dok_exception", "type", "technical").increment();
 		if (e instanceof AuthenticationException || e instanceof AuthorizationException) {
 			authorizationErrorCounter.incrementAndGet();
 			try {
