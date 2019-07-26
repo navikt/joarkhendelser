@@ -30,9 +30,9 @@ public class NaisContract {
 
 	//TODO: Brukes bare for testing, fjern før prod
 	@GetMapping("/increment")
-	public void increment(){
-		authorizationErrorCounter.incrementAndGet();
+	public String increment(){
 		log.info("Har økt errorCounter til {}", authorizationErrorCounter.get());
+		return String.format("Har økt errorCounter til %s", authorizationErrorCounter.get());
 	}
 
 	@GetMapping("/isAlive")
