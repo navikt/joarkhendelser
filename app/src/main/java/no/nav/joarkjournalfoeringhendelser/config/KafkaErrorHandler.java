@@ -6,6 +6,7 @@ import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.KafkaException;
 import org.springframework.kafka.listener.ContainerAwareErrorHandler;
+import org.springframework.kafka.listener.ListenerExecutionFailedException;
 import org.springframework.kafka.listener.MessageListenerContainer;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +32,7 @@ public class KafkaErrorHandler implements ContainerAwareErrorHandler {
 	public void handle(Exception e, List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer, MessageListenerContainer container) {
 		log.warn("KafkaContainer feilet med feilmelding={}", e.getMessage(), e);
 		meterRegistry.counter("dok_exception", "type", "technical", "exception_name", e.getClass().getSimpleName()).increment();
-		if (e instanceof KafkaException) {
+		if (e instanceof KafkaException || e instanceof ListenerExecutionFailedException) {
 			authorizationErrorCounter.incrementAndGet();
 			try {
 				log.warn("Venter for 20 sekunder før nytt forsøk med kobling mot topic {}", String.join(", ", container.getContainerProperties().getTopics()));
