@@ -1,5 +1,6 @@
 package no.nav.joarkjournalfoeringhendelser.nais;
 
+import static no.nav.joarkjournalfoeringhendelser.config.KafkaConfig.N_CONCURRENCY;
 import static no.nav.joarkjournalfoeringhendelser.config.KafkaErrorHandler.authorizationErrorCounter;
 
 import io.micrometer.core.instrument.Gauge;
@@ -36,7 +37,7 @@ public class NaisContract {
 
 	@GetMapping("/isAlive")
 	public ResponseEntity isAlive() {
-		if (authorizationErrorCounter.get()>5){
+		if (authorizationErrorCounter.get()>N_CONCURRENCY*5){
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		return ResponseEntity.ok(APPLICATION_ALIVE);

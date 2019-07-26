@@ -15,6 +15,7 @@ import org.springframework.kafka.transaction.KafkaTransactionManager;
 @Configuration
 public class KafkaConfig {
 
+	public static Integer N_CONCURRENCY = 6;
 	@Bean("kafkaListenerContainerFactory")
 	ConcurrentKafkaListenerContainerFactory<Object, Object> kafkaListenerFactory(
 			ConcurrentKafkaListenerContainerFactoryConfigurer configurer,
@@ -26,7 +27,7 @@ public class KafkaConfig {
 		factory.getContainerProperties().setErrorHandler(errorHandler);
 		factory.getContainerProperties().setTransactionManager(transactionManager);
 		configurer.configure(factory, kafkaConsumerFactory);
-		factory.setConcurrency(6);
+		factory.setConcurrency(N_CONCURRENCY);
 		return factory;
 	}
 
