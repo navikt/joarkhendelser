@@ -60,7 +60,7 @@ public class JournalpostEndretListener {
 				}
 			}
 		} catch (JoarkJournalfoeringHendelseTechnicalException e) {
-			log.error(e.getMessage(), e);
+			throw e;
 		} catch (Exception e) {
 			log.error(String.format("Feil ved prosessering av endringsmelding: %s. Melding: %s", e.getMessage(), record), e);
 		}

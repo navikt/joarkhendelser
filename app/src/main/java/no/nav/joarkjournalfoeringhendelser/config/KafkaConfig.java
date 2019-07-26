@@ -28,6 +28,7 @@ public class KafkaConfig {
 		factory.getContainerProperties().setTransactionManager(transactionManager);
 		configurer.configure(factory, kafkaConsumerFactory);
 		factory.setConcurrency(N_CONCURRENCY);
+		factory.setAfterRollbackProcessor(new InfiniteRollbackProcessor());
 		return factory;
 	}
 
