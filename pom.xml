@@ -171,6 +171,7 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                    <mainClass>no.nav.joarkjournalfoeringhendelser.Application</mainClass>
                 </configuration>
                 <executions>
                     <execution>
