@@ -1,5 +1,6 @@
 package no.nav.joarkjournalfoeringhendelser.consumer.kafka;
 
+import static no.nav.joarkjournalfoeringhendelser.config.KafkaErrorHandler.authorizationErrorCounter;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStatus.INNGAAENDE;
 
 import io.micrometer.core.instrument.MeterRegistry;
@@ -43,6 +44,7 @@ public class JournalpostEndretListener {
 				if (hendelse != null) {
 					publisher.publish(hendelse);
 					meterRegistry.counter("Inngaaendehendelser", "type", hendelse.getHendelsesType()).increment();
+					authorizationErrorCounter.set(0);
 					log.info("Publisert hendelse " + hendelse.getHendelsesType() +
 							" for journalpost " + hendelse.getJournalpostId() +
 							(
