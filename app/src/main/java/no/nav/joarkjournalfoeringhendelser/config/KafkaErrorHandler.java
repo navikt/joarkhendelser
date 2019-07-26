@@ -8,6 +8,7 @@ import org.springframework.kafka.listener.ContainerAwareErrorHandler;
 import org.springframework.kafka.listener.MessageListenerContainer;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,8 @@ import java.util.List;
 @Component
 @Slf4j
 public class KafkaErrorHandler implements ContainerAwareErrorHandler {
+
+    private final static int DURATION = 20;
 
     @Override
     public void handle(Exception e, List<ConsumerRecord<?, ?>> list,
@@ -29,9 +32,9 @@ public class KafkaErrorHandler implements ContainerAwareErrorHandler {
             for (String s : topicNames) {
                 log.warn("Could not authorize to topic {}", s);
             }
-            log.warn("Waiting 20 seconds to try again");
+            log.warn("Thread {} sleeping {} seconds to try again", Thread.currentThread().getId(), DURATION);
             try {
-                Thread.sleep(20000);
+                Thread.sleep(Duration.ofSeconds(DURATION).toMillis());
             } catch (InterruptedException ie) {
             }
         }
