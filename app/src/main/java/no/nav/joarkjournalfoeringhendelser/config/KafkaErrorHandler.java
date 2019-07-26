@@ -4,11 +4,8 @@ import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.common.errors.AuthenticationException;
-import org.apache.kafka.common.errors.AuthorizationException;
-import org.springframework.kafka.KafkaException;
+import org.apache.kafka.common.KafkaException;
 import org.springframework.kafka.listener.ContainerAwareErrorHandler;
-import org.springframework.kafka.listener.ContainerStoppingErrorHandler;
 import org.springframework.kafka.listener.MessageListenerContainer;
 import org.springframework.stereotype.Component;
 
