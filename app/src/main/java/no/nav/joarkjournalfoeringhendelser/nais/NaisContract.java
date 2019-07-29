@@ -6,14 +6,24 @@ import static no.nav.joarkjournalfoeringhendelser.config.KafkaErrorHandler.autho
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.KafkaAdminClient;
+import org.apache.kafka.clients.admin.ListTopicsOptions;
+import org.apache.kafka.clients.admin.TopicListing;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -23,8 +33,10 @@ public class NaisContract {
 	public static final String APPLICATION_READY = "Application is ready for traffic!";
 	private static final String APPLICATION_NOT_READY = "Application is not ready for traffic :-(";
 	private static AtomicInteger isReady = new AtomicInteger(1);
+	private final AdminClient kafkaAdminClient;
 
-	public NaisContract(MeterRegistry meterRegistry) {
+	public NaisContract(MeterRegistry meterRegistry, AdminClient kafkaAdminClient) {
+		this.kafkaAdminClient = kafkaAdminClient;
 		Gauge.builder("dok_app_is_ready", isReady, AtomicInteger::get).register(meterRegistry);
 	}
 
@@ -35,9 +47,20 @@ public class NaisContract {
 		return String.format("Har økt errorCounter til %s", authorizationErrorCounter.get());
 	}
 
+	private List<String> findTopicNames(){
+		Properties properties = System.getProperties();
+		return properties.keySet().stream().filter(key->((String)key).contains("topic")).map(key->System.getProperty((String)key)).collect(Collectors.toList());
+	}
+
+	private boolean topicsAreHealthy() throws ExecutionException, InterruptedException {
+		List<String> topicListingNames = kafkaAdminClient.listTopics(new ListTopicsOptions().timeoutMs(10000)).listings().get().stream().map(TopicListing::name).collect(Collectors.toList());
+		List<String> topicNames = findTopicNames();
+		return topicListingNames.containsAll(topicNames);
+	}
+
 	@GetMapping("/isAlive")
-	public ResponseEntity isAlive() {
-		if (authorizationErrorCounter.get()>N_CONCURRENCY*5){
+	public ResponseEntity isAlive() throws ExecutionException, InterruptedException {
+		if (!topicsAreHealthy()){
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		return ResponseEntity.ok(APPLICATION_ALIVE);

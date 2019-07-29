@@ -10,6 +10,7 @@ healthcheck:
     path: /isAlive
     initialDelay: 30
     failureThreshold: 10
+    timeout: 10
   readiness:
     path: /isReady
     initialDelay: 30
