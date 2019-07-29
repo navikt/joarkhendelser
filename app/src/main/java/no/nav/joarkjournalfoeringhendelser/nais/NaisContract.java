@@ -49,7 +49,7 @@ public class NaisContract {
 
 	private List<String> findTopicNames(){
 		Properties properties = System.getProperties();
-		return properties.keySet().stream().filter(key->((String)key).contains("topic")).map(key->System.getProperty((String)key)).collect(Collectors.toList());
+		return properties.keySet().stream().map(key->System.getProperty((String)key)).filter(key->key.contains("topic")||key.contains("TOPIC")).collect(Collectors.toList());
 	}
 
 	private boolean topicsAreHealthy() throws ExecutionException, InterruptedException {
