@@ -56,25 +56,25 @@ public class InngaaendeHendelsePublisher {
 		ListenableFuture<SendResult<String, JournalfoeringHendelseRecord>> send =
 				kafkaTemplate.send(producerRecord);
 
-		try {
-			SendResult<String, JournalfoeringHendelseRecord> sendResult = send.get();
+        try {
+            SendResult<String, JournalfoeringHendelseRecord> sendResult = send.get();
 
-			if(log.isDebugEnabled()) {
-				log.info("Published to partittion " + sendResult.getRecordMetadata().partition());
-				log.info("Published to offset " + sendResult.getRecordMetadata().offset());
-				log.info("Published to offset " + sendResult.getRecordMetadata().topic());
-			}
+            if(log.isDebugEnabled()) {
+                log.info("Published to partittion " + sendResult.getRecordMetadata().partition());
+                log.info("Published to offset " + sendResult.getRecordMetadata().offset());
+                log.info("Published to offset " + sendResult.getRecordMetadata().topic());
+            }
 		} catch (ExecutionException e) {
-			if(e.getCause() != null && e.getCause() instanceof KafkaProducerException) {
+        	if(e.getCause() != null && e.getCause() instanceof KafkaProducerException) {
 				KafkaProducerException ee = (KafkaProducerException) e.getCause();
 				if(ee.getCause() != null && ee.getCause() instanceof TopicAuthorizationException) {
 					log.warn("Not authenticated to publish to topic '" + topic + "'", ee.getCause().getMessage());
 					throw new JoarkJournalfoeringHendelseTechnicalException("Not authenticated to publish to topic '" + topic + "'", ee.getCause());
 				}
 			}
-		} catch (InterruptedException e) {
-			log.warn("Failed to send message to kafka. Topic: " + topic, e.getMessage());
-			throw new JoarkJournalfoeringHendelseTechnicalException("Failed to send message to kafka. Topic: " + topic, e);
+        } catch (InterruptedException e) {
+            log.warn("Failed to send message to kafka. Topic: " + topic, e.getMessage());
+            throw new JoarkJournalfoeringHendelseTechnicalException("Failed to send message to kafka. Topic: " + topic, e);
 		}
-	}
+    }
 }
