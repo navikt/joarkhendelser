@@ -23,7 +23,7 @@ public class KafkaConfig {
 			KafkaTransactionManager<?, ?> transactionManager) {
 
 		ConcurrentKafkaListenerContainerFactory<Object, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
-		factory.setConcurrency(1);
+		factory.setConcurrency(6);
 		factory.setAfterRollbackProcessor(new InfiniteRollbackProcessor());
 		factory.setErrorHandler(errorHandler);
 		factory.getContainerProperties().setTransactionManager(transactionManager);

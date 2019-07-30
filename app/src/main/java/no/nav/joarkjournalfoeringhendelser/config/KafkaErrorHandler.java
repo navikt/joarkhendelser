@@ -1,16 +1,14 @@
 package no.nav.joarkjournalfoeringhendelser.config;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.common.errors.TopicAuthorizationException;
 import org.springframework.kafka.listener.ContainerAwareErrorHandler;
 import org.springframework.kafka.listener.MessageListenerContainer;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,11 +19,19 @@ import java.util.List;
 public class KafkaErrorHandler implements ContainerAwareErrorHandler {
 
     private final static int DURATION = 20;
+	private final MeterRegistry meterRegistry;
+
+	public KafkaErrorHandler(MeterRegistry meterRegistry) {
+		this.meterRegistry = meterRegistry;
+	}
 
     @Override
     public void handle(Exception e, List<ConsumerRecord<?, ?>> list,
                        Consumer<?, ?> consumer,
                        MessageListenerContainer messageListenerContainer) {
+
+		meterRegistry.counter("dok_exception", "type", "technical", "exception_name", e.getClass().getSimpleName()).increment();
+
         if(list.size() == 1) {
             ConsumerRecord<?, ?> record = list.get(0);
             log.warn("Failed to commit offset {} on partition {}", record.offset(), record.partition());
