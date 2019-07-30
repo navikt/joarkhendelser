@@ -24,7 +24,7 @@ public class DefaultKafkaListenerErrorHandler implements KafkaListenerErrorHandl
 	public Object handleError(Message<?> message, ListenerExecutionFailedException e) {
 		log.warn("Kafka Listener feilet med feilmelding={}", e.getCause().getMessage(), e.getCause());
 		meterRegistry.counter("dok_exception", "type", "technical", "exception_name", e.getCause().getClass().getSimpleName()).increment();
-		return null;
+		throw e; //Må throwe videre for at retryTemplate skal kicke inn
 	}
 
 }
