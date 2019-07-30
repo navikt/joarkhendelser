@@ -68,12 +68,10 @@ public class InngaaendeHendelsePublisher {
         	if(e.getCause() != null && e.getCause() instanceof KafkaProducerException) {
 				KafkaProducerException ee = (KafkaProducerException) e.getCause();
 				if(ee.getCause() != null && ee.getCause() instanceof TopicAuthorizationException) {
-					log.warn("Not authenticated to publish to topic '" + topic + "'", ee.getCause().getMessage());
 					throw new JoarkJournalfoeringHendelseTechnicalException("Not authenticated to publish to topic '" + topic + "'", ee.getCause());
 				}
 			}
         } catch (InterruptedException e) {
-            log.warn("Failed to send message to kafka. Topic: " + topic, e.getMessage());
             throw new JoarkJournalfoeringHendelseTechnicalException("Failed to send message to kafka. Topic: " + topic, e);
 		}
     }

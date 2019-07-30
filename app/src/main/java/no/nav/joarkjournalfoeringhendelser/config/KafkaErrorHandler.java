@@ -7,6 +7,7 @@ import org.apache.kafka.common.errors.TopicAuthorizationException;
 import org.springframework.kafka.listener.ContainerAwareErrorHandler;
 import org.springframework.kafka.listener.MessageListenerContainer;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -25,18 +26,15 @@ public class KafkaErrorHandler implements ContainerAwareErrorHandler {
     public void handle(Exception e, List<ConsumerRecord<?, ?>> list,
                        Consumer<?, ?> consumer,
                        MessageListenerContainer messageListenerContainer) {
-        if(e instanceof TopicAuthorizationException) {
-            TopicAuthorizationException tae = (TopicAuthorizationException) e;
-            ArrayList<String> topicNames = new ArrayList<>(tae.unauthorizedTopics());
+        if(list.size() == 1) {
+            ConsumerRecord<?, ?> record = list.get(0);
+            log.warn("Failed to commit offset {} on partition {}", record.offset(), record.partition());
+        }
 
-            for (String s : topicNames) {
-                log.warn("Could not authorize to topic {}", s);
-            }
-            log.warn("Thread {} sleeping {} seconds to try again", Thread.currentThread().getId(), DURATION);
-            try {
-                Thread.sleep(Duration.ofSeconds(DURATION).toMillis());
-            } catch (InterruptedException ie) {
-            }
+        log.warn("Thread {} sleeping {} seconds to try again", Thread.currentThread().getId(), DURATION);
+        try {
+            Thread.sleep(Duration.ofSeconds(DURATION).toMillis());
+        } catch (InterruptedException ie) {
         }
     }
 }

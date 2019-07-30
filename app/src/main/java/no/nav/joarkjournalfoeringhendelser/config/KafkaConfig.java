@@ -24,13 +24,10 @@ public class KafkaConfig {
 
 		ConcurrentKafkaListenerContainerFactory<Object, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
 		factory.setConcurrency(1);
-//		factory.setAfterRollbackProcessor(new InfiniteRollbackProcessor());
+		factory.setAfterRollbackProcessor(new InfiniteRollbackProcessor());
 		factory.setErrorHandler(errorHandler);
 		factory.getContainerProperties().setTransactionManager(transactionManager);
 
-		//		kafkaConsumerFactory.getConfigurationProperties().put(RECONNECT_BACKOFF_MAX_MS_CONFIG, "4000");
-//		kafkaConsumerFactory.getConfigurationProperties().put(RETRY_BACKOFF_MS_CONFIG, "500");
-//		kafkaConsumerFactory.getConfigurationProperties().put(RECONNECT_BACKOFF_MS_CONFIG, "500");
 		configurer.configure(factory, kafkaConsumerFactory);
 		return factory;
 	}
