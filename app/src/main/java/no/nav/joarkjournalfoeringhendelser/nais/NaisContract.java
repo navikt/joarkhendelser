@@ -40,7 +40,7 @@ public class NaisContract {
 		List<String> topicNames = properties.keySet().stream().map(key -> System.getProperty((String) key)).filter(key -> key.contains("topic") || key.contains("TOPIC")).collect(Collectors.toList());
 		if (topicNames.isEmpty()) {
 			Map<String, String> env = System.getenv();
-			topicNames = env.keySet().stream().filter(key -> key.contains("topic") || key.contains("TOPIC")).collect(Collectors.toList());
+			topicNames = env.entrySet().stream().map(Map.Entry::getValue).filter(key -> key.contains("topic") || key.contains("TOPIC")).collect(Collectors.toList());
 		}
 		return topicNames;
 	}
