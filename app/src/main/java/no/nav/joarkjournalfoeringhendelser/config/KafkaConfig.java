@@ -1,7 +1,6 @@
 package no.nav.joarkjournalfoeringhendelser.config;
 
 import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.KafkaAdminClient;
 import org.springframework.boot.autoconfigure.kafka.ConcurrentKafkaListenerContainerFactoryConfigurer;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
@@ -9,12 +8,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
-import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.transaction.KafkaTransactionManager;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.policy.AlwaysRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
-import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 
 /**
  * @author Martin Burheim Tingstad, Visma Consulting
@@ -23,7 +20,7 @@ import org.springframework.transaction.support.AbstractPlatformTransactionManage
 @Configuration
 public class KafkaConfig {
 
-	public static Integer N_CONCURRENCY = 1;
+	public static Integer N_CONCURRENCY = 6;
 
 	@Bean("kafkaListenerContainerFactory")
 	ConcurrentKafkaListenerContainerFactory<Object, Object> kafkaListenerFactory(

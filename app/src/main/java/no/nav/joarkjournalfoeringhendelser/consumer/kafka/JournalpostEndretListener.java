@@ -1,6 +1,5 @@
 package no.nav.joarkjournalfoeringhendelser.consumer.kafka;
 
-import static no.nav.joarkjournalfoeringhendelser.config.KafkaErrorHandler.authorizationErrorCounter;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStatus.INNGAAENDE;
 
 import io.micrometer.core.instrument.MeterRegistry;
@@ -11,7 +10,6 @@ import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelse;
 import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelsePublisher;
 import no.nav.joarkjournalfoeringhendelser.producer.JournalpostEndretInngaaendeHendelseMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.common.errors.TopicAuthorizationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -50,8 +48,7 @@ public class JournalpostEndretListener {
 				InngaaendeHendelse hendelse = JournalpostEndretInngaaendeHendelseMapper.map(event);
 				if (hendelse != null) {
 					publisher.publish(hendelse);
-					meterRegistry.counter("Inngaaendehendelser", "type", hendelse.getHendelsesType()).increment();
-					authorizationErrorCounter.set(0);
+					meterRegistry.counter("Inngaaendehendelser", "type", hendelse.getHendelsesType(), "tema", hendelse.getTemaNytt() == null ? "UKJENT" : hendelse.getTemaNytt()).increment();
 					log.info("Publisert hendelse " + hendelse.getHendelsesType() +
 							" for journalpost " + hendelse.getJournalpostId() +
 							(

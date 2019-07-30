@@ -1,24 +1,18 @@
 package no.nav.joarkjournalfoeringhendelser.nais;
 
-import static no.nav.joarkjournalfoeringhendelser.config.KafkaConfig.N_CONCURRENCY;
-import static no.nav.joarkjournalfoeringhendelser.config.KafkaErrorHandler.authorizationErrorCounter;
-
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.KafkaAdminClient;
 import org.apache.kafka.clients.admin.ListTopicsOptions;
 import org.apache.kafka.clients.admin.TopicListing;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
@@ -40,13 +34,6 @@ public class NaisContract {
 		Gauge.builder("dok_app_is_ready", isReady, AtomicInteger::get).register(meterRegistry);
 	}
 
-	//TODO: Brukes bare for testing, fjern før prod
-	@GetMapping("/increment")
-	public String increment(){
-		log.info("Har økt errorCounter til {}", authorizationErrorCounter.get());
-		return String.format("Har økt errorCounter til %s", authorizationErrorCounter.get());
-	}
-
 	private List<String> findTopicNames(){
 		Properties properties = System.getProperties();
 		return properties.keySet().stream().map(key->System.getProperty((String)key)).filter(key->key.contains("topic")||key.contains("TOPIC")).collect(Collectors.toList());
@@ -55,6 +42,7 @@ public class NaisContract {
 	private boolean topicsAreHealthy() throws ExecutionException, InterruptedException {
 		List<String> topicListingNames = kafkaAdminClient.listTopics(new ListTopicsOptions().timeoutMs(10000)).listings().get().stream().map(TopicListing::name).collect(Collectors.toList());
 		List<String> topicNames = findTopicNames();
+		log.info(String.format("%s, %s", String.join(",", topicListingNames), String.join(",", topicNames)));
 		return topicListingNames.containsAll(topicNames);
 	}
 
