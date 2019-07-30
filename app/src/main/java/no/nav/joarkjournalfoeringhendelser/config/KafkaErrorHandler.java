@@ -1,7 +1,7 @@
 package no.nav.joarkjournalfoeringhendelser.config;
 
-import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
+import no.nav.joarkjournalfoeringhendelser.metrics.MetricUtils;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.KafkaException;
@@ -18,16 +18,16 @@ import java.util.List;
 @Component
 @Slf4j
 public class KafkaErrorHandler implements ContainerAwareErrorHandler {
-	private final MeterRegistry meterRegistry;
+	private final MetricUtils metricUtils;
 
-	public KafkaErrorHandler(MeterRegistry meterRegistry) {
-		this.meterRegistry = meterRegistry;
+	public KafkaErrorHandler(MetricUtils metricUtils) {
+		this.metricUtils = metricUtils;
 	}
 
 	@Override
 	public void handle(Exception e, List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer, MessageListenerContainer container) {
 		log.warn("KafkaContainer feilet med feilmelding={}", e.getMessage(), e);
-		meterRegistry.counter("dok_exception", "type", "technical", "exception_name", e.getClass().getSimpleName()).increment();
+		metricUtils.incrementExceptionCounter(e.getClass().getSimpleName(), "technical");
 		if (e instanceof KafkaException) {
 			try {
 				log.warn("Venter for 20 sekunder før nytt forsøk med kobling mot topic {}", String.join(", ", container.getContainerProperties().getTopics()));
