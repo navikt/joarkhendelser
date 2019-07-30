@@ -37,10 +37,11 @@ public class NaisContract {
 
 	private List<String> findTopicNames(){
 		Properties properties = System.getProperties();
-		List<String> topicNames = properties.keySet().stream().map(key -> System.getProperty((String) key)).filter(key -> key.contains("topic") || key.contains("TOPIC")).collect(Collectors.toList());
+		List<String> topicNames = properties.keySet().stream().map(key -> (String) key).filter(key -> key.contains("topic") || key.contains("TOPIC")).map(System::getProperty).collect(Collectors.toList());
 		if (topicNames.isEmpty()) {
+			log.info("Henter fra env");
 			Map<String, String> env = System.getenv();
-			topicNames = env.entrySet().stream().map(Map.Entry::getValue).filter(key -> key.contains("topic") || key.contains("TOPIC")).collect(Collectors.toList());
+			topicNames = env.keySet().stream().filter(key -> key.contains("topic") || key.contains("TOPIC")).map(env::get).collect(Collectors.toList());
 		}
 		return topicNames;
 	}
