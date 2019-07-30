@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -36,13 +37,18 @@ public class NaisContract {
 
 	private List<String> findTopicNames(){
 		Properties properties = System.getProperties();
-		return properties.keySet().stream().map(key->System.getProperty((String)key)).filter(key->key.contains("topic")||key.contains("TOPIC")).collect(Collectors.toList());
+		List<String> topicNames = properties.keySet().stream().map(key -> System.getProperty((String) key)).filter(key -> key.contains("topic") || key.contains("TOPIC")).collect(Collectors.toList());
+		if (topicNames.isEmpty()) {
+			Map<String, String> env = System.getenv();
+			topicNames = env.keySet().stream().filter(key -> key.contains("topic") || key.contains("TOPIC")).collect(Collectors.toList());
+		}
+		return topicNames;
 	}
 
 	private boolean topicsAreHealthy() throws ExecutionException, InterruptedException {
 		List<String> topicListingNames = kafkaAdminClient.listTopics(new ListTopicsOptions().timeoutMs(10000)).listings().get().stream().map(TopicListing::name).collect(Collectors.toList());
 		List<String> topicNames = findTopicNames();
-		log.info(String.format("%s, %s", String.join(",", topicListingNames), String.join(",", topicNames)));
+		log.info(String.format("%s -- %s", String.join(",", topicListingNames), String.join(",", topicNames)));
 		return topicListingNames.containsAll(topicNames);
 	}
 
