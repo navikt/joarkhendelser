@@ -29,8 +29,8 @@ public class KafkaErrorHandler implements ContainerAwareErrorHandler {
     public void handle(Exception e, List<ConsumerRecord<?, ?>> list,
                        Consumer<?, ?> consumer,
                        MessageListenerContainer messageListenerContainer) {
-
-		meterRegistry.counter("dok_exception", "type", "technical", "exception_name", e.getClass().getSimpleName()).increment();
+		log.warn("KafkaContainer feilet med feilmelding={}", e.getCause().getMessage(), e.getCause());
+		meterRegistry.counter("dok_exception", "type", "technical", "exception_name", e.getCause().getClass().getSimpleName()).increment();
 
         if(list.size() == 1) {
             ConsumerRecord<?, ?> record = list.get(0);

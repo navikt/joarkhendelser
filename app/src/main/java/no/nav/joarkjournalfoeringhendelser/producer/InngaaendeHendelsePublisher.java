@@ -2,8 +2,8 @@ package no.nav.joarkjournalfoeringhendelser.producer;
 
 import lombok.extern.slf4j.Slf4j;
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord;
-import no.nav.joarkjournalfoeringhendelser.config.AuthenticationFailedExecption;
-import no.nav.joarkjournalfoeringhendelser.config.JoarkJournalfoeringHendelseTechnicalException;
+import no.nav.joarkjournalfoeringhendelser.exception.AuthenticationFailedExecption;
+import no.nav.joarkjournalfoeringhendelser.exception.JoarkJournalfoeringHendelseTechnicalException;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.errors.TopicAuthorizationException;
 import org.springframework.beans.factory.annotation.Autowired;
