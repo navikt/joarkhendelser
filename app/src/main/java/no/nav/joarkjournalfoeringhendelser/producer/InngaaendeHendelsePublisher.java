@@ -2,8 +2,8 @@ package no.nav.joarkjournalfoeringhendelser.producer;
 
 import lombok.extern.slf4j.Slf4j;
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord;
+import no.nav.joarkjournalfoeringhendelser.config.AuthenticationFailedExecption;
 import no.nav.joarkjournalfoeringhendelser.config.JoarkJournalfoeringHendelseTechnicalException;
-
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.errors.TopicAuthorizationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +68,7 @@ public class InngaaendeHendelsePublisher {
         	if(e.getCause() != null && e.getCause() instanceof KafkaProducerException) {
 				KafkaProducerException ee = (KafkaProducerException) e.getCause();
 				if(ee.getCause() != null && ee.getCause() instanceof TopicAuthorizationException) {
-					throw new JoarkJournalfoeringHendelseTechnicalException("Not authenticated to publish to topic '" + topic + "'", ee.getCause());
+					throw new AuthenticationFailedExecption("Not authenticated to publish to topic '" + topic + "'", ee.getCause());
 				}
 			}
         } catch (InterruptedException e) {
