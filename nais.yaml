@@ -3,7 +3,7 @@ team: teamdokumenthandtering
 replicas:
   min: 1
   max: 2
-  cpuThresholdPercentage: 50
+  cpuThresholdPercentage: 80
 port: 8080
 healthcheck:
   liveness:
@@ -20,7 +20,7 @@ prometheus:
   path: /actuator/prometheus
 resources:
   limits:
-    cpu: 1000m
+    cpu: 1500m
     memory: 1024Mi
 fasitResources:
   used:

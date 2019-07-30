@@ -39,7 +39,6 @@ public class NaisContract {
 		Properties properties = System.getProperties();
 		List<String> topicNames = properties.keySet().stream().map(key -> (String) key).filter(key -> key.contains("topic") || key.contains("TOPIC")).map(System::getProperty).collect(Collectors.toList());
 		if (topicNames.isEmpty()) {
-			log.info("Henter fra env");
 			Map<String, String> env = System.getenv();
 			topicNames = env.keySet().stream().filter(key -> key.contains("topic") || key.contains("TOPIC")).map(env::get).collect(Collectors.toList());
 		}
@@ -49,21 +48,16 @@ public class NaisContract {
 	private boolean topicsAreHealthy() throws ExecutionException, InterruptedException {
 		List<String> topicListingNames = kafkaAdminClient.listTopics(new ListTopicsOptions().timeoutMs(10000)).listings().get().stream().map(TopicListing::name).collect(Collectors.toList());
 		List<String> topicNames = findTopicNames();
-		log.info(String.format("%s -- %s", String.join(",", topicListingNames), String.join(",", topicNames)));
+//		log.info(String.format("%s -- %s", String.join(",", topicListingNames), String.join(",", topicNames)));
 		return topicListingNames.containsAll(topicNames);
-	}
-
-
-	@GetMapping("/isAliveTest")
-	public ResponseEntity test() throws ExecutionException, InterruptedException {
-		if (!topicsAreHealthy()) {
-			log.info("isAlive skulle feile nå!Q!");
-		}
-		return ResponseEntity.ok(APPLICATION_ALIVE);
 	}
 
 	@GetMapping("/isAlive")
 	public ResponseEntity isAlive() throws ExecutionException, InterruptedException {
+		if (!topicsAreHealthy()) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+
 		return ResponseEntity.ok(APPLICATION_ALIVE);
 	}
 
