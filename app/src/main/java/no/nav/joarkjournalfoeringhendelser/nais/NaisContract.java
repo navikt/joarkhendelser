@@ -53,12 +53,17 @@ public class NaisContract {
 		return topicListingNames.containsAll(topicNames);
 	}
 
+
+	@GetMapping("/isAliveTest")
+	public ResponseEntity test() throws ExecutionException, InterruptedException {
+		if (!topicsAreHealthy()) {
+			log.info("isAlive skulle feile nå!Q!");
+		}
+		return ResponseEntity.ok(APPLICATION_ALIVE);
+	}
+
 	@GetMapping("/isAlive")
 	public ResponseEntity isAlive() throws ExecutionException, InterruptedException {
-		if (!topicsAreHealthy()){
-			log.info("isAlive skulle feile nå!Q!");
-			return ResponseEntity.ok(APPLICATION_ALIVE);
-		}
 		return ResponseEntity.ok(APPLICATION_ALIVE);
 	}
 
