@@ -54,10 +54,10 @@ public class NaisContract {
 
 	@GetMapping("/isAlive")
 	public ResponseEntity isAlive() throws ExecutionException, InterruptedException {
-//		if (!topicsAreHealthy()) {
-//			log.warn("isAlive feiler fordi");
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//		}
+		if (!topicsAreHealthy()) {
+			log.warn("isAlive feiler fordi");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 
 		return ResponseEntity.ok(APPLICATION_ALIVE);
 	}
