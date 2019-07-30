@@ -4,7 +4,6 @@ import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStat
 
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
-import no.nav.joarkjournalfoeringhendelser.config.JoarkJournalfoeringHendelseTechnicalException;
 import no.nav.joarkjournalfoeringhendelser.metrics.Metrics;
 import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelse;
 import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelsePublisher;
@@ -36,38 +35,33 @@ public class JournalpostEndretListener {
 
 	private static final long DURATION = Duration.ofSeconds(20).toMillis();
 
-	@KafkaListener(topics = "${journalpostEndret.topic}")
+	@KafkaListener(topics = "${journalpostEndret.topic}", errorHandler = "DefaultKafkaListenerErrorHandler")
 	@Metrics(value = "dok_request", percentiles = {0.5, 0.95})
 	@Transactional
 	public void onMessage(final ConsumerRecord<?, ?> record) {
 		long start = System.currentTimeMillis();
-		try {
-			JournalpostEndretEvent event = converter.convertRecordToEvent(record);
+		JournalpostEndretEvent event = converter.convertRecordToEvent(record);
 
-			if (event != null && INNGAAENDE.equalsIgnoreCase(event.getJournalpostType())) {
-				InngaaendeHendelse hendelse = JournalpostEndretInngaaendeHendelseMapper.map(event);
-				if (hendelse != null) {
-					publisher.publish(hendelse);
-					meterRegistry.counter("Inngaaendehendelser", "type", hendelse.getHendelsesType(), "tema", hendelse.getTemaNytt() == null ? "UKJENT" : hendelse.getTemaNytt()).increment();
-					log.info("Publisert hendelse " + hendelse.getHendelsesType() +
-							" for journalpost " + hendelse.getJournalpostId() +
-							(
+		if (event != null && INNGAAENDE.equalsIgnoreCase(event.getJournalpostType())) {
+			InngaaendeHendelse hendelse = JournalpostEndretInngaaendeHendelseMapper.map(event);
+			if (hendelse != null) {
+				publisher.publish(hendelse);
+				meterRegistry.counter("Inngaaendehendelser", "type", hendelse.getHendelsesType(), "tema", hendelse.getTemaNytt() == null ? "UKJENT" : hendelse.getTemaNytt()).increment();
+				log.info("Publisert hendelse " + hendelse.getHendelsesType() +
+						" for journalpost " + hendelse.getJournalpostId() +
+						(
 								StringUtils.isEmpty(hendelse.getKanalReferanseId()) ? "" :
-								(", kanalReferanseId " + hendelse.getKanalReferanseId())
-							) +
-							(
+										(", kanalReferanseId " + hendelse.getKanalReferanseId())
+						) +
+						(
 								StringUtils.isEmpty(hendelse.getMottaksKanal()) ? "" :
-								(", mottaksKanal " + hendelse.getMottaksKanal())
-							) +
-							"."
-					);
-				}
+										(", mottaksKanal " + hendelse.getMottaksKanal())
+						) +
+						"."
+				);
 			}
-		} catch (JoarkJournalfoeringHendelseTechnicalException e) {
-			throw e;
-		} catch (Exception e) {
-			log.error(String.format("Feil ved prosessering av endringsmelding: %s. Melding: %s", e.getMessage(), record), e);
 		}
+
 		log.debug("handling took " + (System.currentTimeMillis() - start) + " ms");
 	}
 

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Martin Burheim Tingstad, Visma Consulting
@@ -19,8 +18,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component
 @Slf4j
 public class KafkaErrorHandler implements ContainerAwareErrorHandler {
-
-	public static final AtomicInteger authorizationErrorCounter = new AtomicInteger(0);
 	private final MeterRegistry meterRegistry;
 
 	public KafkaErrorHandler(MeterRegistry meterRegistry) {

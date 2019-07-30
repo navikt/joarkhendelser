@@ -38,6 +38,7 @@ public class KafkaConfig {
 		configurer.configure(factory, kafkaConsumerFactory);
 		factory.setConcurrency(N_CONCURRENCY);
 		factory.setRetryTemplate(retryTemplate);
+		factory.setAfterRollbackProcessor(new InfiniteRollbackProcessor());
 		return factory;
 	}
 
