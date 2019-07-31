@@ -42,16 +42,19 @@ public class JournalpostEndretListener {
 			InngaaendeHendelse hendelse = JournalpostEndretInngaaendeHendelseMapper.map(event);
 			if (hendelse != null) {
 				publisher.publish(hendelse);
-				meterRegistry.counter("Inngaaendehendelser", "type", hendelse.getHendelsesType(), "tema", hendelse.getTemaNytt() == null ? "UKJENT" : hendelse.getTemaNytt()).increment();
+				meterRegistry.counter("Inngaaendehendelser", "type", hendelse.getHendelsesType(),
+						"tema", hendelse.getTemaNytt() == null ? "UKJENT" : hendelse.getTemaNytt(),
+						"mottakskanal", hendelse.getMottaksKanal()).increment();
+
 				log.info("Publisert hendelse " + hendelse.getHendelsesType() +
 						" for journalpost " + hendelse.getJournalpostId() +
 						(
-							StringUtils.isEmpty(hendelse.getKanalReferanseId()) ? "" :
-							(", kanalReferanseId " + hendelse.getKanalReferanseId())
+								StringUtils.isEmpty(hendelse.getKanalReferanseId()) ? "" :
+										(", kanalReferanseId " + hendelse.getKanalReferanseId())
 						) +
 						(
-							StringUtils.isEmpty(hendelse.getMottaksKanal()) ? "" :
-							(", mottaksKanal " + hendelse.getMottaksKanal())
+								StringUtils.isEmpty(hendelse.getMottaksKanal()) ? "" :
+										(", mottaksKanal " + hendelse.getMottaksKanal())
 						) +
 						"."
 				);
