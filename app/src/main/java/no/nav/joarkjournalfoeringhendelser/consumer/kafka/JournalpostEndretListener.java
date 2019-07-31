@@ -44,7 +44,7 @@ public class JournalpostEndretListener {
 				publisher.publish(hendelse);
 				meterRegistry.counter("Inngaaendehendelser", "type", hendelse.getHendelsesType(),
 						"tema", hendelse.getTemaNytt() == null ? "UKJENT" : hendelse.getTemaNytt(),
-						"mottakskanal", hendelse.getMottaksKanal()).increment();
+						"mottakskanal", hendelse.getMottaksKanal() == null ? "UKJENT" : hendelse.getMottaksKanal()).increment();
 
 				log.info("Publisert hendelse " + hendelse.getHendelsesType() +
 						" for journalpost " + hendelse.getJournalpostId() +
