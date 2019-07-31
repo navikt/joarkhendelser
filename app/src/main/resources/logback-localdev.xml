@@ -28,8 +28,4 @@
         <appender-ref ref="CONSOLE"/>
     </logger>
 
-    <logger name="org.springframework.retry" level="DEBUG" additivity="false">
-        <appender-ref ref="CONSOLE"/>
-    </logger>
-
 </configuration>
