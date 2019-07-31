@@ -7,7 +7,7 @@
 	<parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.5.RELEASE</version>
+        <version>2.1.6.RELEASE</version>
     </parent>
 
     <groupId>no.nav.joarkhendelser</groupId>
@@ -48,11 +48,9 @@
         <confluent.version>4.1.1</confluent.version>
         <logstash-logback-encoder.version>5.1</logstash-logback-encoder.version>
         <micrometer.version>1.0.6</micrometer.version>
-        <spring-kafka.version>2.1.10.RELEASE</spring-kafka.version>
         <avro.version>1.8.2</avro.version>
 		<awaitility.version>3.0.0</awaitility.version>
         <dok-journalfoering-hendelse-v1.version>0.0.3</dok-journalfoering-hendelse-v1.version>
-
 	</properties>
 
     <dependencyManagement>
@@ -161,7 +159,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.0.5.RELEASE</version>
+                <version>2.1.6.RELEASE</version>
                 <configuration>
                     <skip>false</skip>
                     <fork>true</fork>
@@ -172,6 +170,7 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                    <mainClass>no.nav.joarkjournalfoeringhendelser.Application</mainClass>
                 </configuration>
                 <executions>
                     <execution>

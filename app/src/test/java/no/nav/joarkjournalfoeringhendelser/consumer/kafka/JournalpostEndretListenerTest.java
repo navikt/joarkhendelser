@@ -43,7 +43,7 @@ public class JournalpostEndretListenerTest {
 
 	@Before
 	public void before() {
-		when(meterRegistry.counter(anyString(), anyString(), anyString())).thenReturn(counterMock);
+		when(meterRegistry.counter(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(counterMock);
 	}
 
 	@Test
@@ -55,7 +55,7 @@ public class JournalpostEndretListenerTest {
 
 		verify(converterMock).convertRecordToEvent(consumerRecordMock);
 		verify(publisher).publish(any(InngaaendeHendelse.class));
-		verify(meterRegistry, times(1)).counter(anyString(), anyString(), anyString());
+		verify(meterRegistry, times(1)).counter(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString());
 		verify(counterMock, times(1)).increment();
 	}
 

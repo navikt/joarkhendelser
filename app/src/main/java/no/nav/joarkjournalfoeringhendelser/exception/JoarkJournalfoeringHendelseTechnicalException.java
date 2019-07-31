@@ -1,4 +1,4 @@
-package no.nav.joarkjournalfoeringhendelser.config;
+package no.nav.joarkjournalfoeringhendelser.exception;
 
 public class JoarkJournalfoeringHendelseTechnicalException extends RuntimeException {
     public JoarkJournalfoeringHendelseTechnicalException(String s, Throwable t) {

@@ -18,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.util.concurrent.ListenableFuture;
 
@@ -38,7 +39,7 @@ public class InngaaendeHendelsePublisherTest {
 
 		ListenableFuture listenableFuture = mock(ListenableFuture.class);
 		when(kafkaTemplate.send(any(ProducerRecord.class))).thenReturn(listenableFuture);
-		when(listenableFuture.get()).thenReturn("ok");
+		when(listenableFuture.get()).thenReturn(new SendResult<String, JournalfoeringHendelseRecord>(null, null));
 	}
 
 	@Test

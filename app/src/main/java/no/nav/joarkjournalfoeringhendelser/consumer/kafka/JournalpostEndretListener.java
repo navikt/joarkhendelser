@@ -4,15 +4,16 @@ import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStat
 
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
-import no.nav.joarkjournalfoeringhendelser.config.JoarkJournalfoeringHendelseTechnicalException;
 import no.nav.joarkjournalfoeringhendelser.metrics.Metrics;
 import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelse;
 import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelsePublisher;
 import no.nav.joarkjournalfoeringhendelser.producer.JournalpostEndretInngaaendeHendelseMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 /**
@@ -33,34 +34,32 @@ public class JournalpostEndretListener {
 
 	@KafkaListener(topics = "${journalpostEndret.topic}")
 	@Metrics(value = "dok_request", percentiles = {0.5, 0.95})
+	@Transactional
 	public void onMessage(final ConsumerRecord<?, ?> record) {
 		long start = System.currentTimeMillis();
-		try {
-			JournalpostEndretEvent event = converter.convertRecordToEvent(record);
+		JournalpostEndretEvent event = converter.convertRecordToEvent(record);
 
-			if (event != null && INNGAAENDE.equalsIgnoreCase(event.getJournalpostType())) {
-				InngaaendeHendelse hendelse = JournalpostEndretInngaaendeHendelseMapper.map(event);
-				if (hendelse != null) {
-					publisher.publish(hendelse);
-					meterRegistry.counter("Inngaaendehendelser", "type", hendelse.getHendelsesType()).increment();
-					log.info("Publisert hendelse " + hendelse.getHendelsesType() +
-							" for journalpost " + hendelse.getJournalpostId() +
-							(
+		if (event != null && INNGAAENDE.equalsIgnoreCase(event.getJournalpostType())) {
+			InngaaendeHendelse hendelse = JournalpostEndretInngaaendeHendelseMapper.map(event);
+			if (hendelse != null) {
+				publisher.publish(hendelse);
+				meterRegistry.counter("Inngaaendehendelser", "type", hendelse.getHendelsesType(),
+						"tema", Strings.isEmpty(hendelse.getTemaNytt()) ? "UKJENT" : hendelse.getTemaNytt(),
+						"mottakskanal", Strings.isEmpty(hendelse.getMottaksKanal()) ? "UKJENT" : hendelse.getMottaksKanal()).increment();
+
+				log.info("Publisert hendelse " + hendelse.getHendelsesType() +
+						" for journalpost " + hendelse.getJournalpostId() +
+						(
 								StringUtils.isEmpty(hendelse.getKanalReferanseId()) ? "" :
-								(", kanalReferanseId " + hendelse.getKanalReferanseId())
-							) +
-							(
+										(", kanalReferanseId " + hendelse.getKanalReferanseId())
+						) +
+						(
 								StringUtils.isEmpty(hendelse.getMottaksKanal()) ? "" :
-								(", mottaksKanal " + hendelse.getMottaksKanal())
-							) +
-							"."
-					);
-				}
+										(", mottaksKanal " + hendelse.getMottaksKanal())
+						) +
+						"."
+				);
 			}
-		} catch (JoarkJournalfoeringHendelseTechnicalException e) {
-			log.error(e.getMessage(), e);
-		} catch (Exception e) {
-			log.error(String.format("Feil ved prosessering av endringsmelding: %s. Melding: %s", e.getMessage(), record), e);
 		}
 		log.debug("handling took " + (System.currentTimeMillis() - start) + " ms");
 	}

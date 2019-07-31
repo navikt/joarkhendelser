@@ -1,7 +1,7 @@
 package no.nav.joarkjournalfoeringhendelser;
 
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Import;
 
 @Import(value = {
@@ -11,6 +11,6 @@ import org.springframework.context.annotation.Import;
 public class Application {
 
 	public static void main(String[] args) {
-		new SpringApplicationBuilder(Application.class).run(args);
+		SpringApplication.run(Application.class, args);
 	}
 }
