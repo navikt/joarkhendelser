@@ -9,6 +9,7 @@ import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelse;
 import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelsePublisher;
 import no.nav.joarkjournalfoeringhendelser.producer.JournalpostEndretInngaaendeHendelseMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -43,8 +44,8 @@ public class JournalpostEndretListener {
 			if (hendelse != null) {
 				publisher.publish(hendelse);
 				meterRegistry.counter("Inngaaendehendelser", "type", hendelse.getHendelsesType(),
-						"tema", hendelse.getTemaNytt() == null ? "UKJENT" : hendelse.getTemaNytt(),
-						"mottakskanal", hendelse.getMottaksKanal() == null ? "UKJENT" : hendelse.getMottaksKanal()).increment();
+						"tema", Strings.isEmpty(hendelse.getTemaNytt()) ? "UKJENT" : hendelse.getTemaNytt(),
+						"mottakskanal", Strings.isEmpty(hendelse.getMottaksKanal()) ? "UKJENT" : hendelse.getMottaksKanal()).increment();
 
 				log.info("Publisert hendelse " + hendelse.getHendelsesType() +
 						" for journalpost " + hendelse.getJournalpostId() +
