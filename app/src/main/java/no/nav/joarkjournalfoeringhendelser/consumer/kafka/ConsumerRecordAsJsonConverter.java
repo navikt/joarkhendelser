@@ -175,8 +175,12 @@ public class ConsumerRecordAsJsonConverter {
 		Set<String> columnsChanged = new HashSet<>(before.keySet());
 
 		for (Object key : before.keySet()) {
+			if((after.get(key) == null && before.get(key) != null) ||
+					(after.get(key) != null && before.get(key) == null)) {
+				continue;
+			}
 			if ((after.get(key) == null && before.get(key) == null) ||
-                (after.get(key).equals(before.get(key)))) {
+					(after.get(key).equals(before.get(key)))) {
 				columnsChanged.remove(key);
 			}
 		}
