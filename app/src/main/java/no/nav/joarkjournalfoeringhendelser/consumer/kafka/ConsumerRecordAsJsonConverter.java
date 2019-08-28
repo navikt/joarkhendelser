@@ -157,8 +157,8 @@ public class ConsumerRecordAsJsonConverter {
 	}
 
 	private String getVerdi(LinkedHashMap map, String key) {
-		Object value = get((LinkedHashMap<String, Object>) map, key);
-		return value != null ? value.toString() : "";
+		String value = get((LinkedHashMap<String, String>) map, key);
+		return StringUtils.isNotEmpty(value) ? value : "";
 	}
 
 	private <T> T get(LinkedHashMap<?, ? extends T> map, String key) {
@@ -169,21 +169,21 @@ public class ConsumerRecordAsJsonConverter {
 	}
 
 	private Set<String> getChangedColumns(LinkedHashMap before, LinkedHashMap after) {
-		HashSet<String> allValues = new HashSet<>();
-		allValues.addAll(after.keySet());
-		allValues.addAll(before.keySet());
+		if (before.size() != after.size()) {
+			return after.keySet();
+		}
+		Set<String> columnsChanged = new HashSet<>(before.keySet());
 
-		Set<String> columnsChanged = new HashSet<>(allValues);
-
-		for (String key : allValues) {
-			if (keyPresentBeforeAndAfter(key, before, after) && getVerdi(before, key).equalsIgnoreCase(getVerdi(after, key))) {
+		for (Object key : before.keySet()) {
+			if((after.get(key) == null && before.get(key) != null) ||
+					(after.get(key) != null && before.get(key) == null)) {
+				continue;
+			}
+			if ((after.get(key) == null && before.get(key) == null) ||
+					(after.get(key).equals(before.get(key)))) {
 				columnsChanged.remove(key);
 			}
 		}
 		return columnsChanged;
-	}
-
-	private boolean keyPresentBeforeAndAfter(Object key, LinkedHashMap before, LinkedHashMap after) {
-		return after.containsKey(key) && before.containsKey(key);
 	}
 }
