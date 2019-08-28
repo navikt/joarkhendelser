@@ -133,4 +133,25 @@ public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 		});
 	}
 
+
+	/**
+	 * HVIS man mottar en Update med null-verdier i after, så skal det publiseres hendelse til utgaaende topic
+	 */
+	@Test
+	public void shouldNotProduceNullPointer() throws Exception {
+		JsonNode jsonrecord = classpathToJsonNode("__files/nullpointer.json");
+
+		record = new ProducerRecord<>(INN_TOPIC, 0, "key", jsonrecord);
+		sendToTopic(record);
+
+		await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
+			List<ConsumerRecord<String, JournalfoeringHendelseRecord>> records = KafkaTestUtils.getRecords(consumer).records(new TopicPartition(UT_TOPIC, 0));
+			assertThat(records, hasSize(1));
+			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0).value();
+			assertEquals(123456789L, utgaaendeRecord.getJournalpostId().longValue());
+			assertEquals(ENDELIG_JOURNALFORT.toString(), utgaaendeRecord.getHendelsesType().toString());
+		});
+	}
+
+
 }
