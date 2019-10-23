@@ -1,16 +1,8 @@
 package no.nav.joarkjournalfoeringhendelser.consumer.kafka;
 
-import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JoarkSchema.JOURNALPOST;
-import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStatus.INNGAAENDE;
-import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStatus.UTGAR;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelse;
 import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelsePublisher;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -22,6 +14,16 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.HashSet;
+import java.util.concurrent.TimeUnit;
+
+import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JoarkSchema.JOURNALPOST;
+import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStatus.INNGAAENDE;
+import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStatus.UTGAR;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class JournalpostEndretListenerTest {
@@ -36,6 +38,8 @@ public class JournalpostEndretListenerTest {
 	private MeterRegistry meterRegistry;
 	@Mock
 	private Counter counterMock;
+	@Mock
+	private Timer timerMock;
 	@InjectMocks
 	private JournalpostEndretListener listener;
 
@@ -44,6 +48,8 @@ public class JournalpostEndretListenerTest {
 	@Before
 	public void before() {
 		when(meterRegistry.counter(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(counterMock);
+		when(meterRegistry.timer(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(timerMock);
+
 	}
 
 	@Test
@@ -57,6 +63,9 @@ public class JournalpostEndretListenerTest {
 		verify(publisher).publish(any(InngaaendeHendelse.class));
 		verify(meterRegistry, times(1)).counter(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString());
 		verify(counterMock, times(1)).increment();
+		verify(counterMock, times(1)).increment();
+		verify(meterRegistry, times(1)).timer(anyString(), anyString(), anyString(), anyString(), anyString());
+		verify(timerMock, times(1)).record(0L, TimeUnit.MILLISECONDS);
 	}
 
 	@Test

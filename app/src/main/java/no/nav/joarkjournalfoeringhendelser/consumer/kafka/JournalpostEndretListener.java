@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author Martin Burheim Tingstad, Visma Consulting.
  */
@@ -60,8 +62,16 @@ public class JournalpostEndretListener {
 						"."
 				);
 			}
+			jorunalfoeringHendelseTimer("databaseoppdateringer_goldengate_timer", event.getFagomradeBefore(),event.getMottaksKanal(),
+					event.getOperationTimestamp(), event.getCurrentTimestamp());
 		}
 		log.debug("handling took " + (System.currentTimeMillis() - start) + " ms");
 	}
 
+	private void jorunalfoeringHendelseTimer(String timerNavn, String tema, String mottaksKanal,Long startTime, Long endTime) {
+		Long duration = (endTime == null || startTime == null) ? 0L : endTime - startTime;
+		meterRegistry.timer(timerNavn, "tema", StringUtils.isEmpty(tema) ? "UKJENT" :
+				tema,"mottaksKannal",StringUtils.isEmpty(mottaksKanal)?"UKJENT":mottaksKanal)
+				.record(duration, TimeUnit.MILLISECONDS);
+	}
 }
