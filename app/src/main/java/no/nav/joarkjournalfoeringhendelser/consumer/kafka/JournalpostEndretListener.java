@@ -62,13 +62,13 @@ public class JournalpostEndretListener {
 						"."
 				);
 			}
-			jorunalfoeringHendelseTimer("databaseoppdateringer_goldengate_timer", event.getFagomradeBefore(),event.getMottaksKanal(),
+			journalfoeringHendelseTimer("databaseoppdateringer_goldengate_timer", event.getFagomradeBefore(),event.getMottaksKanal(),
 					event.getOperationTimestamp(), event.getCurrentTimestamp());
 		}
 		log.debug("handling took " + (System.currentTimeMillis() - start) + " ms");
 	}
 
-	private void jorunalfoeringHendelseTimer(String timerNavn, String tema, String mottaksKanal,Long startTime, Long endTime) {
+	private void journalfoeringHendelseTimer(String timerNavn, String tema, String mottaksKanal, Long startTime, Long endTime) {
 		Long duration = (endTime == null || startTime == null) ? 0L : endTime - startTime;
 		meterRegistry.timer(timerNavn, "tema", StringUtils.isEmpty(tema) ? "UKJENT" :
 				tema,"mottaksKannal",StringUtils.isEmpty(mottaksKanal)?"UKJENT":mottaksKanal)
