@@ -1,5 +1,6 @@
 package no.nav.joarkjournalfoeringhendelser.producer;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord;
 import no.nav.joarkjournalfoeringhendelser.exception.AuthenticationFailedExecption;
@@ -13,9 +14,11 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Martin Burheim Tingstad, Visma Consulting.
@@ -29,6 +32,8 @@ public class InngaaendeHendelsePublisher {
 
 	@Value("${journalfoeringHendelse-v1.topic}")
 	private String topic;
+	@Autowired
+	private MeterRegistry meterRegistry;
 
 
 	@Transactional
@@ -49,7 +54,7 @@ public class InngaaendeHendelsePublisher {
 		ProducerRecord<String, JournalfoeringHendelseRecord> producerRecord = new ProducerRecord<>(
 				topic,
 				null,
-				hendelse.getTimestamp(),
+				hendelse.getOperationTimestamp(),
 				hendelse.getJournalpostId().toString(),
 				record);
 
@@ -58,8 +63,12 @@ public class InngaaendeHendelsePublisher {
 
         try {
             SendResult<String, JournalfoeringHendelseRecord> sendResult = send.get();
+			meterRegistry.timer("journalfoeringhendelse_timer",
+					"tema", StringUtils.isEmpty(hendelse.getTemaNytt())?"UKJENT":hendelse.getTemaNytt(),
+					"mottaksKanal",StringUtils.isEmpty(hendelse.getMottaksKanal())?"UKJENT":hendelse.getMottaksKanal())
+					.record(hendelse.getOperationTimestamp()==null?0:System.currentTimeMillis()-hendelse.getOperationTimestamp(), TimeUnit.MILLISECONDS);
 
-            if(log.isDebugEnabled()) {
+			if(log.isDebugEnabled()) {
                 log.info("Published to partittion " + sendResult.getRecordMetadata().partition());
                 log.info("Published to offset " + sendResult.getRecordMetadata().offset());
                 log.info("Published to offset " + sendResult.getRecordMetadata().topic());

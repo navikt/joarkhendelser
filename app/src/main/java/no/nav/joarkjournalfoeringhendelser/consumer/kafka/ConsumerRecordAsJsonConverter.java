@@ -8,6 +8,7 @@ import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JoarkSchema.K_J
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JoarkSchema.K_JOURNAL_S;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JoarkSchema.K_MOTTAKS_KANAL;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStatus.INNGAAENDE;
+import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.OracleSchema.CURRENT_TIMESTAMP;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.OracleSchema.INSERT_OPERATION;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.OracleSchema.OPERATION_TIMESTAMP;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.OracleSchema.OPERATION_TYPE;
@@ -42,10 +43,12 @@ public class ConsumerRecordAsJsonConverter {
 		LinkedHashMap after = (LinkedHashMap) values.get("after");
 
 		String operation = get((LinkedHashMap<String, String>) values, OPERATION_TYPE);
-		String timestamp = get((LinkedHashMap<String, String>) values, OPERATION_TIMESTAMP);
+		String operationTimestamp = get((LinkedHashMap<String, String>) values, OPERATION_TIMESTAMP);
 
-		Long timeStamp = convertOracleTimeStampToLong(timestamp);
+		String currentTimestamp = get((LinkedHashMap<String, String>) values, CURRENT_TIMESTAMP);
 
+		Long opTimeStamp = convertOracleTimeStampToLong(operationTimestamp);
+		Long curTimestamp = convertOracleTimeStampToLong(currentTimestamp);
 		Integer journalpostId = null;
 		if (after != null) {
 			journalpostId = (Integer) after.get(JOURNALPOST_ID);
@@ -90,7 +93,8 @@ public class ConsumerRecordAsJsonConverter {
 						.kanalReferanseId(getUpdatedVerdi(columnsChanged, after, before, KANAL_REFERANSE_ID))
 						.behandlingsTema(getUpdatedVerdi(columnsChanged, after, before, K_BEHANDLINGSTEMA))
 						.columnsChanged(columnsChanged)
-						.timestamp(timeStamp)
+						.operationTimestamp(opTimeStamp)
+						.currentTimestamp(curTimestamp)
 						.build();
 			}
 		} else if (INSERT_OPERATION.equalsIgnoreCase(operation)) {
@@ -113,7 +117,8 @@ public class ConsumerRecordAsJsonConverter {
 					.kanalReferanseId(getVerdi(after, KANAL_REFERANSE_ID))
 					.behandlingsTema(getVerdi(after, K_BEHANDLINGSTEMA))
 					.columnsChanged(columnsChanged)
-					.timestamp(timeStamp)
+					.operationTimestamp(opTimeStamp)
+					.currentTimestamp(curTimestamp)
 					.build();
 		} else {
 			log.warn("Received unknown operation {} for journalpost {}", prettyPrintOperationName(operation), journalpostId);

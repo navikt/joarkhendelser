@@ -20,5 +20,6 @@ public class InngaaendeHendelse {
 	String mottaksKanal;
 	String kanalReferanseId;
 	String behandlingsTema;
-	Long timestamp;
+	Long operationTimestamp;
+	Long currentTimestamp;
 }
