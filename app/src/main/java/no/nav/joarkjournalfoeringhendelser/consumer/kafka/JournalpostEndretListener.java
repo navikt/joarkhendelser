@@ -10,12 +10,14 @@ import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelsePublisher;
 import no.nav.joarkjournalfoeringhendelser.producer.JournalpostEndretInngaaendeHendelseMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.logging.log4j.util.Strings;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -38,6 +40,7 @@ public class JournalpostEndretListener {
 	@Metrics(value = "dok_request", percentiles = {0.5, 0.95})
 	@Transactional
 	public void onMessage(final ConsumerRecord<?, ?> record) {
+		MDC.put("callId", UUID.randomUUID().toString());
 		long start = System.currentTimeMillis();
 		JournalpostEndretEvent event = converter.convertRecordToEvent(record);
 
