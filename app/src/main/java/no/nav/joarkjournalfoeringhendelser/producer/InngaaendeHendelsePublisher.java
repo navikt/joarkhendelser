@@ -66,7 +66,7 @@ public class InngaaendeHendelsePublisher {
 			meterRegistry.timer("journalfoeringhendelse_timer",
 					"tema", StringUtils.isEmpty(hendelse.getTemaNytt())?"UKJENT":hendelse.getTemaNytt(),
 					"mottaksKanal",StringUtils.isEmpty(hendelse.getMottaksKanal())?"UKJENT":hendelse.getMottaksKanal())
-					.record(hendelse.getOperationTimestamp()==null?0:System.currentTimeMillis()-hendelse.getOperationTimestamp(), TimeUnit.MILLISECONDS);
+					.record(hendelse.getOperationTimestamp() == null ? 0 : hendelse.getCurrentTimestamp() - hendelse.getOperationTimestamp(), TimeUnit.MILLISECONDS);
 
 			if(log.isDebugEnabled()) {
                 log.info("Published to partittion " + sendResult.getRecordMetadata().partition());
