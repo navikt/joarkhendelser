@@ -39,6 +39,7 @@ public class JournalpostEndretInngaaendeHendelseMapper {
 						.journalpostStatus(event.getJournalpostStatusAfter())
 						.hendelsesType(inngaaendeHendelsesType.toString())
 						.operationTimestamp(event.getOperationTimestamp())
+						.currentTimestamp(event.getCurrentTimestamp())
 						.build() : null;
 	}
 

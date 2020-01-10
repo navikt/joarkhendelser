@@ -64,8 +64,8 @@ public class InngaaendeHendelsePublisher {
         try {
             SendResult<String, JournalfoeringHendelseRecord> sendResult = send.get();
 			meterRegistry.timer("journalfoeringhendelse_timer",
-					"tema", StringUtils.isEmpty(hendelse.getTemaNytt())?"UKJENT":hendelse.getTemaNytt(),
-					"mottaksKanal",StringUtils.isEmpty(hendelse.getMottaksKanal())?"UKJENT":hendelse.getMottaksKanal())
+					"tema", StringUtils.isEmpty(hendelse.getTemaNytt()) ? "UKJENT" : hendelse.getTemaNytt(),
+					"mottaksKanal", StringUtils.isEmpty(hendelse.getMottaksKanal()) ? "UKJENT" : hendelse.getMottaksKanal())
 					.record(hendelse.getOperationTimestamp() == null ? 0 : hendelse.getCurrentTimestamp() - hendelse.getOperationTimestamp(), TimeUnit.MILLISECONDS);
 
 			if(log.isDebugEnabled()) {
