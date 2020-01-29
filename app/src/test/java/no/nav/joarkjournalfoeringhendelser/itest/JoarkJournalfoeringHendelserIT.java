@@ -41,6 +41,8 @@ public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0).value();
 			assertEquals(1L, utgaaendeRecord.getJournalpostId().longValue());
 			assertEquals(TEMA_ENDRET.toString(), utgaaendeRecord.getHendelsesType().toString());
+			assertEquals("SAK", utgaaendeRecord.getTemaGammelt().toString());
+			assertEquals("AAP", utgaaendeRecord.getTemaNytt().toString());
 		});
 	}
 
