@@ -5,6 +5,6 @@
   "SPRING_KAFKA_PRODUCER_PROPERTIES_SCHEMA_REGISTRY_URL": "https://kafka-schema-registry.nais.preprod.local",
   "JOURNALFOERINGHENDELSE_V1_TOPIC": "aapen-dok-journalfoering-v1-q1",
   "JOURNALPOSTENDRET_TOPIC": "privat-dok-journalpostEndret-v1-q1",
-  "SRVJOARKJOURNALFOERINGHENDELSER": "serviceuser/data/dev/srvjoarkjournalfoeringhendelser",
+  "SRVJOARKJOURNALFOERINGHENDELSER": "/serviceuser/data/dev/srvjoarkjournalfoeringhendelser",
   "INGRESSES": "https://joarkjournalfoeringhendelser.nais.preprod.local"
 }
