@@ -1,0 +1,10 @@
+{
+  "NAMESPACE": "q1",
+  "SECURITYTOKENSERVICE_URL": "https://sts-q1.preprod.local/SecurityTokenServiceProvider/",
+  "SPRING_KAFKA_BOOTSTRAP_SERVERS": "b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443",
+  "SPRING_KAFKA_PRODUCER_PROPERTIES_SCHEMA_REGISTRY_URL": "https://kafka-schema-registry.nais.preprod.local",
+  "JOURNALFOERINGHENDELSE_V1_TOPIC": "aapen-dok-journalfoering-v1-q1",
+  "JOURNALPOSTENDRET_TOPIC": "privat-dok-journalpostEndret-v1-q1",
+  "SRVJOARKJOURNALFOERINGHENDELSER": "serviceuser/data/dev/srvjoarkjournalfoeringhendelser",
+  "INGRESSES": "https://joarkjournalfoeringhendelser.nais.preprod.local"
+}
