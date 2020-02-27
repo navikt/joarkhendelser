@@ -2,7 +2,7 @@ kind: Application
 apiVersion: nais.io/v1alpha1
 metadata:
   name: joarkjournalfoeringhendelser
-  namespace: default
+  namespace: {{ NAMESPACE }}
   labels:
     team: teamdokumenthandtering
 spec:
