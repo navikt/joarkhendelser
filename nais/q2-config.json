@@ -6,7 +6,5 @@
   "JOURNALFOERINGHENDELSE_V1_TOPIC": "aapen-dok-journalfoering-v1-q2",
   "JOURNALPOSTENDRET_TOPIC": "privat-dok-journalpostEndret-v1-q2",
   "SRVJOARKJOURNALFOERINGHENDELSER": "/serviceuser/data/dev/srvjoarkjournalfoeringhendelser",
-  "INGRESSES": [
-    "https://joarkjournalfoeringhendelser-q2.nais.preprod.local"
-  ]
+  "INGRESSES":  "https://joarkjournalfoeringhendelser-q2.nais.preprod.local"
 }
