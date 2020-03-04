@@ -100,7 +100,7 @@ public class ConsumerRecordAsJsonConverterTest {
         valuesBefore.put("DATO_OPPRETTET", "2018-09-24 12:19:23.280000000");
         valuesBefore.put("DATO_DOKUMENT", "null");
         valuesBefore.put("AVSEND_MOTTAKER", "FORNAVN ETTERNAVN");
-        valuesBefore.put("AVSEND_MOTTAK_ID", "***gammelt_fnr***");
+        valuesBefore.put("AVSEND_MOTTAK_ID", "12345678901");
         valuesBefore.put("JOURNALFORT_AV_NAVN", "SAKSBEHANDLER NORMANN");
         valuesBefore.put("DATO_MOTTATT", "2018-09-24 00:00:00.000000000");
         valuesBefore.put("LAND", "null");
