@@ -3,7 +3,7 @@
   "op_type":"I",
   "op_ts":"2018-10-09 11:06:02.000000",
   "current_ts":"2018-10-09T13:06:04.842000",
-  "pos":"***gammelt_fnr***000091406",
+  "pos":"00000000000000091406",
   "after": {
     "JOURNALPOST_ID":1,
     "JOURNALF_ENHET":"1234",
