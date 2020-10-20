@@ -15,7 +15,7 @@ import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.OracleSchema.OP
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.OracleSchema.UPDATE_OPERATION;
 
 import lombok.extern.slf4j.Slf4j;
-import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
+import net.logstash.logback.encoder.org.apache.commons.lang3.StringUtils;
 import no.nav.joarkjournalfoeringhendelser.exception.JoarkJournalfoeringHendelseTechnicalException;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.stereotype.Component;

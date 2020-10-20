@@ -1,6 +1,6 @@
 package no.nav.joarkjournalfoeringhendelser.producer;
 
-import static net.logstash.logback.encoder.org.apache.commons.lang.StringUtils.isNotEmpty;
+import static net.logstash.logback.encoder.org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStatus.OPPLASTINGDOKUMENT;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStatus.INNGAAENDE;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStatus.JOURNALFORT;
