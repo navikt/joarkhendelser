@@ -55,7 +55,6 @@
         <snappy.version>1.1.4</snappy.version>
         <objenesis.version>2.6</objenesis.version>
         <zookeeper.version>3.4.10</zookeeper.version>
-        <spring-kafka.version>2.2.7.RELEASE</spring-kafka.version>
 	</properties>
 
     <dependencyManagement>
@@ -70,12 +69,6 @@
                 <groupId>no.nav.dok</groupId>
                 <artifactId>dok-journalfoering-hendelse-v1</artifactId>
                 <version>${dok-journalfoering-hendelse-v1.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.kafka</groupId>
-                <artifactId>spring-kafka</artifactId>
-                <version>${spring-kafka.version}</version>
             </dependency>
 
             <dependency>
