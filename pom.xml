@@ -4,10 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-	<parent>
+    <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.17.RELEASE</version>
+        <version>2.1.18.RELEASE</version>
     </parent>
 
     <groupId>no.nav.joarkhendelser</groupId>
@@ -39,23 +39,26 @@
         <project.scm.id>stash</project.scm.id>
         <additionalparam>-Xdoclint:none</additionalparam>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <!-- Default argLine used by surefire and other plugins -->
         <argLine>-Xmx512m</argLine>
 
-        <lombok.version>1.16.22</lombok.version>
-        <confluent.version>4.1.2</confluent.version>
-        <logstash-logback-encoder.version>6.3</logstash-logback-encoder.version>
-        <micrometer.version>1.0.6</micrometer.version>
-        <avro.version>1.8.2</avro.version>
-		<awaitility.version>3.0.0</awaitility.version>
+        <lombok.version>1.18.16</lombok.version>
+        <confluent.version>5.5.2</confluent.version>
+        <logstash-logback-encoder.version>6.5</logstash-logback-encoder.version>
+        <micrometer.version>1.6.1</micrometer.version>
+        <avro.version>1.10.0</avro.version>
+        <awaitility.version>4.0.3</awaitility.version>
+        <org-springframework-boot.version>2.1.18.RELEASE</org-springframework-boot.version>
+        <org-apache-maven-plugins.version>3.0.0-M5</org-apache-maven-plugins.version>
         <dok-journalfoering-hendelse-v1.version>0.0.3</dok-journalfoering-hendelse-v1.version>
-        <javax-inject.version>1</javax-inject.version>
-        <snappy.version>1.1.4</snappy.version>
-        <objenesis.version>2.6</objenesis.version>
+        <wagon-webdav-jackrabbit.version>3.4.2</wagon-webdav-jackrabbit.version>
         <zookeeper.version>3.4.10</zookeeper.version>
-	</properties>
+        <objenesis.version>3.1</objenesis.version>
+        <snappy-java.version>1.1.8.2</snappy-java.version>
+        <javax-inject.version>1</javax-inject.version>
+    </properties>
 
     <dependencyManagement>
         <dependencies>
@@ -81,7 +84,7 @@
             <dependency>
                 <groupId>org.xerial.snappy</groupId>
                 <artifactId>snappy-java</artifactId>
-                <version>${snappy.version}</version>
+                <version>${snappy-java.version}</version>
             </dependency>
 
             <dependency>
@@ -176,7 +179,7 @@
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
                 <artifactId>wagon-webdav-jackrabbit</artifactId>
-                <version>1.0</version>
+                <version>${wagon-webdav-jackrabbit.version}</version>
             </extension>
         </extensions>
         <plugins>
@@ -197,13 +200,8 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.0</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.22.0</version>
+                <version>${org-apache-maven-plugins.version}</version>
                 <configuration>
                     <additionalClasspathElements>${basedir}/target/classes</additionalClasspathElements>
                 </configuration>
@@ -219,7 +217,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.1.6.RELEASE</version>
+                <version>${org-springframework-boot.version}</version>
                 <configuration>
                     <skip>false</skip>
                     <fork>true</fork>
@@ -246,22 +244,22 @@
         </plugins>
     </build>
 
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.20.1</version>
-				<reportSets>
-					<reportSet>
-						<id>integration-tests</id>
-						<reports>
-							<report>failsafe-report-only</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-		</plugins>
-	</reporting>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>${org-apache-maven-plugins.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <id>integration-tests</id>
+                        <reports>
+                            <report>failsafe-report-only</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
 
 </project>
