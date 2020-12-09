@@ -22,32 +22,15 @@
 		<module>app</module>
 	</modules>
 
-	<distributionManagement>
-		<repository>
-			<id>m2internal</id>
-			<name>NAV Internal Repository</name>
-			<url>dav:http://maven.adeo.no/nexus/content/repositories/m2internal</url>
-		</repository>
-		<snapshotRepository>
-			<id>m2snapshot</id>
-			<name>NAV Snapshot Repository</name>
-			<url>dav:http://maven.adeo.no/nexus/content/repositories/m2snapshot</url>
-		</snapshotRepository>
-	</distributionManagement>
-
 	<properties>
-		<project.scm.id>stash</project.scm.id>
 		<additionalparam>-Xdoclint:none</additionalparam>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
+		<java.version>11</java.version>
 		<!-- Default argLine used by surefire and other plugins -->
 		<argLine>-Xmx512m</argLine>
 
 		<lombok.version>1.18.16</lombok.version>
 		<confluent.version>5.5.2</confluent.version>
 		<logstash-logback-encoder.version>6.5</logstash-logback-encoder.version>
-		<micrometer.version>1.6.1</micrometer.version>
 		<avro.version>1.10.0</avro.version>
 		<awaitility.version>4.0.3</awaitility.version>
 		<org-springframework-boot.version>2.1.18.RELEASE</org-springframework-boot.version>
@@ -97,18 +80,6 @@
 				<groupId>org.objenesis</groupId>
 				<artifactId>objenesis</artifactId>
 				<version>${objenesis.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.micrometer</groupId>
-				<artifactId>micrometer-core</artifactId>
-				<version>${micrometer.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.micrometer</groupId>
-				<artifactId>micrometer-registry-prometheus</artifactId>
-				<version>${micrometer.version}</version>
 			</dependency>
 
 			<dependency>
@@ -240,6 +211,26 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-toolchains-plugin</artifactId>
+				<version>3.0.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>toolchain</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<toolchains>
+						<jdk>
+							<version>11</version>
+							<vendor>openjdk</vendor>
+						</jdk>
+					</toolchains>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
