@@ -4,18 +4,18 @@ import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
 import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelse;
-import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelsePublisher;
+import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelseProducer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.HashSet;
-import java.util.concurrent.TimeUnit;
 
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JoarkSchema.JOURNALPOST;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStatus.INNGAAENDE;
 import static no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostStatus.UTGAR;
@@ -25,31 +25,31 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class JournalpostEndretListenerTest {
+@SpringBootTest(classes = {JournalpostEndretConsumer.class})
+public class JournalpostEndretConsumerTest {
+
+	@Autowired
+	private JournalpostEndretConsumer listener;
 
 	@Mock
 	private ConsumerRecord<?, byte[]> consumerRecordMock;
-	@Mock
+	@MockBean
 	private ConsumerRecordAsJsonConverter converterMock;
-	@Mock
-	private InngaaendeHendelsePublisher publisher;
-	@Mock
+	@MockBean
+	private InngaaendeHendelseProducer publisher;
+	@MockBean
 	private MeterRegistry meterRegistry;
 	@Mock
 	private Counter counterMock;
 	@Mock
 	private Timer timerMock;
-	@InjectMocks
-	private JournalpostEndretListener listener;
 
 	private JournalpostEndretEvent event;
 
-	@Before
-	public void before() {
+	@BeforeEach
+	public void beforeAll() {
 		when(meterRegistry.counter(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(counterMock);
 		when(meterRegistry.timer(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(timerMock);
-
 	}
 
 	@Test
@@ -65,7 +65,7 @@ public class JournalpostEndretListenerTest {
 		verify(counterMock, times(1)).increment();
 		verify(counterMock, times(1)).increment();
 		verify(meterRegistry, times(1)).timer(anyString(), anyString(), anyString(), anyString(), anyString());
-		verify(timerMock, times(1)).record(0L, TimeUnit.MILLISECONDS);
+		verify(timerMock, times(1)).record(0L, MILLISECONDS);
 	}
 
 	@Test

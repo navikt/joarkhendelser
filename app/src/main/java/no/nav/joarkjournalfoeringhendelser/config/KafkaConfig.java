@@ -8,9 +8,8 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.transaction.KafkaTransactionManager;
 
-/**
- * @author Martin Burheim Tingstad, Visma Consulting
- */
+import java.time.Duration;
+
 @EnableKafka
 @Configuration
 public class KafkaConfig {
@@ -20,13 +19,14 @@ public class KafkaConfig {
 			ConcurrentKafkaListenerContainerFactoryConfigurer configurer,
 			ConsumerFactory<Object, Object> kafkaConsumerFactory,
 			KafkaErrorHandler errorHandler,
-			KafkaTransactionManager<?, ?> transactionManager) {
-
+			KafkaTransactionManager<?, ?> transactionManager
+	) {
 		ConcurrentKafkaListenerContainerFactory<Object, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
-		factory.setConcurrency(6);
-		factory.setAfterRollbackProcessor(new InfiniteRollbackProcessor());
+		factory.setConcurrency(4);
 		factory.setErrorHandler(errorHandler);
 		factory.getContainerProperties().setTransactionManager(transactionManager);
+		factory.getContainerProperties()
+				.setAuthorizationExceptionRetryInterval(Duration.ofSeconds(10L));
 
 		configurer.configure(factory, kafkaConsumerFactory);
 		return factory;

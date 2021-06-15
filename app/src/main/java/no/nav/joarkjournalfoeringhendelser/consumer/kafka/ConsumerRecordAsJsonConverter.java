@@ -27,9 +27,6 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
-/**
- * @author Martin Burheim Tingstad, Visma Consulting.
- */
 @Component
 @Slf4j
 public class ConsumerRecordAsJsonConverter {
@@ -126,39 +123,43 @@ public class ConsumerRecordAsJsonConverter {
 		}
 
 		return event;
-
 	}
 
-    private String prettyPrintOperationName(String operation) {
+	private String prettyPrintOperationName(String operation) {
 		switch (operation) {
-			case "I": return "INSERT";
-			case "U": return "UPDATE";
-			case "D": return "DELETE";
-			default: return operation;
+			case "I":
+				return "INSERT";
+			case "U":
+				return "UPDATE";
+			case "D":
+				return "DELETE";
+			default:
+				return operation;
 		}
-    }
+	}
 
 	private Long convertOracleTimeStampToLong(String timestamp) {
-		Long timeStamp;
 		if (StringUtils.isNotEmpty(timestamp)) {
 			try {
 				Date date = dateFormat.parse(timestamp);
-				timeStamp = date.getTime();
+				return date.getTime();
 			} catch (ParseException e) {
-				timeStamp = new Date().getTime();
+				//fall gjennom til return
 			}
-		} else {
-			timeStamp = new Date().getTime();
 		}
-		return timeStamp;
+		return new Date().getTime();
 	}
 
-	private String getUpdatedVerdi(Set<String> columnsChanged, LinkedHashMap after, LinkedHashMap before, String key) {
+	private String getUpdatedVerdi(
+			Set<String> columnsChanged,
+			LinkedHashMap after,
+			LinkedHashMap before,
+			String key
+	) {
 		if (columnsChanged.contains(key)) {
 			return getVerdi(after, key);
-		} else {
-			return getVerdi(before, key);
 		}
+		return getVerdi(before, key);
 	}
 
 	private String getVerdi(LinkedHashMap map, String key) {
@@ -180,7 +181,7 @@ public class ConsumerRecordAsJsonConverter {
 		Set<String> columnsChanged = new HashSet<>(before.keySet());
 
 		for (Object key : before.keySet()) {
-			if((after.get(key) == null && before.get(key) != null) ||
+			if ((after.get(key) == null && before.get(key) != null) ||
 					(after.get(key) != null && before.get(key) == null)) {
 				continue;
 			}

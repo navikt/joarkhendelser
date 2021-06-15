@@ -6,7 +6,7 @@ import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.joarkjournalfoeringhendelser.metrics.Metrics;
 import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelse;
-import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelsePublisher;
+import no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelseProducer;
 import no.nav.joarkjournalfoeringhendelser.producer.JournalpostEndretInngaaendeHendelseMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.logging.log4j.util.Strings;
@@ -25,13 +25,13 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Component
-public class JournalpostEndretListener {
+public class JournalpostEndretConsumer {
 
 	@Autowired
 	private ConsumerRecordAsJsonConverter converter;
 
 	@Autowired
-	private InngaaendeHendelsePublisher publisher;
+	private InngaaendeHendelseProducer publisher;
 
 	@Autowired
 	private MeterRegistry meterRegistry;
@@ -40,6 +40,7 @@ public class JournalpostEndretListener {
 	@Metrics(value = "dok_request", percentiles = {0.5, 0.95})
 	@Transactional
 	public void onMessage(final ConsumerRecord<?, ?> record) {
+		log.info("Innkommende kafka record til topic: {}, partition: {}, offset: {}", record.topic(), record.partition(), record.offset());
 		MDC.put("callId", UUID.randomUUID().toString());
 		long start = System.currentTimeMillis();
 		JournalpostEndretEvent event = converter.convertRecordToEvent(record);

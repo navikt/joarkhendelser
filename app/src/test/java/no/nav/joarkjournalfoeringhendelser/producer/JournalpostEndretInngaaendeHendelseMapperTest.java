@@ -4,11 +4,11 @@ import static no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelsesTy
 import static no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_UTGATT;
 import static no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelsesType.MIDLERTIDIG_JOURNALFORT;
 import static no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelsesType.TEMA_ENDRET;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import no.nav.joarkjournalfoeringhendelser.consumer.kafka.JournalpostEndretEvent;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class JournalpostEndretInngaaendeHendelseMapperTest {
 

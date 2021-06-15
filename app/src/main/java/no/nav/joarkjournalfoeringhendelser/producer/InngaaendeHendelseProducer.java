@@ -17,24 +17,29 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.util.concurrent.ListenableFuture;
 
+import javax.inject.Inject;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author Martin Burheim Tingstad, Visma Consulting.
- */
 @Slf4j
 @Component
-public class InngaaendeHendelsePublisher {
+public class InngaaendeHendelseProducer {
 
-	@Autowired
-	private KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate;
-
-	@Value("${journalfoeringHendelse-v1.topic}")
 	private String topic;
-	@Autowired
+	private KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate;
 	private MeterRegistry meterRegistry;
 
+	@Inject
+	public InngaaendeHendelseProducer(
+			MeterRegistry meterRegistry,
+			KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate,
+			@Value("${journalfoeringHendelse-v1.topic}")
+			String topic
+	) {
+		this.meterRegistry = meterRegistry;
+		this.kafkaTemplate = kafkaTemplate;
+		this.topic = topic;
+	}
 
 	@Transactional
 	public void publish(InngaaendeHendelse hendelse) throws JoarkJournalfoeringHendelseTechnicalException {
@@ -56,32 +61,37 @@ public class InngaaendeHendelsePublisher {
 				null,
 				hendelse.getOperationTimestamp(),
 				hendelse.getJournalpostId().toString(),
-				record);
+				record
+		);
 
-		ListenableFuture<SendResult<String, JournalfoeringHendelseRecord>> send =
-				kafkaTemplate.send(producerRecord);
+		ListenableFuture<SendResult<String, JournalfoeringHendelseRecord>> send = kafkaTemplate.send(producerRecord);
 
-        try {
-            SendResult<String, JournalfoeringHendelseRecord> sendResult = send.get();
-			meterRegistry.timer("journalfoeringhendelse_timer",
-					"tema", StringUtils.isEmpty(hendelse.getTemaNytt()) ? "UKJENT" : hendelse.getTemaNytt(),
-					"mottaksKanal", StringUtils.isEmpty(hendelse.getMottaksKanal()) ? "UKJENT" : hendelse.getMottaksKanal())
-					.record(hendelse.getOperationTimestamp() == null ? 0 : hendelse.getCurrentTimestamp() - hendelse.getOperationTimestamp(), TimeUnit.MILLISECONDS);
+		try {
+			SendResult<String, JournalfoeringHendelseRecord> sendResult = send.get();
+			meterRegistry.timer(
+					"journalfoeringhendelse_timer","tema",
+					StringUtils.isEmpty(hendelse.getTemaNytt()) ? "UKJENT" : hendelse.getTemaNytt(),
+					"mottaksKanal",
+					StringUtils.isEmpty(hendelse.getMottaksKanal()) ? "UKJENT" : hendelse.getMottaksKanal()
+			).record(
+					hendelse.getOperationTimestamp() == null ? 0 : hendelse.getCurrentTimestamp() - hendelse.getOperationTimestamp(),
+					TimeUnit.MILLISECONDS
+			);
 
-			if(log.isDebugEnabled()) {
-                log.info("Published to partittion " + sendResult.getRecordMetadata().partition());
-                log.info("Published to offset " + sendResult.getRecordMetadata().offset());
-                log.info("Published to offset " + sendResult.getRecordMetadata().topic());
-            }
+			log.info("Published to partition {}, offset {}, topic {}",
+					sendResult.getRecordMetadata().partition(),
+					sendResult.getRecordMetadata().offset(),
+					sendResult.getRecordMetadata().topic()
+			);
 		} catch (ExecutionException e) {
-        	if(e.getCause() != null && e.getCause() instanceof KafkaProducerException) {
+			if (e.getCause() != null && e.getCause() instanceof KafkaProducerException) {
 				KafkaProducerException ee = (KafkaProducerException) e.getCause();
-				if(ee.getCause() != null && ee.getCause() instanceof TopicAuthorizationException) {
+				if (ee.getCause() != null && ee.getCause() instanceof TopicAuthorizationException) {
 					throw new AuthenticationFailedExecption("Not authenticated to publish to topic '" + topic + "'", ee.getCause());
 				}
 			}
-        } catch (InterruptedException e) {
-            throw new JoarkJournalfoeringHendelseTechnicalException("Failed to send message to kafka. Topic: " + topic, e);
+		} catch (InterruptedException e) {
+			throw new JoarkJournalfoeringHendelseTechnicalException("Failed to send message to kafka. Topic: " + topic, e);
 		}
-    }
+	}
 }

@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.18.RELEASE</version>
+		<version>2.5.0</version>
 	</parent>
 
 	<groupId>no.nav.joarkhendelser</groupId>
@@ -28,19 +28,20 @@
 		<!-- Default argLine used by surefire and other plugins -->
 		<argLine>-Xmx512m</argLine>
 
-		<lombok.version>1.18.16</lombok.version>
-		<confluent.version>5.5.2</confluent.version>
-		<logstash-logback-encoder.version>6.5</logstash-logback-encoder.version>
-		<avro.version>1.10.0</avro.version>
+		<lombok.version>1.18.20</lombok.version>
+		<logstash-logback-encoder.version>6.6</logstash-logback-encoder.version>
 		<awaitility.version>4.0.3</awaitility.version>
-		<org-springframework-boot.version>2.1.18.RELEASE</org-springframework-boot.version>
-		<org-apache-maven-plugins.version>3.0.0-M5</org-apache-maven-plugins.version>
+		<org-springframework-boot.version>2.5.0</org-springframework-boot.version>
 		<dok-journalfoering-hendelse-v1.version>0.0.3</dok-journalfoering-hendelse-v1.version>
-		<wagon-webdav-jackrabbit.version>3.4.2</wagon-webdav-jackrabbit.version>
-		<zookeeper.version>3.4.10</zookeeper.version>
 		<objenesis.version>3.1</objenesis.version>
 		<snappy-java.version>1.1.8.2</snappy-java.version>
 		<javax-inject.version>1</javax-inject.version>
+		<org.scala-lang.version>2.13.4</org.scala-lang.version>
+
+		<confluent.version>6.1.1</confluent.version>
+		<avro.version>1.10.0</avro.version>
+
+		<org-apache-maven-plugins.version>3.0.0-M5</org-apache-maven-plugins.version>
 	</properties>
 
 	<dependencyManagement>
@@ -100,61 +101,32 @@
 				<groupId>io.confluent</groupId>
 				<artifactId>kafka-avro-serializer</artifactId>
 				<version>${confluent.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>org.apache.zookeeper</groupId>
-						<artifactId>zookeeper</artifactId>
-					</exclusion>
-				</exclusions>
 			</dependency>
 
 			<dependency>
 				<groupId>io.confluent</groupId>
 				<artifactId>kafka-json-serializer</artifactId>
 				<version>${confluent.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>org.apache.zookeeper</groupId>
-						<artifactId>zookeeper</artifactId>
-					</exclusion>
-				</exclusions>
 			</dependency>
 
-			<!-- TODO: Remove when Confluent got its dependencies in sync -->
 			<dependency>
-				<groupId>org.apache.zookeeper</groupId>
-				<artifactId>zookeeper</artifactId>
-				<version>${zookeeper.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>log4j</groupId>
-						<artifactId>log4j</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.slf4j</groupId>
-						<artifactId>slf4j-log4j12</artifactId>
-					</exclusion>
-				</exclusions>
+				<groupId>org.scala-lang</groupId>
+				<artifactId>scala-library</artifactId>
+				<version>${org.scala-lang.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.scala-lang</groupId>
+				<artifactId>scala-reflect</artifactId>
+				<version>${org.scala-lang.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 	<build>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-			</resource>
-		</resources>
-		<extensions>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-webdav-jackrabbit</artifactId>
-				<version>${wagon-webdav-jackrabbit.version}</version>
-			</extension>
-		</extensions>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
 				<executions>
 					<execution>
@@ -193,12 +165,6 @@
 					<skip>false</skip>
 					<fork>true</fork>
 					<useTestClasspath>true</useTestClasspath>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
 					<mainClass>no.nav.joarkjournalfoeringhendelser.Application</mainClass>
 				</configuration>
 				<executions>
@@ -234,23 +200,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>${org-apache-maven-plugins.version}</version>
-				<reportSets>
-					<reportSet>
-						<id>integration-tests</id>
-						<reports>
-							<report>failsafe-report-only</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-		</plugins>
-	</reporting>
-
 </project>

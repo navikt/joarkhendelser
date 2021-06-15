@@ -1,44 +1,35 @@
 package no.nav.joarkjournalfoeringhendelser.itest;
 
+import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord;
+import no.nav.joarkjournalfoeringhendelser.itest.utils.AbstractIT;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelsesType.ENDELIG_JOURNALFORT;
 import static no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_UTGATT;
 import static no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelsesType.MIDLERTIDIG_JOURNALFORT;
 import static no.nav.joarkjournalfoeringhendelser.producer.InngaaendeHendelsesType.TEMA_ENDRET;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.junit.Assert.assertEquals;
-
-import com.fasterxml.jackson.databind.JsonNode;
-
-import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.common.TopicPartition;
-import org.junit.Test;
-import org.springframework.kafka.test.utils.KafkaTestUtils;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 
-	private ProducerRecord<Object, Object> record;
+	private static final Long JOURNALPOST_ID_UTGAAENDE = 105L;
 
 	/**
 	 * HVIS man mottar en Update med endring av Tema, skal TemaEndret-hendelse publiseres til utgaaende topic
 	 */
 	@Test
 	public void shouldPublishNewTemaEndretHendelse() throws Exception {
-		JsonNode jsonrecord = classpathToJsonNode("__files/tema_endret.json");
+		sendToInnTopic(classpathToJsonNode("__files/tema_endret.json"));
 
-		record = new ProducerRecord<>(INN_TOPIC, 0, "key", jsonrecord);
-		sendToTopic(record);
-
-		await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
-			List<ConsumerRecord<String, JournalfoeringHendelseRecord>> records = KafkaTestUtils.getRecords(consumer).records(new TopicPartition(UT_TOPIC, 0));
-			assertThat(records, hasSize(1));
-			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0).value();
+		await().atMost(10, SECONDS).untilAsserted(() -> {
+			List<JournalfoeringHendelseRecord> records = this.getAllCurrentRecordsOnTopicUt();
+			assertEquals(1, records.size());
+			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
 			assertEquals(1L, utgaaendeRecord.getJournalpostId().longValue());
 			assertEquals(TEMA_ENDRET.toString(), utgaaendeRecord.getHendelsesType().toString());
 			assertEquals("SAK", utgaaendeRecord.getTemaGammelt().toString());
@@ -51,15 +42,12 @@ public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 	 */
 	@Test
 	public void shouldPublishNewMidlertidigJournalfoertHendelse() throws Exception {
-		JsonNode jsonrecord = classpathToJsonNode("__files/midlertidig_jf.json");
+		sendToInnTopic(classpathToJsonNode("__files/midlertidig_jf.json"));
 
-		record = new ProducerRecord<>(INN_TOPIC, 0, "key", jsonrecord);
-		sendToTopic(record);
-
-		await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
-			List<ConsumerRecord<String, JournalfoeringHendelseRecord>> records = KafkaTestUtils.getRecords(consumer).records(new TopicPartition(UT_TOPIC, 0));
-			assertThat(records, hasSize(1));
-			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0).value();
+		await().atMost(10, SECONDS).untilAsserted(() -> {
+			List<JournalfoeringHendelseRecord> records = this.getAllCurrentRecordsOnTopicUt();
+			assertEquals(1, records.size());
+			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
 			assertEquals(1L, utgaaendeRecord.getJournalpostId().longValue());
 			assertEquals(MIDLERTIDIG_JOURNALFORT.toString(), utgaaendeRecord.getHendelsesType().toString());
 		});
@@ -70,15 +58,12 @@ public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 	 */
 	@Test
 	public void shouldPublishNewEndligJournalfoertHendelse() throws Exception {
-		JsonNode jsonrecord = classpathToJsonNode("__files/endelig_jf.json");
+		sendToInnTopic(classpathToJsonNode("__files/endelig_jf.json"));
 
-		record = new ProducerRecord<>(INN_TOPIC, 0, "key", jsonrecord);
-		sendToTopic(record);
-
-		await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
-			List<ConsumerRecord<String, JournalfoeringHendelseRecord>> records = KafkaTestUtils.getRecords(consumer).records(new TopicPartition(UT_TOPIC, 0));
-			assertThat(records, hasSize(1));
-			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0).value();
+		await().atMost(10, SECONDS).untilAsserted(() -> {
+			List<JournalfoeringHendelseRecord> records = this.getAllCurrentRecordsOnTopicUt();
+			assertEquals(1, records.size());
+			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
 			assertEquals(1L, utgaaendeRecord.getJournalpostId().longValue());
 			assertEquals(ENDELIG_JOURNALFORT.toString(), utgaaendeRecord.getHendelsesType().toString());
 		});
@@ -89,15 +74,11 @@ public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 	 */
 	@Test
 	public void shouldPublishNewJournalpostUtgaattHendelse() throws Exception {
-		JsonNode jsonrecord = classpathToJsonNode("__files/journalpost_utgaatt.json");
-
-		record = new ProducerRecord<>(INN_TOPIC, 0, "key", jsonrecord);
-		sendToTopic(record);
-
-		await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
-			List<ConsumerRecord<String, JournalfoeringHendelseRecord>> records = KafkaTestUtils.getRecords(consumer).records(new TopicPartition(UT_TOPIC, 0));
-			assertThat(records, hasSize(1));
-			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0).value();
+		sendToInnTopic(classpathToJsonNode("__files/journalpost_utgaatt_med_update.json"));
+		await().atMost(10, SECONDS).untilAsserted(() -> {
+			List<JournalfoeringHendelseRecord> records = this.getAllCurrentRecordsOnTopicUt();
+			assertEquals(1, records.size());
+			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
 			assertEquals(1L, utgaaendeRecord.getJournalpostId().longValue());
 			assertEquals(JOURNALPOST_UTGATT.toString(), utgaaendeRecord.getHendelsesType().toString());
 		});
@@ -108,14 +89,12 @@ public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 	 */
 	@Test
 	public void shouldNotPublishUtgaaendeEvent() throws Exception {
-		JsonNode jsonrecord = classpathToJsonNode("__files/journalpost_utgaatt.json");
+		sendToInnTopic(classpathToJsonNode("__files/journalpost_utgaaende.json"));
 
-		record = new ProducerRecord<>(INN_TOPIC, 0, "key", jsonrecord);
-		sendToTopic(record);
-
-		await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
-			List<ConsumerRecord<String, JournalfoeringHendelseRecord>> records = KafkaTestUtils.getRecords(consumer, 1_000L).records(new TopicPartition(UT_TOPIC, 0));
-			assertThat(records, hasSize(0));
+		await().atLeast(1, SECONDS).atMost(10, SECONDS).untilAsserted(() -> {
+			List<JournalfoeringHendelseRecord> records = this.getAllCurrentRecordsOnTopicUt();
+			assertEquals(0, records.size());
+			assertThat(records).extracting(JournalfoeringHendelseRecord::getJournalpostId).doesNotContain(JOURNALPOST_ID_UTGAAENDE);
 		});
 	}
 
@@ -124,36 +103,27 @@ public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 	 */
 	@Test
 	public void shouldNotPublishSlettetEvent() throws Exception {
-		JsonNode jsonrecord = classpathToJsonNode("__files/slettet.json");
+		sendToInnTopic(classpathToJsonNode("__files/slettet.json"));
 
-		record = new ProducerRecord<>(INN_TOPIC, 0, "key", jsonrecord);
-		sendToTopic(record);
-
-		await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
-			List<ConsumerRecord<String, JournalfoeringHendelseRecord>> records = KafkaTestUtils.getRecords(consumer, 1_000L).records(new TopicPartition(UT_TOPIC, 0));
-			assertThat(records, hasSize(0));
+		await().atMost(10, SECONDS).untilAsserted(() -> {
+			List<JournalfoeringHendelseRecord> records = this.getAllCurrentRecordsOnTopicUt();
+			assertEquals(0, records.size());
 		});
 	}
-
 
 	/**
 	 * HVIS man mottar en Update med null-verdier i after, så skal det publiseres hendelse til utgaaende topic
 	 */
 	@Test
 	public void shouldNotProduceNullPointer() throws Exception {
-		JsonNode jsonrecord = classpathToJsonNode("__files/nullpointer.json");
+		sendToInnTopic(classpathToJsonNode("__files/nullpointer.json"));
 
-		record = new ProducerRecord<>(INN_TOPIC, 0, "key", jsonrecord);
-		sendToTopic(record);
-
-		await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
-			List<ConsumerRecord<String, JournalfoeringHendelseRecord>> records = KafkaTestUtils.getRecords(consumer).records(new TopicPartition(UT_TOPIC, 0));
-			assertThat(records, hasSize(1));
-			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0).value();
+		await().atMost(10, SECONDS).untilAsserted(() -> {
+			List<JournalfoeringHendelseRecord> records = this.getAllCurrentRecordsOnTopicUt();
+			assertEquals(1, records.size());
+			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
 			assertEquals(123456789L, utgaaendeRecord.getJournalpostId().longValue());
 			assertEquals(ENDELIG_JOURNALFORT.toString(), utgaaendeRecord.getHendelsesType().toString());
 		});
 	}
-
-
 }
