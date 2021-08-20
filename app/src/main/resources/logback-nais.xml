@@ -20,7 +20,7 @@
         <appender-ref ref="stdout_json"/>
     </root>
 
-    <logger name="no.nav.joarkjournalfoeringhendelser" level="INFO" additivity="false">
+    <logger name="no.nav.joarkhendelser" level="INFO" additivity="false">
         <appender-ref ref="stdout_json"/>
     </logger>
 
