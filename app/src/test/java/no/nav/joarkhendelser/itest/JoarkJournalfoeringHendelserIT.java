@@ -1,7 +1,7 @@
 package no.nav.joarkhendelser.itest;
 
-import no.nav.joarkhendelser.JournalfoeringHendelseRecord;
 import no.nav.joarkhendelser.itest.utils.AbstractIT;
+import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

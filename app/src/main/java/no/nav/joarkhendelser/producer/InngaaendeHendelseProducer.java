@@ -2,12 +2,11 @@ package no.nav.joarkhendelser.producer;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
-import no.nav.joarkhendelser.JournalfoeringHendelseRecord;
 import no.nav.joarkhendelser.exception.AuthenticationFailedExecption;
 import no.nav.joarkhendelser.exception.JoarkJournalfoeringHendelseTechnicalException;
+import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.errors.TopicAuthorizationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaProducerException;
 import org.springframework.kafka.core.KafkaTemplate;

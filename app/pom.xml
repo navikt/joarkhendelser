@@ -5,8 +5,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<artifactId>joarkhendelser</artifactId>
 		<groupId>no.nav.joarkhendelser</groupId>
+		<artifactId>joarkhendelser</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 
