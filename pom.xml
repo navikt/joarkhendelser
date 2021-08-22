@@ -11,12 +11,12 @@
 	</parent>
 
 	<groupId>no.nav.joarkhendelser</groupId>
-	<artifactId>joarkjournalfoeringhendelser</artifactId>
+	<artifactId>joarkhendelser</artifactId>
 	<version>1.0-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
-	<name>joarkjournalfoeringhendelser</name>
+	<name>joarkhendelser</name>
 
 	<modules>
 		<module>app</module>
@@ -165,7 +165,7 @@
 					<skip>false</skip>
 					<fork>true</fork>
 					<useTestClasspath>true</useTestClasspath>
-					<mainClass>no.nav.joarkjournalfoeringhendelser.Application</mainClass>
+					<mainClass>no.nav.joarkhendelser.Application</mainClass>
 				</configuration>
 				<executions>
 					<execution>
@@ -178,26 +178,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-toolchains-plugin</artifactId>
-				<version>3.0.0</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>toolchain</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<toolchains>
-						<jdk>
-							<version>11</version>
-							<vendor>openjdk</vendor>
-						</jdk>
-					</toolchains>
-				</configuration>
-			</plugin>
+
 		</plugins>
 	</build>
 </project>

@@ -1,7 +1,7 @@
 kind: Application
 apiVersion: nais.io/v1alpha1
 metadata:
-  name: joarkjournalfoeringhendelser
+  name: joarkhendelser
   namespace: {{ NAMESPACE }}
   labels:
     team: teamdokumenthandtering
@@ -46,5 +46,5 @@ spec:
   vault:
     enabled: true
     paths:
-      - kvPath: {{ SRVJOARKJOURNALFOERINGHENDELSER }}
-        mountPath: /var/run/secrets/nais.io/srvjoarkjournalfoeringhendelser
+      - kvPath: {{ SRVJOARKHENDELSER }}
+        mountPath: /var/run/secrets/nais.io/srvjoarkhendelser

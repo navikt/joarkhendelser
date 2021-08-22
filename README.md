@@ -1,15 +1,15 @@
-joarkjournalfoeringhendelser
+joarkhendelser
 ==========
 # Funksjonalitet
-Joarkjournalfoeringshendelser lar fagsystemene få informasjon når det skjer endringer på inngående journalposter på tema/fagområder som de er interessert i, uavhengig av hvem som har gjort endringen.
+Joarkhendelser lar fagsystemene få informasjon når det skjer endringer på inngående journalposter på tema/fagområder som de er interessert i, uavhengig av hvem som har gjort endringen.
 
 Tilgangsstyring må kunne begrense hvilke produsenter som kan skrive hendelser til topic.
 
-For mer informasjon: [confluence](https://confluence.adeo.no/display/BOA/Joarkjournalfoeringhendelser)
+For mer informasjon: [confluence](https://confluence.adeo.no/display/BOA/joarkhendelser)
 
 # Deploy
 Distribusjon av tjenesten er gjort med integrasjon mot Jenkins:
-[joarkjournalfoeringhendelser CI / CD](https://dok-jenkins.adeo.no/job/joarkjournalfoeringhendelser/job/master/)
+[joarkhendelser CI / CD](https://dok-jenkins.adeo.no/job/joarkhendelser/job/master/)
 
 Push/merge til master branch vil teste, bygge og deploye til produksjonsmiljø og testmiljø.
 
@@ -22,7 +22,7 @@ Push/merge til master branch vil teste, bygge og deploye til produksjonsmiljø o
 
 ## Kjøre Prosjekt
 Lokal utvikling er satt opp slik at applikasjonen kjøres lokalt på VDI. 
-For å kjøre opp applikasjonen lokalt, bruk systemvariabler hentet fra [Vault](https://vault.adeo.no/ui/vault/secrets/secret/show/dokument/joarkjournalfoeringhendelser). Hvis du ikke har den nyeste truststore filen spør på slack kanalen Anakonda.
+For å kjøre opp applikasjonen lokalt, bruk systemvariabler hentet fra [Vault](https://vault.adeo.no/ui/vault/secrets/secret/show/dokument/joarkhendelser). Hvis du ikke har den nyeste truststore filen spør på slack kanalen Anakonda.
 
 
 # Drift og støtte
@@ -38,15 +38,15 @@ For [prod-fss](https://logs.adeo.no/goto/ca96f2932f187020cc9089559b1b739e)
 For dev-fss:
 ```shell script
 kubectl config use-context dev-fss
-kubectl get pods -n q1 | grep joarkjournalfoeringhendelser
-kubectl logs -f joarkjournalfoeringhendelser-<POD-ID> -n teamdokumenthandtering -c joarkjournalfoeringhendelser
+kubectl get pods -n q1 | grep joarkhendelser
+kubectl logs -f joarkhendelser-<POD-ID> -n teamdokumenthandtering -c joarkhendelser
 ```
 
 For prod-fss:
 ```shell script
 kubectl config use-context prod-fss
-kubectl get pods -n p | grep joarkjournalfoeringhendelser
-kubectl logs -f joarkjournalfoeringhendelser-<POD-ID> -n teamdokumenthandtering -c joarkjournalfoeringhendelser
+kubectl get pods -n p | grep joarkhendelser
+kubectl logs -f joarkhendelser-<POD-ID> -n teamdokumenthandtering -c joarkhendelser
 ```
 
 ## Metrics

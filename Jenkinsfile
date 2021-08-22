@@ -1,5 +1,5 @@
 naiseratorPipeline {
-    applicationName = "joarkjournalfoeringhendelser"
+    applicationName = "joarkhendelser"
     dockerfileDir = "."
     deployEnvironmentQ = "q1,q2"
 }
