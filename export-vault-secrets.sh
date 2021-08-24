@@ -1,13 +1,13 @@
 #!/usr/bin/env sh
 
-if test -f /var/run/secrets/nais.io/joarkhendelser/username;
+if test -f /var/run/secrets/nais.io/srvjoarkhendelser/username;
 then
     echo "Setting SERVICEUSER_USERNAME"
-    export SERVICEUSER_USERNAME=$(cat /var/run/secrets/nais.io/joarkhendelser/username)
+    export SERVICEUSER_USERNAME=$(cat /var/run/secrets/nais.io/srvjoarkhendelser/username)
 fi
 
-if test -f /var/run/secrets/nais.io/joarkhendelser/password;
+if test -f /var/run/secrets/nais.io/srvjoarkhendelser/password;
 then
     echo "Setting SERVICEUSER_PASSWORD"
-    export SERVICEUSER_PASSWORD=$(cat /var/run/secrets/nais.io/joarkhendelser/password)
+    export SERVICEUSER_PASSWORD=$(cat /var/run/secrets/nais.io/srvjoarkhendelser/password)
 fi
