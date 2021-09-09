@@ -28,13 +28,8 @@
 		<!-- Default argLine used by surefire and other plugins -->
 		<argLine>-Xmx512m</argLine>
 
-		<lombok.version>1.18.20</lombok.version>
 		<logstash-logback-encoder.version>6.6</logstash-logback-encoder.version>
-		<awaitility.version>4.0.3</awaitility.version>
-		<org-springframework-boot.version>2.5.0</org-springframework-boot.version>
 		<dok-journalfoering-hendelse-v1.version>0.0.3</dok-journalfoering-hendelse-v1.version>
-		<objenesis.version>3.1</objenesis.version>
-		<snappy-java.version>1.1.8.2</snappy-java.version>
 		<javax-inject.version>1</javax-inject.version>
 		<org.scala-lang.version>2.13.4</org.scala-lang.version>
 
@@ -56,38 +51,6 @@
 				<groupId>no.nav.dok</groupId>
 				<artifactId>dok-journalfoering-hendelse-v1</artifactId>
 				<version>${dok-journalfoering-hendelse-v1.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.projectlombok</groupId>
-				<artifactId>lombok</artifactId>
-				<version>${lombok.version}</version>
-				<scope>provided</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>org.xerial.snappy</groupId>
-				<artifactId>snappy-java</artifactId>
-				<version>${snappy-java.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.avro</groupId>
-				<artifactId>avro</artifactId>
-				<version>${avro.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.objenesis</groupId>
-				<artifactId>objenesis</artifactId>
-				<version>${objenesis.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.awaitility</groupId>
-				<artifactId>awaitility</artifactId>
-				<version>${awaitility.version}</version>
-				<scope>test</scope>
 			</dependency>
 
 			<!-- Logging -->
@@ -160,7 +123,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${org-springframework-boot.version}</version>
 				<configuration>
 					<skip>false</skip>
 					<fork>true</fork>
