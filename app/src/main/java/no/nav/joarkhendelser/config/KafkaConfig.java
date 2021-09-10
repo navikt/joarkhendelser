@@ -17,7 +17,6 @@ import javax.inject.Inject;
 import java.time.Duration;
 
 @Slf4j
-@EnableKafka
 @Configuration
 public class KafkaConfig {
 
