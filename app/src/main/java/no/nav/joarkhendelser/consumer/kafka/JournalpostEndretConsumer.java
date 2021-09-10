@@ -36,7 +36,7 @@ public class JournalpostEndretConsumer {
 	@Autowired
 	private MeterRegistry meterRegistry;
 
-	@KafkaListener(topics = "${journalpostEndret.topic}")
+	@KafkaListener(topics = "${journalpostendret.topic}")
 	@Metrics(value = "dok_request", percentiles = {0.5, 0.95})
 	@Transactional
 	public void onMessage(final ConsumerRecord<?, ?> record) {

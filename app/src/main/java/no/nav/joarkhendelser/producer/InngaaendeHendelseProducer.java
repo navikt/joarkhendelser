@@ -32,7 +32,7 @@ public class InngaaendeHendelseProducer {
 	public InngaaendeHendelseProducer(
 			MeterRegistry meterRegistry,
 			KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate,
-			@Value("${journalfoeringHendelse-v1.topic}")
+			@Value("${journalfoeringhendelse.topic}")
 			String topic
 	) {
 		this.meterRegistry = meterRegistry;
