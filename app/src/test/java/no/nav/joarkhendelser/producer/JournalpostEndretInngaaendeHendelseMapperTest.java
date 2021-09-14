@@ -1,8 +1,8 @@
 package no.nav.joarkhendelser.producer;
 
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.ENDELIG_JOURNALFORT;
+import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_MOTTATT;
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_UTGATT;
-import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.MIDLERTIDIG_JOURNALFORT;
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.TEMA_ENDRET;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -38,8 +38,8 @@ public class JournalpostEndretInngaaendeHendelseMapperTest {
 		InngaaendeHendelse mapMidlertidig = mapper.map(journalpostEndretEventMidlertidig);
 		JournalpostEndretEvent journalpostEndretEventMottatt = createJournalpostEndretEvent(null, "FOR", null, "MO", "I", "I");
 		InngaaendeHendelse mapMottatt = mapper.map(journalpostEndretEventMottatt);
-		assertEquals(MIDLERTIDIG_JOURNALFORT.toString(), mapMottatt.getHendelsesType());
-		assertEquals(MIDLERTIDIG_JOURNALFORT.toString(), mapMidlertidig.getHendelsesType());
+		assertEquals(JOURNALPOST_MOTTATT.toString(), mapMottatt.getHendelsesType());
+		assertEquals(JOURNALPOST_MOTTATT.toString(), mapMidlertidig.getHendelsesType());
 	}
 
 	@Test
@@ -48,8 +48,8 @@ public class JournalpostEndretInngaaendeHendelseMapperTest {
 		InngaaendeHendelse mapMidlertidig = mapper.map(journalpostEndretEventMidlertidig);
 		JournalpostEndretEvent journalpostEndretEventMottatt = createJournalpostEndretEvent("DAG", "FOR", "MO", "MO", "I", "I");
 		InngaaendeHendelse mapMottatt = mapper.map(journalpostEndretEventMottatt);
-		assertEquals(MIDLERTIDIG_JOURNALFORT.toString(), mapMottatt.getHendelsesType());
-		assertEquals(MIDLERTIDIG_JOURNALFORT.toString(), mapMidlertidig.getHendelsesType());
+		assertEquals(JOURNALPOST_MOTTATT.toString(), mapMottatt.getHendelsesType());
+		assertEquals(JOURNALPOST_MOTTATT.toString(), mapMidlertidig.getHendelsesType());
 	}
 
 	@Test

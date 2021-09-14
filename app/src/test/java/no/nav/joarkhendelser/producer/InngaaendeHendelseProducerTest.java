@@ -19,7 +19,7 @@ import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.concurrent.TimeUnit;
 
-import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.MIDLERTIDIG_JOURNALFORT;
+import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_MOTTATT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -63,7 +63,7 @@ public class InngaaendeHendelseProducerTest {
 		verify(kafkaTemplate, times(1)).send(any(ProducerRecord.class));
 		verify(meterRegistry, times(1)).timer(anyString(), anyString(), anyString(), anyString(), anyString());
 		verify(timerMock, times(1)).record(0L, TimeUnit.MILLISECONDS);
-		assertEquals(MIDLERTIDIG_JOURNALFORT.toString(), hendelse.getHendelsesType());
+		assertEquals(JOURNALPOST_MOTTATT.toString(), hendelse.getHendelsesType());
 	}
 
 	private InngaaendeHendelse createInngaaendeHendelse() {

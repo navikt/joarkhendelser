@@ -8,8 +8,8 @@ import java.util.List;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.ENDELIG_JOURNALFORT;
+import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_MOTTATT;
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_UTGATT;
-import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.MIDLERTIDIG_JOURNALFORT;
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.TEMA_ENDRET;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -49,7 +49,7 @@ public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 			assertEquals(1, records.size());
 			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
 			assertEquals(1L, utgaaendeRecord.getJournalpostId().longValue());
-			assertEquals(MIDLERTIDIG_JOURNALFORT.toString(), utgaaendeRecord.getHendelsesType().toString());
+			assertEquals(JOURNALPOST_MOTTATT.toString(), utgaaendeRecord.getHendelsesType().toString());
 		});
 	}
 

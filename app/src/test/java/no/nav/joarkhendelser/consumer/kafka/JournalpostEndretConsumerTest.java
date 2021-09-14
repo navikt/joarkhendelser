@@ -17,7 +17,7 @@ import java.util.HashSet;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static no.nav.joarkhendelser.consumer.kafka.JoarkSchema.JOURNALPOST;
-import static no.nav.joarkhendelser.consumer.kafka.JournalpostStatus.INNGAAENDE;
+import static no.nav.joarkhendelser.consumer.kafka.JournalpostRetning.INNGAAENDE;
 import static no.nav.joarkhendelser.consumer.kafka.JournalpostStatus.UTGAR;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;

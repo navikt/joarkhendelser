@@ -1,7 +1,7 @@
 package no.nav.joarkhendelser.producer;
 
 public enum InngaaendeHendelsesType {
-	MIDLERTIDIG_JOURNALFORT("MidlertidigJournalført"),
+	JOURNALPOST_MOTTATT("JournalpostMottatt"),
 	TEMA_ENDRET("TemaEndret"),
 	ENDELIG_JOURNALFORT("EndeligJournalført"),
 	JOURNALPOST_UTGATT("JournalpostUtgått");
