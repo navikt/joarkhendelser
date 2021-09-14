@@ -1,8 +1,6 @@
 {
-  "NAMESPACE": "q1",
-  "SECURITYTOKENSERVICE_URL": "https://sts-q1.preprod.local/SecurityTokenServiceProvider/",
-  "SRVJOARKHENDELSER": "/serviceuser/data/dev/srvjoarkhendelser",
-  "INGRESSES": "https://joarkhendelser-q1.dev.intern.nav.no",
+  "APPNAVN": "joarkhendelser-q1",
+  "NAMESPACE": "teamdokumenthandtering",
   "KAFKA_POOL": "nav-dev",
   "JOURNALFOERINGHENDELSE_TOPIC": "teamdokumenthandtering.aapen-dok-journalfoering-q1",
   "JOURNALPOSTENDRET_TOPIC": "teamdokumenthandtering.privat-dok-journalpost-endret-q1"

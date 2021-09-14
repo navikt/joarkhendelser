@@ -1,21 +1,19 @@
 kind: Application
 apiVersion: nais.io/v1alpha1
 metadata:
-  name: joarkhendelser
+  name: {{ APPNAVN }}
   namespace: {{ NAMESPACE }}
   labels:
     team: teamdokumenthandtering
 spec:
   env:
-    - name: SECURITYTOKENSERVICE_URL
-      value: {{ SECURITYTOKENSERVICE_URL }}
+    - name: APPNAVN
+      value: {{ APPNAVN }}
     - name: JOURNALFOERINGHENDELSE_TOPIC
       value: {{ JOURNALFOERINGHENDELSE_TOPIC }}
     - name: JOURNALPOSTENDRET_TOPIC
       value: {{ JOURNALPOSTENDRET_TOPIC }}
   image: {{ image }}
-  ingresses:
-    - {{ INGRESSES }}
   liveness:
     path: /isAlive
     port: 8080
@@ -41,8 +39,3 @@ spec:
     limits:
       cpu: 1500m
       memory: 1024Mi
-  vault:
-    enabled: true
-    paths:
-      - kvPath: {{ SRVJOARKHENDELSER }}
-        mountPath: /var/run/secrets/nais.io/srvjoarkhendelser

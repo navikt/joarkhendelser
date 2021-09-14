@@ -1,8 +1,6 @@
 {
+  "APPNAVN": "joarkhendelser",
   "NAMESPACE": "teamdokumenthandtering",
-  "SECURITYTOKENSERVICE_URL": "https://sts.adeo.no/SecurityTokenServiceProvider/",
-  "SRVJOARKHENDELSER": "/serviceuser/data/prod/srvjoarkhendelser",
-  "INGRESSES": "https://joarkhendelser.intern.nav.no",
   "KAFKA_POOL": "nav-prod",
   "JOURNALFOERINGHENDELSE_TOPIC": "teamdokumenthandtering.aapen-dok-journalfoering",
   "JOURNALPOSTENDRET_TOPIC": "teamdokumenthandtering.privat-dok-journalpost-endret"
