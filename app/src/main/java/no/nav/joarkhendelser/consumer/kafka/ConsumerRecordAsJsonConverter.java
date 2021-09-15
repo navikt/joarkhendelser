@@ -1,5 +1,18 @@
 package no.nav.joarkhendelser.consumer.kafka;
 
+import lombok.extern.slf4j.Slf4j;
+import net.logstash.logback.encoder.org.apache.commons.lang3.StringUtils;
+import no.nav.joarkhendelser.exception.JoarkJournalfoeringHendelseTechnicalException;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.stereotype.Component;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Set;
+
 import static no.nav.joarkhendelser.consumer.kafka.JoarkSchema.JOURNALPOST_ID;
 import static no.nav.joarkhendelser.consumer.kafka.JoarkSchema.KANAL_REFERANSE_ID;
 import static no.nav.joarkhendelser.consumer.kafka.JoarkSchema.K_BEHANDLINGSTEMA;
@@ -13,19 +26,6 @@ import static no.nav.joarkhendelser.consumer.kafka.OracleSchema.INSERT_OPERATION
 import static no.nav.joarkhendelser.consumer.kafka.OracleSchema.OPERATION_TIMESTAMP;
 import static no.nav.joarkhendelser.consumer.kafka.OracleSchema.OPERATION_TYPE;
 import static no.nav.joarkhendelser.consumer.kafka.OracleSchema.UPDATE_OPERATION;
-
-import lombok.extern.slf4j.Slf4j;
-import net.logstash.logback.encoder.org.apache.commons.lang3.StringUtils;
-import no.nav.joarkhendelser.exception.JoarkJournalfoeringHendelseTechnicalException;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.stereotype.Component;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Set;
 
 @Component
 @Slf4j

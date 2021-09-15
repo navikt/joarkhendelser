@@ -7,6 +7,7 @@ import no.nav.joarkhendelser.exception.JoarkJournalfoeringHendelseTechnicalExcep
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.errors.TopicAuthorizationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaProducerException;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -16,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.util.concurrent.ListenableFuture;
 
-import javax.inject.Inject;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -28,7 +28,7 @@ public class InngaaendeHendelseProducer {
 	private KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate;
 	private MeterRegistry meterRegistry;
 
-	@Inject
+	@Autowired
 	public InngaaendeHendelseProducer(
 			MeterRegistry meterRegistry,
 			KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate,
