@@ -7,7 +7,7 @@ import static no.nav.joarkhendelser.consumer.kafka.JoarkSchema.K_FAGOMRADE;
 import static no.nav.joarkhendelser.consumer.kafka.JoarkSchema.K_JOURNALPOST_T;
 import static no.nav.joarkhendelser.consumer.kafka.JoarkSchema.K_JOURNAL_S;
 import static no.nav.joarkhendelser.consumer.kafka.JoarkSchema.K_MOTTAKS_KANAL;
-import static no.nav.joarkhendelser.consumer.kafka.JournalpostRetning.INNGAAENDE;
+import static no.nav.joarkhendelser.consumer.kafka.JournalpostType.INNGAAENDE;
 import static no.nav.joarkhendelser.consumer.kafka.OracleSchema.CURRENT_TIMESTAMP;
 import static no.nav.joarkhendelser.consumer.kafka.OracleSchema.INSERT_OPERATION;
 import static no.nav.joarkhendelser.consumer.kafka.OracleSchema.OPERATION_TIMESTAMP;

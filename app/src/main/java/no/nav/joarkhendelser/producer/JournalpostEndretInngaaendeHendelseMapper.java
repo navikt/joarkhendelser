@@ -7,7 +7,7 @@ import no.nav.joarkhendelser.consumer.kafka.JournalpostStatus;
 import java.util.UUID;
 
 import static net.logstash.logback.encoder.org.apache.commons.lang3.StringUtils.isNotEmpty;
-import static no.nav.joarkhendelser.consumer.kafka.JournalpostRetning.INNGAAENDE;
+import static no.nav.joarkhendelser.consumer.kafka.JournalpostType.INNGAAENDE;
 import static no.nav.joarkhendelser.consumer.kafka.OracleSchema.INSERT_OPERATION;
 import static no.nav.joarkhendelser.consumer.kafka.OracleSchema.UPDATE_OPERATION;
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.ENDELIG_JOURNALFORT;
