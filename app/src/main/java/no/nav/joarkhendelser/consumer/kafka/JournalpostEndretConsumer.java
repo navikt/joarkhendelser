@@ -1,6 +1,6 @@
 package no.nav.joarkhendelser.consumer.kafka;
 
-import static no.nav.joarkhendelser.consumer.kafka.JournalpostStatus.INNGAAENDE;
+import static no.nav.joarkhendelser.consumer.kafka.JournalpostType.INNGAAENDE;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;

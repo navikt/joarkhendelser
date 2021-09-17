@@ -4,11 +4,9 @@ package no.nav.joarkhendelser.consumer.kafka;
  * @author Martin Burheim Tingstad, Visma Consulting.
  */
 public class JournalpostStatus {
-	public static final String MOTTATT = "MO";
-	public static final String MIDLERTIDIG = "M";
-	public static final String JOURNALFORT = "J";
-	public static final String INNGAAENDE = "I";
-	public static final String UTGAR = "U";
-	public static final String UKJENTBRUKER = "UB";
-	public static final String OPPLASTINGDOKUMENT = "OD";
+	public static final String MOTTATT = "MOTTATT";
+	public static final String JOURNALFORT = "JOURNALFOERT";
+	public static final String UTGAR = "UTGAAR";
+	public static final String UKJENTBRUKER = "UKJENT_BRUKER";
+	public static final String OPPLASTINGDOKUMENT = "OPPLASTING_DOKUMENT";
 }

@@ -17,7 +17,7 @@ import java.util.HashSet;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static no.nav.joarkhendelser.consumer.kafka.JoarkSchema.JOURNALPOST;
-import static no.nav.joarkhendelser.consumer.kafka.JournalpostStatus.INNGAAENDE;
+import static no.nav.joarkhendelser.consumer.kafka.JournalpostType.INNGAAENDE;
 import static no.nav.joarkhendelser.consumer.kafka.JournalpostStatus.UTGAR;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -79,6 +79,11 @@ public class JournalpostEndretConsumerTest {
 		verify(publisher, times(0)).publish(any(InngaaendeHendelse.class));
 	}
 
+	@Test
+	public void testmapping(){
+
+	}
+
 	private JournalpostEndretEvent createJournalpostEndretEvent(String journalpostType) {
 		HashSet<String> columnsChanged = new HashSet<>();
 		columnsChanged.add(JOURNALPOST);
@@ -93,4 +98,5 @@ public class JournalpostEndretConsumerTest {
 				.columnsChanged(columnsChanged)
 				.build();
 	}
+
 }
