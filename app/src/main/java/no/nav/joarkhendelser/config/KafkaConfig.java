@@ -3,27 +3,26 @@ package no.nav.joarkhendelser.config;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.listener.SeekToCurrentErrorHandler;
 import org.springframework.util.backoff.FixedBackOff;
+
+import java.time.Duration;
+
 import static org.springframework.util.backoff.FixedBackOff.DEFAULT_INTERVAL;
 import static org.springframework.util.backoff.FixedBackOff.UNLIMITED_ATTEMPTS;
 
-import javax.inject.Inject;
-import java.time.Duration;
-
 @Slf4j
-@EnableKafka
 @Configuration
 public class KafkaConfig {
 
 	private final MeterRegistry meterRegistry;
 
-	@Inject
+	@Autowired
 	public KafkaConfig(MeterRegistry meterRegistry) {
 		this.meterRegistry = meterRegistry;
 	}

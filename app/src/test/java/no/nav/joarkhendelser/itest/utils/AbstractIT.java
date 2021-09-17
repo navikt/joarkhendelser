@@ -55,10 +55,10 @@ import java.util.stream.StreamSupport;
 )
 public abstract class AbstractIT {
 
-	@Value("${journalfoeringHendelse-v1.topic}")
+	@Value("${journalfoeringhendelse.topic}")
 	public static String UT_TOPIC = "test-ut-topic";
 
-	@Value("${journalpostEndret.topic}")
+	@Value("${journalpostendret.topic}")
 	public static String INN_TOPIC = "test-inn-topic";
 
 	@Autowired

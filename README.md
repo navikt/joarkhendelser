@@ -35,18 +35,21 @@ For [dev-fss](https://logs.adeo.no/goto/2025ed36ac97de78e0a9880b19865ff2)
 For [prod-fss](https://logs.adeo.no/goto/ca96f2932f187020cc9089559b1b739e)
 
 ### Kubectl
+Merk at det eksisterer to versjoner av appen i dev-fss: joarkhendelser og joarkhendelser-q1, 
+med integrasjoner mot henholdsvis q2 og q1.
+
 For dev-fss:
-```shell script
+```
 kubectl config use-context dev-fss
-kubectl get pods -n q1 | grep joarkhendelser
-kubectl logs -f joarkhendelser-<POD-ID> -n teamdokumenthandtering -c joarkhendelser
+kubectl get pods -n teamdokumenthandtering | grep joarkhendelser
+kubectl logs -f joarkhendelser-<POD-ID> -n teamdokumenthandtering
 ```
 
 For prod-fss:
-```shell script
+```
 kubectl config use-context prod-fss
-kubectl get pods -n p | grep joarkhendelser
-kubectl logs -f joarkhendelser-<POD-ID> -n teamdokumenthandtering -c joarkhendelser
+kubectl get pods -n teamdokumenthandtering | grep joarkhendelser
+kubectl logs -f joarkhendelser-<POD-ID> -n teamdokumenthandtering
 ```
 
 ## Metrics
