@@ -14,19 +14,20 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @Slf4j
 @Component
 public class InngaaendeHendelseProducer {
 
-	private String topic;
-	private KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate;
-	private MeterRegistry meterRegistry;
+	private final String topic;
+	private final KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate;
+	private final MeterRegistry meterRegistry;
 
 	@Autowired
 	public InngaaendeHendelseProducer(
@@ -68,10 +69,9 @@ public class InngaaendeHendelseProducer {
 		try {
 			SendResult<String, JournalfoeringHendelseRecord> sendResult = send.get();
 			meterRegistry.timer(
-					"journalfoeringhendelse_timer","tema",
-					StringUtils.isEmpty(hendelse.getTemaNytt()) ? "UKJENT" : hendelse.getTemaNytt(),
-					"mottaksKanal",
-					StringUtils.isEmpty(hendelse.getMottaksKanal()) ? "UKJENT" : hendelse.getMottaksKanal()
+					"journalfoeringhendelse_timer",
+					"tema", isEmpty(hendelse.getTemaNytt()) ? "UKJENT" : hendelse.getTemaNytt(),
+					"mottaksKanal", isEmpty(hendelse.getMottaksKanal()) ? "UKJENT" : hendelse.getMottaksKanal()
 			).record(
 					hendelse.getOperationTimestamp() == null ? 0 : hendelse.getCurrentTimestamp() - hendelse.getOperationTimestamp(),
 					TimeUnit.MILLISECONDS

@@ -47,6 +47,7 @@
   },
   "after": {
     "JOURNALPOST_ID": 1,
-    "K_JOURNAL_S":"U"
+    "K_JOURNAL_S":"U",
+    "K_JOURNALPOST_T":"I"
   }
 }

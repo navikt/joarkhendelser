@@ -1,81 +1,94 @@
 package no.nav.joarkhendelser.consumer.kafka;
 
-import static no.nav.joarkhendelser.consumer.kafka.JournalpostType.INNGAAENDE;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
+import no.nav.joarkhendelser.consumer.kafka.goldengate.GoldenGateEvent;
+import no.nav.joarkhendelser.consumer.kafka.goldengate.GoldenGateEventMapper;
 import no.nav.joarkhendelser.metrics.Metrics;
 import no.nav.joarkhendelser.producer.InngaaendeHendelse;
 import no.nav.joarkhendelser.producer.InngaaendeHendelseProducer;
 import no.nav.joarkhendelser.producer.JournalpostEndretInngaaendeHendelseMapper;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.logging.log4j.util.Strings;
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
+import javax.inject.Inject;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author Martin Burheim Tingstad, Visma Consulting.
- */
+import static no.nav.joarkhendelser.consumer.kafka.goldengate.GoldenGateEventFilter.shouldStopProcessingOfMessage;
+import static org.springframework.kafka.support.KafkaHeaders.OFFSET;
+import static org.springframework.kafka.support.KafkaHeaders.RECEIVED_PARTITION_ID;
+import static org.springframework.kafka.support.KafkaHeaders.RECEIVED_TOPIC;
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @Slf4j
 @Component
 public class JournalpostEndretConsumer {
 
-	@Autowired
-	private ConsumerRecordAsJsonConverter converter;
+	private final JournalpostEndretEventConverter converter;
+	private final InngaaendeHendelseProducer publisher;
+	private final MeterRegistry meterRegistry;
 
-	@Autowired
-	private InngaaendeHendelseProducer publisher;
-
-	@Autowired
-	private MeterRegistry meterRegistry;
+	@Inject
+	public JournalpostEndretConsumer(
+			JournalpostEndretEventConverter converter,
+			InngaaendeHendelseProducer publisher,
+			MeterRegistry meterRegistry
+	) {
+		this.converter = converter;
+		this.publisher = publisher;
+		this.meterRegistry = meterRegistry;
+	}
 
 	@KafkaListener(topics = "${journalpostendret.topic}")
 	@Metrics(value = "dok_request", percentiles = {0.5, 0.95})
 	@Transactional
-	public void onMessage(final ConsumerRecord<?, ?> record) {
-		log.info("Innkommende kafka record til topic: {}, partition: {}, offset: {}", record.topic(), record.partition(), record.offset());
+	public void onMessage(
+			@Payload String message,
+			@Header(RECEIVED_TOPIC) String topic,
+			@Header(RECEIVED_PARTITION_ID) int partition,
+			@Header(OFFSET) int offset
+	) throws JsonProcessingException {
+		log.info("Innkommende Golden Gate-melding til topic: {}, partition: {}, offset: {}", topic, partition, offset);
 		MDC.put("callId", UUID.randomUUID().toString());
-		long start = System.currentTimeMillis();
-		JournalpostEndretEvent event = converter.convertRecordToEvent(record);
+		GoldenGateEvent goldenGateEvent = GoldenGateEventMapper.mapToEvent(message);
 
-		if (event != null && INNGAAENDE.equalsIgnoreCase(event.getJournalpostType())) {
-			InngaaendeHendelse hendelse = JournalpostEndretInngaaendeHendelseMapper.map(event);
+		if (shouldStopProcessingOfMessage(goldenGateEvent, topic, partition, offset)) {
+			return;
+		}
+
+		JournalpostEndretEvent journalpostEndretEvent = converter.convertToEvent(goldenGateEvent, topic, partition, offset);
+
+		if (journalpostEndretEvent != null) {
+			InngaaendeHendelse hendelse = JournalpostEndretInngaaendeHendelseMapper.map(journalpostEndretEvent);
 			if (hendelse != null) {
 				publisher.publish(hendelse);
-				meterRegistry.counter("Inngaaendehendelser", "type", hendelse.getHendelsesType(),
-						"tema", Strings.isEmpty(hendelse.getTemaNytt()) ? "UKJENT" : hendelse.getTemaNytt(),
-						"mottakskanal", Strings.isEmpty(hendelse.getMottaksKanal()) ? "UKJENT" : hendelse.getMottaksKanal()).increment();
+				meterRegistry.counter(
+						"Inngaaendehendelser",
+						"type", hendelse.getHendelsesType(),
+						"tema", isEmpty(hendelse.getTemaNytt()) ? "UKJENT" : hendelse.getTemaNytt(),
+						"mottakskanal", isEmpty(hendelse.getMottaksKanal()) ? "UKJENT" : hendelse.getMottaksKanal()).increment();
 
-				log.info("Publisert hendelse " + hendelse.getHendelsesType() +
-						" for journalpost " + hendelse.getJournalpostId() +
-						(
-								StringUtils.isEmpty(hendelse.getKanalReferanseId()) ? "" :
-										(", kanalReferanseId " + hendelse.getKanalReferanseId())
-						) +
-						(
-								StringUtils.isEmpty(hendelse.getMottaksKanal()) ? "" :
-										(", mottaksKanal " + hendelse.getMottaksKanal())
-						) +
-						"."
-				);
+				log.info("Publisert hendelse {} for journalpost={}, kanalreferanseId={}, og mottakskanal={}.",
+						hendelse.getHendelsesType(),
+						hendelse.getJournalpostId(),
+						hendelse.getKanalReferanseId(),
+						hendelse.getMottaksKanal());
 			}
-			journalfoeringHendelseTimer("databaseoppdateringer_goldengate_timer", event.getFagomradeBefore(),event.getMottaksKanal(),
-					event.getOperationTimestamp(), event.getCurrentTimestamp());
+			journalfoeringHendelseTimer("databaseoppdateringer_goldengate_timer", journalpostEndretEvent.getFagomradeBefore(), journalpostEndretEvent.getMottaksKanal(),
+					journalpostEndretEvent.getOperationTimestamp(), journalpostEndretEvent.getCurrentTimestamp());
 		}
-		log.debug("handling took " + (System.currentTimeMillis() - start) + " ms");
 	}
 
 	private void journalfoeringHendelseTimer(String timerNavn, String tema, String mottaksKanal, Long startTime, Long endTime) {
-		Long duration = (endTime == null || startTime == null) ? 0L : endTime - startTime;
-		meterRegistry.timer(timerNavn, "tema", StringUtils.isEmpty(tema) ? "UKJENT" :
-				tema,"mottaksKannal",StringUtils.isEmpty(mottaksKanal)?"UKJENT":mottaksKanal)
+		long duration = (endTime == null || startTime == null) ? 0L : endTime - startTime;
+		meterRegistry.timer(timerNavn, "tema", isEmpty(tema) ? "UKJENT" :
+						tema, "mottaksKannal", isEmpty(mottaksKanal) ? "UKJENT" : mottaksKanal)
 				.record(duration, TimeUnit.MILLISECONDS);
 	}
 }

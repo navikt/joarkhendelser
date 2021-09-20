@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
-
 @Getter
 @Builder
 @NoArgsConstructor
@@ -22,7 +20,6 @@ public class JournalpostEndretEvent {
 	String mottaksKanal;
 	String kanalReferanseId;
 	String behandlingsTema;
-	Set<String> columnsChanged;
 	Long operationTimestamp;
 	Long currentTimestamp;
 }
