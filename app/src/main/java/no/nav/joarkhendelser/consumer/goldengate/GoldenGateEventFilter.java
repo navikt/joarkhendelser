@@ -1,14 +1,14 @@
-package no.nav.joarkhendelser.consumer.kafka.goldengate;
+package no.nav.joarkhendelser.consumer.goldengate;
 
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static no.nav.joarkhendelser.consumer.kafka.goldengate.GoldenGateUtils.prettyPrintOperationName;
-import static no.nav.joarkhendelser.consumer.kafka.JournalpostType.INNGAAENDE;
-import static no.nav.joarkhendelser.consumer.kafka.OracleSchema.INSERT_OPERATION;
-import static no.nav.joarkhendelser.consumer.kafka.OracleSchema.UPDATE_OPERATION;
+import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateUtils.prettyPrintOperationName;
+import static no.nav.joarkhendelser.consumer.JournalpostType.INNGAAENDE;
+import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.INSERT_OPERATION;
+import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.UPDATE_OPERATION;
 
 @Slf4j
 public class GoldenGateEventFilter {

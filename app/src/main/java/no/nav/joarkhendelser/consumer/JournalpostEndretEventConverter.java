@@ -1,18 +1,18 @@
-package no.nav.joarkhendelser.consumer.kafka;
+package no.nav.joarkhendelser.consumer;
 
 import lombok.extern.slf4j.Slf4j;
 import net.logstash.logback.encoder.org.apache.commons.lang3.StringUtils;
-import no.nav.joarkhendelser.consumer.kafka.goldengate.GoldenGateEvent;
-import no.nav.joarkhendelser.consumer.kafka.goldengate.GoldenGateColumns;
+import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEvent;
+import no.nav.joarkhendelser.consumer.goldengate.GoldenGateColumns;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static no.nav.joarkhendelser.consumer.kafka.goldengate.GoldenGateUtils.prettyPrintOperationName;
-import static no.nav.joarkhendelser.consumer.kafka.OracleSchema.INSERT_OPERATION;
-import static no.nav.joarkhendelser.consumer.kafka.OracleSchema.UPDATE_OPERATION;
+import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateUtils.prettyPrintOperationName;
+import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.INSERT_OPERATION;
+import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.UPDATE_OPERATION;
 
 @Component
 @Slf4j

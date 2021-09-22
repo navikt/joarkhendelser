@@ -1,4 +1,4 @@
-package no.nav.joarkhendelser.consumer.kafka.goldengate;
+package no.nav.joarkhendelser.consumer.goldengate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

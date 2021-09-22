@@ -1,4 +1,4 @@
-package no.nav.joarkhendelser.consumer.kafka;
+package no.nav.joarkhendelser.consumer;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

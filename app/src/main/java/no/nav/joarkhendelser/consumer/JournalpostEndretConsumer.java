@@ -1,10 +1,11 @@
-package no.nav.joarkhendelser.consumer.kafka;
+package no.nav.joarkhendelser.consumer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
-import no.nav.joarkhendelser.consumer.kafka.goldengate.GoldenGateEvent;
-import no.nav.joarkhendelser.consumer.kafka.goldengate.GoldenGateEventMapper;
+import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEvent;
+import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEventFilter;
+import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEventMapper;
 import no.nav.joarkhendelser.metrics.Metrics;
 import no.nav.joarkhendelser.producer.InngaaendeHendelse;
 import no.nav.joarkhendelser.producer.InngaaendeHendelseProducer;
@@ -20,7 +21,6 @@ import javax.inject.Inject;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import static no.nav.joarkhendelser.consumer.kafka.goldengate.GoldenGateEventFilter.shouldStopProcessingOfMessage;
 import static org.springframework.kafka.support.KafkaHeaders.OFFSET;
 import static org.springframework.kafka.support.KafkaHeaders.RECEIVED_PARTITION_ID;
 import static org.springframework.kafka.support.KafkaHeaders.RECEIVED_TOPIC;
@@ -58,7 +58,7 @@ public class JournalpostEndretConsumer {
 		MDC.put("callId", UUID.randomUUID().toString());
 		GoldenGateEvent goldenGateEvent = GoldenGateEventMapper.mapToEvent(message);
 
-		if (shouldStopProcessingOfMessage(goldenGateEvent, topic, partition, offset)) {
+		if (GoldenGateEventFilter.shouldStopProcessingOfMessage(goldenGateEvent, topic, partition, offset)) {
 			return;
 		}
 

@@ -1,4 +1,4 @@
-package no.nav.joarkhendelser.consumer.kafka.goldengate;
+package no.nav.joarkhendelser.consumer.goldengate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

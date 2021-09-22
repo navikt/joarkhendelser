@@ -1,7 +1,7 @@
-package no.nav.joarkhendelser.consumer.kafka;
+package no.nav.joarkhendelser.consumer;
 
-import no.nav.joarkhendelser.consumer.kafka.goldengate.GoldenGateEvent;
-import no.nav.joarkhendelser.consumer.kafka.goldengate.GoldenGateEventMapper;
+import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEvent;
+import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEventMapper;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Files;

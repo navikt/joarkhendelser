@@ -1,14 +1,14 @@
-package no.nav.joarkhendelser.consumer.kafka;
+package no.nav.joarkhendelser.consumer;
 
-import no.nav.joarkhendelser.consumer.kafka.goldengate.GoldenGateEvent;
+import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEvent;
 import org.junit.jupiter.api.Test;
 
-import static no.nav.joarkhendelser.consumer.kafka.GoldenGateEventUtils.createBasicColumns;
-import static no.nav.joarkhendelser.consumer.kafka.GoldenGateEventUtils.createBasicColumnsWithTema;
-import static no.nav.joarkhendelser.consumer.kafka.GoldenGateEventUtils.createBasicEvent;
-import static no.nav.joarkhendelser.consumer.kafka.OracleSchema.DELETE_OPERATION;
-import static no.nav.joarkhendelser.consumer.kafka.OracleSchema.INSERT_OPERATION;
-import static no.nav.joarkhendelser.consumer.kafka.OracleSchema.UPDATE_OPERATION;
+import static no.nav.joarkhendelser.consumer.GoldenGateEventUtils.createBasicColumns;
+import static no.nav.joarkhendelser.consumer.GoldenGateEventUtils.createBasicColumnsWithTema;
+import static no.nav.joarkhendelser.consumer.GoldenGateEventUtils.createBasicEvent;
+import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.DELETE_OPERATION;
+import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.INSERT_OPERATION;
+import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.UPDATE_OPERATION;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 

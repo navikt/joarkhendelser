@@ -1,7 +1,7 @@
-package no.nav.joarkhendelser.consumer.kafka;
+package no.nav.joarkhendelser.consumer;
 
-import no.nav.joarkhendelser.consumer.kafka.goldengate.GoldenGateEvent;
-import no.nav.joarkhendelser.consumer.kafka.goldengate.GoldenGateColumns;
+import no.nav.joarkhendelser.consumer.goldengate.GoldenGateColumns;
+import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEvent;
 
 public class GoldenGateEventUtils {
 

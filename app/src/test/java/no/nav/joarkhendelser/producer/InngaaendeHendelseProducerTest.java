@@ -2,7 +2,7 @@ package no.nav.joarkhendelser.producer;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
-import no.nav.joarkhendelser.consumer.kafka.JournalpostEndretEvent;
+import no.nav.joarkhendelser.consumer.JournalpostEndretEvent;
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;

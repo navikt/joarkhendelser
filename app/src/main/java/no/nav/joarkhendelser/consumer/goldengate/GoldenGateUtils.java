@@ -1,4 +1,4 @@
-package no.nav.joarkhendelser.consumer.kafka.goldengate;
+package no.nav.joarkhendelser.consumer.goldengate;
 
 public class GoldenGateUtils {
 
