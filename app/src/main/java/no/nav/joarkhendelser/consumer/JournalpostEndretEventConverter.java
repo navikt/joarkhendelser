@@ -25,7 +25,7 @@ public class JournalpostEndretEventConverter {
 
 		String operation = goldenGateEvent.getOperation();
 		if (!(UPDATE_OPERATION.equalsIgnoreCase(operation) || INSERT_OPERATION.equalsIgnoreCase(operation))) {
-			log.warn("Received unknown operation {} for journalpost", prettyPrintOperationName(operation));
+			log.warn("Mottok ukjent operasjon={} for journalpost. Avslutter behandling av hendelse", prettyPrintOperationName(operation));
 			return null;
 		}
 
@@ -35,7 +35,7 @@ public class JournalpostEndretEventConverter {
 		GoldenGateColumns before = goldenGateEvent.getBefore();
 		Integer journalpostId = after.getJournalpostId();
 
-		log.info("Received {}-event for journalpost {} on topic: {} (Partition: {}, offset: {}) (op_ts: {}, current_ts: {})",
+		log.info("Mottok {}-event for journalposId={} på topic={} (Partition={}, offset={}) (op_ts={}, current_ts={})",
 				prettyPrintOperationName(operation), journalpostId, topic, partition, offset, operationTimestamp, currentTimestamp);
 
 		if (UPDATE_OPERATION.equalsIgnoreCase(operation)) {

@@ -55,7 +55,7 @@ public class JournalpostEndretConsumer {
 			@Header(OFFSET) int offset
 	) throws JsonProcessingException {
 		MDC.put("callId", UUID.randomUUID().toString());
-		log.info("Innkommende Golden Gate-melding til topic: {}, partition: {}, offset: {}", topic, partition, offset);
+		log.info("Innkommende Golden Gate-melding fra topic={}, partition={}, offset={}", topic, partition, offset);
 		GoldenGateEvent goldenGateEvent = GoldenGateEventMapper.mapToEvent(message);
 
 		if (GoldenGateEventFilter.shouldStopProcessingOfMessage(goldenGateEvent, topic, partition, offset)) {
@@ -74,7 +74,7 @@ public class JournalpostEndretConsumer {
 						"tema", isEmpty(hendelse.getTemaNytt()) ? "UKJENT" : hendelse.getTemaNytt(),
 						"mottakskanal", isEmpty(hendelse.getMottaksKanal()) ? "UKJENT" : hendelse.getMottaksKanal()).increment();
 
-				log.info("Publisert hendelse {} for journalpost={}, kanalreferanseId={}, og mottakskanal={}.",
+				log.info("Publisert hendelse={} for journalpostId={}, kanalreferanseId={}, og mottakskanal={}.",
 						hendelse.getHendelsesType(),
 						hendelse.getJournalpostId(),
 						hendelse.getKanalReferanseId(),

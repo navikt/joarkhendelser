@@ -77,7 +77,7 @@ public class InngaaendeHendelseProducer {
 					TimeUnit.MILLISECONDS
 			);
 
-			log.info("Published to partition {}, offset {}, topic {}",
+			log.info("Publiserte til partition={}, offset={}, topic={}",
 					sendResult.getRecordMetadata().partition(),
 					sendResult.getRecordMetadata().offset(),
 					sendResult.getRecordMetadata().topic()
@@ -86,11 +86,11 @@ public class InngaaendeHendelseProducer {
 			if (e.getCause() != null && e.getCause() instanceof KafkaProducerException) {
 				KafkaProducerException ee = (KafkaProducerException) e.getCause();
 				if (ee.getCause() != null && ee.getCause() instanceof TopicAuthorizationException) {
-					throw new AuthenticationFailedExecption("Not authenticated to publish to topic '" + topic + "'", ee.getCause());
+					throw new AuthenticationFailedExecption("Ikke autentisert for å publisere til topic=" + topic, ee.getCause());
 				}
 			}
 		} catch (InterruptedException e) {
-			throw new JoarkJournalfoeringHendelseTechnicalException("Failed to send message to kafka. Topic: " + topic, e);
+			throw new JoarkJournalfoeringHendelseTechnicalException("Feilet sending av Kafka-melding til topic=" + topic, e);
 		}
 	}
 }

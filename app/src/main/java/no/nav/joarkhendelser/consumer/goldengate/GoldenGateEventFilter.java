@@ -20,22 +20,25 @@ public class GoldenGateEventFilter {
 		String operation = goldenGateEvent.getOperation();
 
 		if (!allowedOperations.contains(operation)) {
-			log.info("Golden Gate-message with operation {} is ignored in filter with topic: {}, partition: {}, offset: {}", prettyPrintOperationName(operation), topic, partition, offset);
+			log.info("Forkaster Golden Gate-melding med operasjon {} fra topic={}, partition={}, offset={}",
+					prettyPrintOperationName(operation), topic, partition, offset);
 			return true;
 		}
 
 		if ((INSERT_OPERATION.equalsIgnoreCase(operation) || UPDATE_OPERATION.equalsIgnoreCase(operation)) && goldenGateEvent.getAfter() == null) {
-			log.warn("Golden Gate-message missing after values with topic: {}, partition: {}, offset: {}", topic, partition, offset);
+			log.warn("Forkaster Golden Gate-melding med operasjon {} som mangler after-feltet fra topic={}, partition={}, offset={}",
+					prettyPrintOperationName(operation), topic, partition, offset);
 			return true;
 		}
 
 		if (UPDATE_OPERATION.equalsIgnoreCase(operation) && goldenGateEvent.getBefore() == null) {
-			log.warn("Golden Gate-message missing before values with topic: {}, partition: {}, offset: {}", topic, partition, offset);
+			log.warn("Forkaster Golden Gate-melding med operasjon {} som mangler before-feltet fra topic={}, partition={}, offset={}",
+					prettyPrintOperationName(operation), topic, partition, offset);
 			return true;
 		}
 
 		if (!INNGAAENDE.equalsIgnoreCase((goldenGateEvent.getAfter().getJournalposttype()))) {
-			log.info("Journalpost event with journalposttype not equal to I (inngaaende) is ignored in filter with topic: {}, partition: {}, offset: {}", topic, partition, offset);
+			log.info("Forkaster Golden Gate-melding med journalposttype ulik I (inngaaende) fra topic={}, partition={}, offset={}", topic, partition, offset);
 			return true;
 		}
 
