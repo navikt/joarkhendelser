@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEvent;
 import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEventFilter;
 import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEventMapper;
-import no.nav.joarkhendelser.metrics.Metrics;
 import no.nav.joarkhendelser.producer.InngaaendeHendelse;
 import no.nav.joarkhendelser.producer.InngaaendeHendelseProducer;
 import no.nav.joarkhendelser.producer.JournalpostEndretInngaaendeHendelseMapper;
@@ -46,7 +45,6 @@ public class JournalpostEndretConsumer {
 	}
 
 	@KafkaListener(topics = "${journalpostendret.topic}")
-	@Metrics(value = "dok_request", percentiles = {0.5, 0.95})
 	@Transactional
 	public void onMessage(
 			@Payload String message,
@@ -87,8 +85,9 @@ public class JournalpostEndretConsumer {
 
 	private void journalfoeringHendelseTimer(String timerNavn, String tema, String mottaksKanal, Long startTime, Long endTime) {
 		long duration = (endTime == null || startTime == null) ? 0L : endTime - startTime;
-		meterRegistry.timer(timerNavn, "tema", isEmpty(tema) ? "UKJENT" :
-						tema, "mottaksKannal", isEmpty(mottaksKanal) ? "UKJENT" : mottaksKanal)
-				.record(duration, TimeUnit.MILLISECONDS);
+		meterRegistry.timer(timerNavn,
+				"tema", isEmpty(tema) ? "UKJENT" : tema, "mottaksKannal",
+				isEmpty(mottaksKanal) ? "UKJENT" : mottaksKanal
+		).record(duration, TimeUnit.MILLISECONDS);
 	}
 }

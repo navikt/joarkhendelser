@@ -34,10 +34,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@SpringBootTest(
-		classes = {ApplicationTestConfig.class},
-		properties = "spring.main.allow-bean-definition-overriding=true"
-)
+@SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ActiveProfiles("itest")
 @EmbeddedKafka(
