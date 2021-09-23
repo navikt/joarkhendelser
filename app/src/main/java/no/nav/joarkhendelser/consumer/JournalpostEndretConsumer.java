@@ -1,14 +1,11 @@
 package no.nav.joarkhendelser.consumer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEvent;
-import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEventFilter;
 import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEventMapper;
 import no.nav.joarkhendelser.producer.InngaaendeHendelse;
 import no.nav.joarkhendelser.producer.InngaaendeHendelseProducer;
-import no.nav.joarkhendelser.producer.JournalpostEndretInngaaendeHendelseMapper;
 import org.slf4j.MDC;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Header;
@@ -18,8 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateEventFilter.shouldStopProcessingOfMessage;
+import static no.nav.joarkhendelser.producer.JournalpostEndretInngaaendeHendelseMapper.map;
 import static org.springframework.kafka.support.KafkaHeaders.OFFSET;
 import static org.springframework.kafka.support.KafkaHeaders.RECEIVED_PARTITION_ID;
 import static org.springframework.kafka.support.KafkaHeaders.RECEIVED_TOPIC;
@@ -32,16 +31,20 @@ public class JournalpostEndretConsumer {
 	private final JournalpostEndretEventConverter converter;
 	private final InngaaendeHendelseProducer publisher;
 	private final MeterRegistry meterRegistry;
+	private final GoldenGateEventMapper goldenGateEventMapper;
+
 
 	@Inject
 	public JournalpostEndretConsumer(
 			JournalpostEndretEventConverter converter,
 			InngaaendeHendelseProducer publisher,
-			MeterRegistry meterRegistry
+			MeterRegistry meterRegistry,
+			GoldenGateEventMapper goldenGateEventMapper
 	) {
 		this.converter = converter;
 		this.publisher = publisher;
 		this.meterRegistry = meterRegistry;
+		this.goldenGateEventMapper = goldenGateEventMapper;
 	}
 
 	@KafkaListener(topics = "${journalpostendret.topic}")
@@ -51,19 +54,18 @@ public class JournalpostEndretConsumer {
 			@Header(RECEIVED_TOPIC) String topic,
 			@Header(RECEIVED_PARTITION_ID) int partition,
 			@Header(OFFSET) int offset
-	) throws JsonProcessingException {
+	) {
 		MDC.put("callId", UUID.randomUUID().toString());
 		log.info("Innkommende Golden Gate-melding fra topic={}, partition={}, offset={}", topic, partition, offset);
-		GoldenGateEvent goldenGateEvent = GoldenGateEventMapper.mapToEvent(message);
 
-		if (GoldenGateEventFilter.shouldStopProcessingOfMessage(goldenGateEvent, topic, partition, offset)) {
-			return;
-		}
+		GoldenGateEvent goldenGateEvent = goldenGateEventMapper.mapToEvent(message);
+		if (goldenGateEvent == null) return;
+		if (shouldStopProcessingOfMessage(goldenGateEvent, topic, partition, offset)) return;
 
 		JournalpostEndretEvent journalpostEndretEvent = converter.convertToEvent(goldenGateEvent, topic, partition, offset);
 
 		if (journalpostEndretEvent != null) {
-			InngaaendeHendelse hendelse = JournalpostEndretInngaaendeHendelseMapper.map(journalpostEndretEvent);
+			InngaaendeHendelse hendelse = map(journalpostEndretEvent);
 			if (hendelse != null) {
 				publisher.publish(hendelse);
 				meterRegistry.counter(
@@ -88,6 +90,6 @@ public class JournalpostEndretConsumer {
 		meterRegistry.timer(timerNavn,
 				"tema", isEmpty(tema) ? "UKJENT" : tema, "mottaksKannal",
 				isEmpty(mottaksKanal) ? "UKJENT" : mottaksKanal
-		).record(duration, TimeUnit.MILLISECONDS);
+		).record(duration, MILLISECONDS);
 	}
 }
