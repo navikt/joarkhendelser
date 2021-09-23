@@ -1,6 +1,5 @@
 package no.nav.joarkhendelser.producer;
 
-import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.joarkhendelser.exception.AuthenticationFailedExecption;
 import no.nav.joarkhendelser.exception.JoarkJournalfoeringHendelseTechnicalException;
@@ -17,9 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-
-import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Slf4j
 @Component
@@ -27,16 +23,13 @@ public class InngaaendeHendelseProducer {
 
 	private final String topic;
 	private final KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate;
-	private final MeterRegistry meterRegistry;
 
 	@Autowired
 	public InngaaendeHendelseProducer(
-			MeterRegistry meterRegistry,
 			KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate,
 			@Value("${journalfoeringhendelse.topic}")
 			String topic
 	) {
-		this.meterRegistry = meterRegistry;
 		this.kafkaTemplate = kafkaTemplate;
 		this.topic = topic;
 	}
@@ -58,8 +51,6 @@ public class InngaaendeHendelseProducer {
 
 		ProducerRecord<String, JournalfoeringHendelseRecord> producerRecord = new ProducerRecord<>(
 				topic,
-				null,
-				hendelse.getOperationTimestamp(),
 				hendelse.getJournalpostId().toString(),
 				record
 		);
@@ -68,14 +59,6 @@ public class InngaaendeHendelseProducer {
 
 		try {
 			SendResult<String, JournalfoeringHendelseRecord> sendResult = send.get();
-			meterRegistry.timer(
-					"journalfoeringhendelse_timer",
-					"tema", isEmpty(hendelse.getTemaNytt()) ? "UKJENT" : hendelse.getTemaNytt(),
-					"mottaksKanal", isEmpty(hendelse.getMottaksKanal()) ? "UKJENT" : hendelse.getMottaksKanal()
-			).record(
-					hendelse.getOperationTimestamp() == null ? 0 : hendelse.getCurrentTimestamp() - hendelse.getOperationTimestamp(),
-					TimeUnit.MILLISECONDS
-			);
 
 			log.info("Publiserte til partition={}, offset={}, topic={}",
 					sendResult.getRecordMetadata().partition(),

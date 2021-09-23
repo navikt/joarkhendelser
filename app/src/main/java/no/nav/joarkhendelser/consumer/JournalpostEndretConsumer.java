@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.UUID;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -60,9 +62,9 @@ public class JournalpostEndretConsumer {
 
 		GoldenGateEvent goldenGateEvent = goldenGateEventMapper.mapToEvent(message);
 		if (goldenGateEvent == null) return;
-		if (shouldStopProcessingOfMessage(goldenGateEvent, topic, partition, offset)) return;
+		if (shouldStopProcessingOfMessage(goldenGateEvent)) return;
 
-		JournalpostEndretEvent journalpostEndretEvent = converter.convertToEvent(goldenGateEvent, topic, partition, offset);
+		JournalpostEndretEvent journalpostEndretEvent = converter.convertToEvent(goldenGateEvent);
 
 		if (journalpostEndretEvent != null) {
 			InngaaendeHendelse hendelse = map(journalpostEndretEvent);
@@ -80,14 +82,18 @@ public class JournalpostEndretConsumer {
 						hendelse.getKanalReferanseId(),
 						hendelse.getMottaksKanal());
 			}
-			journalfoeringHendelseTimer("databaseoppdateringer_goldengate_timer", journalpostEndretEvent.getFagomradeBefore(), journalpostEndretEvent.getMottaksKanal(),
-					journalpostEndretEvent.getOperationTimestamp(), journalpostEndretEvent.getCurrentTimestamp());
+			journalfoeringHendelseTimer(
+					journalpostEndretEvent.getFagomradeBefore(),
+					journalpostEndretEvent.getMottaksKanal(),
+					goldenGateEvent.getOperationTimestamp().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+			);
 		}
 	}
 
-	private void journalfoeringHendelseTimer(String timerNavn, String tema, String mottaksKanal, Long startTime, Long endTime) {
-		long duration = (endTime == null || startTime == null) ? 0L : endTime - startTime;
-		meterRegistry.timer(timerNavn,
+	private void journalfoeringHendelseTimer(String tema, String mottaksKanal, Long startTime) {
+		long duration = (startTime == null) ? 0L : Instant.now().toEpochMilli() - startTime;
+		meterRegistry.timer(
+				"databaseoppdateringer_goldengate_timer",
 				"tema", isEmpty(tema) ? "UKJENT" : tema, "mottaksKannal",
 				isEmpty(mottaksKanal) ? "UKJENT" : mottaksKanal
 		).record(duration, MILLISECONDS);

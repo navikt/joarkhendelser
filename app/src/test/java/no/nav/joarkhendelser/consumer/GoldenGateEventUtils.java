@@ -3,15 +3,17 @@ package no.nav.joarkhendelser.consumer;
 import no.nav.joarkhendelser.consumer.goldengate.GoldenGateColumns;
 import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEvent;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class GoldenGateEventUtils {
+
+	public static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");;
 
 	public static GoldenGateEvent createBasicEvent(String operation) {
 		return new GoldenGateEvent(
-				"JOARK.T_JOURNALPOST",
 				operation,
-				"2021-09-21 15:21:53.000000",
-				"2021-09-21T15:21:58.162000",
-				"00000000150000011839",
+				LocalDateTime.parse("2021-09-21 15:21:53.000000", dateTimeFormatter),
 				null,
 				null
 		);

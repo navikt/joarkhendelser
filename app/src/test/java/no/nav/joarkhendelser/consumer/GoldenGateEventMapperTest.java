@@ -6,24 +6,26 @@ import org.junit.jupiter.api.Test;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 
+import static no.nav.joarkhendelser.consumer.GoldenGateEventUtils.dateTimeFormatter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class GoldenGateEventMapperTest {
 
+	private final GoldenGateEventMapper goldenGateEventMapper = new GoldenGateEventMapper();
+
 	@Test
 	void shouldMapInsertMelding() throws Exception {
 		String pathInsertMelding = "src/test/resources/__files/endelig_jf.json";
 		String json = readFileAsString(pathInsertMelding);
-		GoldenGateEvent goldenGateEvent = GoldenGateEventMapper.mapToEvent(json);
+		GoldenGateEvent goldenGateEvent = goldenGateEventMapper.mapToEvent(json);
 
-		assertEquals("JOARK.T_JOURNALPOST", goldenGateEvent.getTable());
+		LocalDateTime operationTimestamp = LocalDateTime.parse("2018-10-09 11:06:02.123456", dateTimeFormatter);
+		assertEquals(operationTimestamp, goldenGateEvent.getOperationTimestamp());
+
 		assertEquals("I", goldenGateEvent.getOperation());
-		assertEquals("2018-10-09 11:06:02.000000", goldenGateEvent.getOperationTimestamp());
-		assertEquals("2018-10-09T13:06:04.842000", goldenGateEvent.getCurrentTimestamp());
-		assertEquals("00000000000000091406", goldenGateEvent.getPosition());
-
 		assertEquals(1, goldenGateEvent.getAfter().getJournalpostId());
 		assertEquals("SAK", goldenGateEvent.getAfter().getFagomraade());
 		assertEquals("J", goldenGateEvent.getAfter().getJournalpoststatus());
@@ -37,13 +39,11 @@ public class GoldenGateEventMapperTest {
 	void shouldMapUpdateMelding() throws Exception {
 		String pathUpdateMelding = "src/test/resources/__files/update.json";
 		String json = readFileAsString(pathUpdateMelding);
-		GoldenGateEvent goldenGateEvent = GoldenGateEventMapper.mapToEvent(json);
+		GoldenGateEvent goldenGateEvent = goldenGateEventMapper.mapToEvent(json);
 
-		assertEquals("JOARK.T_JOURNALPOST", goldenGateEvent.getTable());
 		assertEquals("U", goldenGateEvent.getOperation());
-		assertEquals("2021-09-21 15:21:53.000000", goldenGateEvent.getOperationTimestamp());
-		assertEquals("2021-09-21T15:21:58.162000", goldenGateEvent.getCurrentTimestamp());
-		assertEquals("00000000150000011839", goldenGateEvent.getPosition());
+		LocalDateTime operationTimestamp = LocalDateTime.parse("2021-09-21 15:21:53.000000", dateTimeFormatter);
+		assertEquals(operationTimestamp, goldenGateEvent.getOperationTimestamp());
 
 		assertEquals(453655940, goldenGateEvent.getBefore().getJournalpostId());
 		assertEquals("MED", goldenGateEvent.getBefore().getFagomraade());

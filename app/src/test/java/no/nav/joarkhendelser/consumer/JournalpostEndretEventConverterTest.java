@@ -22,7 +22,7 @@ public class JournalpostEndretEventConverterTest {
 		event.setBefore(createBasicColumnsWithTema("FOR"));
 		event.setAfter(createBasicColumnsWithTema("DAG"));
 
-		JournalpostEndretEvent journalpostEndretEvent = converter.convertToEvent(event, "test-topic-inn", 0, 1337);
+		JournalpostEndretEvent journalpostEndretEvent = converter.convertToEvent(event);
 		assertEquals(453655940L, journalpostEndretEvent.getJournalpostId());
 		assertEquals("U", journalpostEndretEvent.getOperation());
 		assertEquals("M", journalpostEndretEvent.getJournalpostStatusAfter());
@@ -35,7 +35,7 @@ public class JournalpostEndretEventConverterTest {
 		GoldenGateEvent event = createBasicEvent(INSERT_OPERATION);
 		event.setAfter(createBasicColumnsWithTema("DAG"));
 
-		JournalpostEndretEvent journalpostEndretEvent = converter.convertToEvent(event, "test-topic-inn", 0, 1337);
+		JournalpostEndretEvent journalpostEndretEvent = converter.convertToEvent(event);
 
 		assertEquals(453655940L, journalpostEndretEvent.getJournalpostId());
 		assertEquals("I", journalpostEndretEvent.getOperation());
@@ -49,7 +49,7 @@ public class JournalpostEndretEventConverterTest {
 		GoldenGateEvent event = createBasicEvent(DELETE_OPERATION);
 		event.setBefore(createBasicColumns());
 
-		JournalpostEndretEvent journalpostEndretEvent = converter.convertToEvent(event, "test-topic-inn", 0, 1337);
+		JournalpostEndretEvent journalpostEndretEvent = converter.convertToEvent(event);
 		assertNull(journalpostEndretEvent);
 	}
 }

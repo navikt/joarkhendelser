@@ -2,26 +2,19 @@ package no.nav.joarkhendelser.consumer;
 
 import lombok.extern.slf4j.Slf4j;
 import net.logstash.logback.encoder.org.apache.commons.lang3.StringUtils;
-import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEvent;
 import no.nav.joarkhendelser.consumer.goldengate.GoldenGateColumns;
+import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEvent;
 import org.springframework.stereotype.Component;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateUtils.prettyPrintOperationName;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.INSERT_OPERATION;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.UPDATE_OPERATION;
+import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateUtils.prettyPrintOperationName;
 
 @Component
 @Slf4j
 public class JournalpostEndretEventConverter {
 
-	private final String template = "yyyy-MM-dd HH:mm:ss.SSSSSS";
-	final SimpleDateFormat dateFormat = new SimpleDateFormat(template);
-
-	public JournalpostEndretEvent convertToEvent(GoldenGateEvent goldenGateEvent, String topic, int partition, int offset) {
+	public JournalpostEndretEvent convertToEvent(GoldenGateEvent goldenGateEvent) {
 
 		String operation = goldenGateEvent.getOperation();
 		if (!(UPDATE_OPERATION.equalsIgnoreCase(operation) || INSERT_OPERATION.equalsIgnoreCase(operation))) {
@@ -29,14 +22,11 @@ public class JournalpostEndretEventConverter {
 			return null;
 		}
 
-		String operationTimestamp = goldenGateEvent.getOperationTimestamp();
-		String currentTimestamp = goldenGateEvent.getCurrentTimestamp();
 		GoldenGateColumns after = goldenGateEvent.getAfter();
 		GoldenGateColumns before = goldenGateEvent.getBefore();
 		Integer journalpostId = after.getJournalpostId();
 
-		log.info("Mottok {}-event for journalposId={} på topic={} (Partition={}, offset={}) (op_ts={}, current_ts={})",
-				prettyPrintOperationName(operation), journalpostId, topic, partition, offset, operationTimestamp, currentTimestamp);
+		log.info("Mottok {}-event for journalpostId={}", prettyPrintOperationName(operation), journalpostId);
 
 		if (UPDATE_OPERATION.equalsIgnoreCase(operation)) {
 			return JournalpostEndretEvent.builder()
@@ -50,8 +40,6 @@ public class JournalpostEndretEventConverter {
 					.mottaksKanal(getStringOrEmptyString(after.getMottakskanal()))
 					.kanalReferanseId(getStringOrEmptyString(after.getKanalreferanseId()))
 					.behandlingsTema(getStringOrEmptyString(after.getBehandlingstema()))
-					.operationTimestamp(convertOracleTimeStampToLong(operationTimestamp))
-					.currentTimestamp(convertOracleTimeStampToLong(currentTimestamp))
 					.build();
 		} else if (INSERT_OPERATION.equalsIgnoreCase(operation)) {
 			return JournalpostEndretEvent.builder()
@@ -65,23 +53,9 @@ public class JournalpostEndretEventConverter {
 					.mottaksKanal(getStringOrEmptyString(after.getMottakskanal()))
 					.kanalReferanseId(getStringOrEmptyString(after.getKanalreferanseId()))
 					.behandlingsTema(getStringOrEmptyString(after.getBehandlingstema()))
-					.operationTimestamp(convertOracleTimeStampToLong(operationTimestamp))
-					.currentTimestamp(convertOracleTimeStampToLong(currentTimestamp))
 					.build();
 		}
 		return null;
-	}
-
-	private Long convertOracleTimeStampToLong(String timestamp) {
-		if (StringUtils.isNotEmpty(timestamp)) { // TODO Possibly a bug. Should check this with get current time on DB
-			try {
-				Date date = dateFormat.parse(timestamp);
-				return date.getTime();
-			} catch (ParseException e) {
-				//fall gjennom til return
-			}
-		}
-		return new Date().getTime();
 	}
 
 	private String getStringOrEmptyString(String value) {

@@ -15,30 +15,27 @@ public class GoldenGateEventFilter {
 
 	private static final List<String> allowedOperations = Arrays.asList(INSERT_OPERATION, UPDATE_OPERATION);
 
-	public static boolean shouldStopProcessingOfMessage(GoldenGateEvent goldenGateEvent, String topic, int partition, int offset) {
+	public static boolean shouldStopProcessingOfMessage(GoldenGateEvent goldenGateEvent) {
 
 		String operation = goldenGateEvent.getOperation();
 
 		if (!allowedOperations.contains(operation)) {
-			log.info("Forkaster Golden Gate-melding med operasjon {} fra topic={}, partition={}, offset={}",
-					prettyPrintOperationName(operation), topic, partition, offset);
+			log.info("Forkaster Golden Gate-melding med operasjon {}", prettyPrintOperationName(operation));
 			return true;
 		}
 
 		if ((INSERT_OPERATION.equalsIgnoreCase(operation) || UPDATE_OPERATION.equalsIgnoreCase(operation)) && goldenGateEvent.getAfter() == null) {
-			log.warn("Forkaster Golden Gate-melding med operasjon {} som mangler after-feltet fra topic={}, partition={}, offset={}",
-					prettyPrintOperationName(operation), topic, partition, offset);
+			log.warn("Forkaster Golden Gate-melding med operasjon {} som mangler after-feltet", prettyPrintOperationName(operation));
 			return true;
 		}
 
 		if (UPDATE_OPERATION.equalsIgnoreCase(operation) && goldenGateEvent.getBefore() == null) {
-			log.warn("Forkaster Golden Gate-melding med operasjon {} som mangler before-feltet fra topic={}, partition={}, offset={}",
-					prettyPrintOperationName(operation), topic, partition, offset);
+			log.warn("Forkaster Golden Gate-melding med operasjon {} som mangler before-feltet", prettyPrintOperationName(operation));
 			return true;
 		}
 
 		if (!INNGAAENDE.equalsIgnoreCase((goldenGateEvent.getAfter().getJournalposttype()))) {
-			log.info("Forkaster Golden Gate-melding med journalposttype ulik I (inngaaende) fra topic={}, partition={}, offset={}", topic, partition, offset);
+			log.info("Forkaster Golden Gate-melding med journalposttype ulik I (inngaaende)");
 			return true;
 		}
 

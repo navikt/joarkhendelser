@@ -1,11 +1,14 @@
 package no.nav.joarkhendelser.consumer.goldengate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 
 @Getter
@@ -15,20 +18,12 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GoldenGateEvent {
 
-	@JsonProperty("table")
-	private String table;
-
 	@JsonProperty("op_type")
 	private String operation;
 
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss.SSSSSS")
 	@JsonProperty("op_ts")
-	private String operationTimestamp;
-
-	@JsonProperty("current_ts")
-	private String currentTimestamp;
-
-	@JsonProperty("pos")
-	private String position;
+	private LocalDateTime operationTimestamp;
 
 	@JsonProperty("before")
 	private GoldenGateColumns before;
