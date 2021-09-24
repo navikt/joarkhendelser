@@ -1,6 +1,5 @@
 package no.nav.joarkhendelser.producer;
 
-import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.joarkhendelser.exception.AuthenticationFailedExecption;
 import no.nav.joarkhendelser.exception.JoarkJournalfoeringHendelseTechnicalException;
@@ -14,28 +13,23 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
 public class InngaaendeHendelseProducer {
 
-	private String topic;
-	private KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate;
-	private MeterRegistry meterRegistry;
+	private final String topic;
+	private final KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate;
 
 	@Autowired
 	public InngaaendeHendelseProducer(
-			MeterRegistry meterRegistry,
 			KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate,
 			@Value("${journalfoeringhendelse.topic}")
 			String topic
 	) {
-		this.meterRegistry = meterRegistry;
 		this.kafkaTemplate = kafkaTemplate;
 		this.topic = topic;
 	}
@@ -57,8 +51,6 @@ public class InngaaendeHendelseProducer {
 
 		ProducerRecord<String, JournalfoeringHendelseRecord> producerRecord = new ProducerRecord<>(
 				topic,
-				null,
-				hendelse.getOperationTimestamp(),
 				hendelse.getJournalpostId().toString(),
 				record
 		);
@@ -67,17 +59,8 @@ public class InngaaendeHendelseProducer {
 
 		try {
 			SendResult<String, JournalfoeringHendelseRecord> sendResult = send.get();
-			meterRegistry.timer(
-					"journalfoeringhendelse_timer","tema",
-					StringUtils.isEmpty(hendelse.getTemaNytt()) ? "UKJENT" : hendelse.getTemaNytt(),
-					"mottaksKanal",
-					StringUtils.isEmpty(hendelse.getMottaksKanal()) ? "UKJENT" : hendelse.getMottaksKanal()
-			).record(
-					hendelse.getOperationTimestamp() == null ? 0 : hendelse.getCurrentTimestamp() - hendelse.getOperationTimestamp(),
-					TimeUnit.MILLISECONDS
-			);
 
-			log.info("Published to partition {}, offset {}, topic {}",
+			log.info("Publiserte til partition={}, offset={}, topic={}",
 					sendResult.getRecordMetadata().partition(),
 					sendResult.getRecordMetadata().offset(),
 					sendResult.getRecordMetadata().topic()
@@ -86,11 +69,11 @@ public class InngaaendeHendelseProducer {
 			if (e.getCause() != null && e.getCause() instanceof KafkaProducerException) {
 				KafkaProducerException ee = (KafkaProducerException) e.getCause();
 				if (ee.getCause() != null && ee.getCause() instanceof TopicAuthorizationException) {
-					throw new AuthenticationFailedExecption("Not authenticated to publish to topic '" + topic + "'", ee.getCause());
+					throw new AuthenticationFailedExecption("Ikke autentisert for å publisere til topic=" + topic, ee.getCause());
 				}
 			}
 		} catch (InterruptedException e) {
-			throw new JoarkJournalfoeringHendelseTechnicalException("Failed to send message to kafka. Topic: " + topic, e);
+			throw new JoarkJournalfoeringHendelseTechnicalException("Feilet sending av Kafka-melding til topic=" + topic, e);
 		}
 	}
 }

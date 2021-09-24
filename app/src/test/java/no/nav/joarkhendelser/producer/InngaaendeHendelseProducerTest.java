@@ -1,8 +1,6 @@
 package no.nav.joarkhendelser.producer;
 
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Timer;
-import no.nav.joarkhendelser.consumer.kafka.JournalpostEndretEvent;
+import no.nav.joarkhendelser.consumer.JournalpostEndretEvent;
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -17,12 +15,9 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.util.concurrent.ListenableFuture;
 
-import java.util.concurrent.TimeUnit;
-
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_MOTTATT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -34,11 +29,7 @@ public class InngaaendeHendelseProducerTest {
 	InngaaendeHendelseProducer inngaaendeHendelsePublisher;
 
 	@MockBean
-	private MeterRegistry meterRegistry;
-	@MockBean
 	private KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate;
-	@Mock
-	private Timer timerMock;
 	@Mock
 	private ListenableFuture listenableFuture;
 
@@ -51,8 +42,6 @@ public class InngaaendeHendelseProducerTest {
 				.thenReturn(listenableFuture);
 		when(listenableFuture.get())
 				.thenReturn(new SendResult<String, JournalfoeringHendelseRecord>(null, recordMetadata));
-		when(meterRegistry.timer(anyString(), anyString(), anyString(), anyString(), anyString()))
-				.thenReturn(timerMock);
 	}
 
 	@Test
@@ -61,8 +50,6 @@ public class InngaaendeHendelseProducerTest {
 		inngaaendeHendelsePublisher.publish(hendelse);
 
 		verify(kafkaTemplate, times(1)).send(any(ProducerRecord.class));
-		verify(meterRegistry, times(1)).timer(anyString(), anyString(), anyString(), anyString(), anyString());
-		verify(timerMock, times(1)).record(0L, TimeUnit.MILLISECONDS);
 		assertEquals(JOURNALPOST_MOTTATT.toString(), hendelse.getHendelsesType());
 	}
 

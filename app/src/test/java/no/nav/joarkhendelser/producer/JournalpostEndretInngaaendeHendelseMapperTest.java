@@ -1,12 +1,12 @@
 package no.nav.joarkhendelser.producer;
 
-import no.nav.joarkhendelser.consumer.kafka.JournalpostEndretEvent;
+import no.nav.joarkhendelser.consumer.JournalpostEndretEvent;
 import org.junit.jupiter.api.Test;
 
-import static no.nav.joarkhendelser.consumer.kafka.JournalpostStatus.JOURNALFORT;
-import static no.nav.joarkhendelser.consumer.kafka.JournalpostStatus.MOTTATT;
-import static no.nav.joarkhendelser.consumer.kafka.JournalpostStatus.UKJENTBRUKER;
-import static no.nav.joarkhendelser.consumer.kafka.JournalpostStatus.UTGAR;
+import static no.nav.joarkhendelser.producer.JournalpostStatus.JOURNALFORT;
+import static no.nav.joarkhendelser.producer.JournalpostStatus.MOTTATT;
+import static no.nav.joarkhendelser.producer.JournalpostStatus.UKJENTBRUKER;
+import static no.nav.joarkhendelser.producer.JournalpostStatus.UTGAR;
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.ENDELIG_JOURNALFORT;
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_MOTTATT;
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_UTGATT;

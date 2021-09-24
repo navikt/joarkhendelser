@@ -47,6 +47,8 @@
   },
   "after": {
     "JOURNALPOST_ID": 1,
-    "K_FAGOMRADE": "AAP"
+    "K_FAGOMRADE": "AAP",
+    "K_JOURNALPOST_T":"I",
+    "K_JOURNAL_S":"M"
   }
 }

@@ -1,11 +1,9 @@
-package no.nav.joarkhendelser.consumer.kafka;
+package no.nav.joarkhendelser.consumer;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.Set;
 
 @Getter
 @Builder
@@ -22,7 +20,4 @@ public class JournalpostEndretEvent {
 	String mottaksKanal;
 	String kanalReferanseId;
 	String behandlingsTema;
-	Set<String> columnsChanged;
-	Long operationTimestamp;
-	Long currentTimestamp;
 }
