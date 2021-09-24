@@ -49,6 +49,11 @@ public class InngaaendeHendelseProducer {
 				hendelse.getBehandlingsTema()
 		);
 
+		log.info("Utgående record: hendelsesId={}, versjon={}, hendelsesType={}, journalpostId={}, journalpostStatus={}, " +
+						"temaGammelt={}, temaNytt={}, mottaksKanal={}, kanalReferanseId={}, behandlingsTema={}",
+				record.getHendelsesId(), record.getVersjon(), record.getHendelsesType(), record.getJournalpostId(), record.getJournalpostStatus(),
+				record.getTemaGammelt(), record.getTemaNytt(), record.getMottaksKanal(), record.getKanalReferanseId(), record.getBehandlingstema());
+
 		ProducerRecord<String, JournalfoeringHendelseRecord> producerRecord = new ProducerRecord<>(
 				topic,
 				hendelse.getJournalpostId().toString(),

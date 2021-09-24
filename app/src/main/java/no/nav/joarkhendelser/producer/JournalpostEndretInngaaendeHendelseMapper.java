@@ -1,5 +1,6 @@
 package no.nav.joarkhendelser.producer;
 
+import lombok.extern.slf4j.Slf4j;
 import no.nav.joarkhendelser.consumer.JournalpostEndretEvent;
 
 import java.util.UUID;
@@ -13,26 +14,29 @@ import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.JOURNALPOST
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_UTGATT;
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.TEMA_ENDRET;
 
-/**
- * @author Martin Burheim Tingstad, Visma Consulting.
- */
+@Slf4j
 public class JournalpostEndretInngaaendeHendelseMapper {
 	public static InngaaendeHendelse map(JournalpostEndretEvent event) {
 		InngaaendeHendelsesType inngaaendeHendelsesType = finnHendelsesType(event);
 
-		return inngaaendeHendelsesType != null ?
-				InngaaendeHendelse.builder()
-						.hendelsesId(UUID.randomUUID().toString())
-						.versjon(1)
-						.temaNytt(event.getFagomradeAfter())
-						.temaGammelt(event.getFagomradeBefore())
-						.journalpostId(event.getJournalpostId())
-						.kanalReferanseId(event.getKanalReferanseId())
-						.mottaksKanal(event.getMottaksKanal())
-						.behandlingsTema(event.getBehandlingsTema())
-						.journalpostStatus(mapJournalstatus(event.getJournalpostStatusAfter()))
-						.hendelsesType(inngaaendeHendelsesType.toString())
-						.build() : null;
+		if (inngaaendeHendelsesType != null) {
+			return InngaaendeHendelse.builder()
+					.hendelsesId(UUID.randomUUID().toString())
+					.versjon(1)
+					.temaNytt(event.getFagomradeAfter())
+					.temaGammelt(event.getFagomradeBefore())
+					.journalpostId(event.getJournalpostId())
+					.kanalReferanseId(event.getKanalReferanseId())
+					.mottaksKanal(event.getMottaksKanal())
+					.behandlingsTema(event.getBehandlingsTema())
+					.journalpostStatus(mapJournalstatus(event.getJournalpostStatusAfter()))
+					.hendelsesType(inngaaendeHendelsesType.toString())
+					.build();
+		} else {
+			log.info("InngaaendeHendelsesType er null med operation={}, journalposttype={}, journalpoststatusBefore={}, journalpoststatusAfter={}.",
+					event.getOperation(), event.getJournalpostType(), event.getJournalpostStatusBefore(), event.getJournalpostStatusAfter());
+			return null;
+		}
 	}
 
 	private static String mapJournalstatus(String journalpostStatus) {
