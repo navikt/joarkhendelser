@@ -5,5 +5,5 @@
   "JOURNALFOERINGHENDELSE_TOPIC": "teamdokumenthandtering.aapen-dok-journalfoering",
   "JOURNALPOSTENDRET_TOPIC": "teamdokumenthandtering.privat-dok-journalpost-endret",
   "MIN_REPLICAS": 2,
-  "MAX_REPLICAS": 4
+  "MAX_REPLICAS": 3
 }
