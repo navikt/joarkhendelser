@@ -40,7 +40,7 @@ public class JournalpostEndretInngaaendeHendelseMapper {
 	}
 
 	private static String mapJournalstatus(String journalpostStatus) {
-		if(JoarkJournalpostStatus.JOURNALFORT.equalsIgnoreCase(journalpostStatus)) {
+		if (JoarkJournalpostStatus.JOURNALFORT.equalsIgnoreCase(journalpostStatus)) {
 			return JournalpostStatus.JOURNALFORT;
 		} else if (JoarkJournalpostStatus.MIDLERTIDIG.equalsIgnoreCase(journalpostStatus) || JoarkJournalpostStatus.MOTTATT.equalsIgnoreCase(journalpostStatus)) {
 			return JournalpostStatus.MOTTATT;
@@ -59,7 +59,7 @@ public class JournalpostEndretInngaaendeHendelseMapper {
 
 		if (!isInngaaende(event)) {
 			hendelsesType = null;
-		} else if (isMidlertidigJournalfort(event)) {
+		} else if (isJournalpostMottatt(event)) {
 			hendelsesType = JOURNALPOST_MOTTATT;
 		} else if (isEndeligJournalfort(event)) {
 			hendelsesType = ENDELIG_JOURNALFORT;
@@ -71,7 +71,7 @@ public class JournalpostEndretInngaaendeHendelseMapper {
 		return hendelsesType;
 	}
 
-	private static boolean isMidlertidigJournalfort(JournalpostEndretEvent event) {
+	private static boolean isJournalpostMottatt(JournalpostEndretEvent event) {
 		return (isMottatt(event) || isMidlertidig(event)) &&
 				(isInsertOperation(event) || isUpdateFromOpplastingDokument(event));
 	}
