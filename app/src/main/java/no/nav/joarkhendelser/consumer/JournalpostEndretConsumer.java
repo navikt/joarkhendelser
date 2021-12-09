@@ -67,7 +67,7 @@ public class JournalpostEndretConsumer {
 		JournalpostEndretEvent journalpostEndretEvent = converter.convertToEvent(goldenGateEvent);
 
 		if (journalpostEndretEvent != null) {
-			InngaaendeHendelse hendelse = map(journalpostEndretEvent);
+			InngaaendeHendelse hendelse = map(journalpostEndretEvent, goldenGateEvent);
 			if (hendelse != null) {
 				publisher.publish(hendelse);
 				meterRegistry.counter(

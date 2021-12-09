@@ -1,7 +1,10 @@
 package no.nav.joarkhendelser.producer;
 
 import no.nav.joarkhendelser.consumer.JournalpostEndretEvent;
+import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEvent;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDateTime;
 
 import static no.nav.joarkhendelser.producer.JournalpostStatus.JOURNALFORT;
 import static no.nav.joarkhendelser.producer.JournalpostStatus.MOTTATT;
@@ -18,6 +21,89 @@ public class JournalpostEndretInngaaendeHendelseMapperTest {
 
 	private final JournalpostEndretInngaaendeHendelseMapper mapper = new JournalpostEndretInngaaendeHendelseMapper();
 
+	@Test
+	public void shouldNotMapToJournalpostMottatt() {
+		JournalpostEndretEvent journalpostEndretEventMidlertidig = createJournalpostEndretEvent("DAG", "DAG", "MO", "M", "U", "I");
+		InngaaendeHendelse mapMidlertidig = mapper.map(journalpostEndretEventMidlertidig, this.buildGoldenGate());
+
+		assertNull(mapMidlertidig);
+	}
+
+	@Test
+	public void shouldMapToJournalpostMottatt() {
+		JournalpostEndretEvent journalpostEndretEventMidlertidig = createJournalpostEndretEvent("DAG", "FOR", "M", "M", "I", "I");
+		InngaaendeHendelse mapMidlertidig = mapper.map(journalpostEndretEventMidlertidig, this.buildGoldenGate());
+		JournalpostEndretEvent journalpostEndretEventMottatt = createJournalpostEndretEvent("DAG", "FOR", "MO", "MO", "I", "I");
+		InngaaendeHendelse mapMottatt = mapper.map(journalpostEndretEventMottatt, this.buildGoldenGate());
+
+		assertEquals(JOURNALPOST_MOTTATT.toString(), mapMottatt.getHendelsesType());
+		assertEquals(JOURNALPOST_MOTTATT.toString(), mapMidlertidig.getHendelsesType());
+		assertEquals(MOTTATT, mapMidlertidig.getJournalpostStatus());
+		assertEquals(MOTTATT, mapMottatt.getJournalpostStatus());
+	}
+
+	@Test
+	public void shouldMapToJournalpostMottattIfUpdateFromOpplastingDokument() {
+		JournalpostEndretEvent journalpostEndretEventMidlertidig = createJournalpostEndretEvent("DAG", "DAG", "OD", "M", "U", "I");
+		InngaaendeHendelse mapMidlertidig = mapper.map(journalpostEndretEventMidlertidig, this.buildGoldenGate());
+		JournalpostEndretEvent journalpostEndretEventMottatt = createJournalpostEndretEvent(null, "FOR", null, "MO", "I", "I");
+		InngaaendeHendelse mapMottatt = mapper.map(journalpostEndretEventMottatt, this.buildGoldenGate());
+
+		assertEquals(JOURNALPOST_MOTTATT.toString(), mapMottatt.getHendelsesType());
+		assertEquals(JOURNALPOST_MOTTATT.toString(), mapMidlertidig.getHendelsesType());
+		assertEquals(MOTTATT, mapMidlertidig.getJournalpostStatus());
+		assertEquals(MOTTATT, mapMottatt.getJournalpostStatus());
+	}
+
+	@Test
+	public void shouldMapToEndeligJournalfort() {
+		JournalpostEndretEvent journalpostEndretEvent = createJournalpostEndretEvent("DAG", "FOR", "M", "J", "U", "I");
+		InngaaendeHendelse map = mapper.map(journalpostEndretEvent, this.buildGoldenGate());
+
+		assertEquals(ENDELIG_JOURNALFORT.toString(), map.getHendelsesType());
+		assertEquals(JOURNALFORT, map.getJournalpostStatus());
+
+	}
+
+	@Test
+	public void shouldMapToJournalpostUtgaatt() {
+		JournalpostEndretEvent journalpostEndretEventUtgatt = createJournalpostEndretEvent("", "", "MO", "U", "U", "I");
+		JournalpostEndretEvent journalpostEndretEventUkjent = createJournalpostEndretEvent("", "", "MO", "UB", "U", "I");
+		InngaaendeHendelse mapUtgatt = mapper.map(journalpostEndretEventUtgatt, this.buildGoldenGate());
+		InngaaendeHendelse mapUkjent = mapper.map(journalpostEndretEventUkjent, this.buildGoldenGate());
+
+		assertEquals(JOURNALPOST_UTGATT.toString(), mapUtgatt.getHendelsesType());
+		assertEquals(JOURNALPOST_UTGATT.toString(), mapUkjent.getHendelsesType());
+		assertEquals(UTGAR, mapUtgatt.getJournalpostStatus());
+		assertEquals(UKJENTBRUKER, mapUkjent.getJournalpostStatus());
+	}
+
+	@Test
+	public void shouldMapToTemaEndret() {
+		JournalpostEndretEvent journalpostEndretEvent = createJournalpostEndretEvent("DAG", "FOR", "MO", "M", "U", "I");
+		InngaaendeHendelse map = mapper.map(journalpostEndretEvent, this.buildGoldenGate());
+
+		assertEquals(TEMA_ENDRET.toString(), map.getHendelsesType());
+		assertEquals(MOTTATT, map.getJournalpostStatus());
+	}
+
+	@Test
+	public void shouldNotMapToHendelsesType() {
+		JournalpostEndretEvent journalpostEndretEvent = createJournalpostEndretEvent("", "", "", "", "", "");
+
+		assertNull(mapper.map(journalpostEndretEvent, this.buildGoldenGate()));
+	}
+
+	@Test
+	public void shouldMapToJournalpostMottatt22() {
+		GoldenGateEvent goldenGateEvent = this.buildGoldenGate();
+		JournalpostEndretEvent journalpostEndretEventMidlertidig = createJournalpostEndretEvent("DAG", "FOR", "M", "M", "I", "I");
+		InngaaendeHendelse mapMidlertidig = mapper.map(journalpostEndretEventMidlertidig, goldenGateEvent);
+
+		assertEquals(journalpostEndretEventMidlertidig.getJournalpostId() + "-" + goldenGateEvent.getOperationTimestamp(),
+				mapMidlertidig.getHendelsesId());
+	}
+
 	private JournalpostEndretEvent createJournalpostEndretEvent(String fagomradeBefore, String fagomradeAfter, String journalpostStatusBefore, String journalpostStatusAfter, String operation, String journalposttype) {
 		return JournalpostEndretEvent.builder()
 				.fagomradeBefore(fagomradeBefore)
@@ -29,76 +115,10 @@ public class JournalpostEndretInngaaendeHendelseMapperTest {
 				.build();
 	}
 
-	@Test
-	public void shouldNotMapToJournalpostMottatt() {
-		JournalpostEndretEvent journalpostEndretEventMidlertidig = createJournalpostEndretEvent("DAG", "DAG", "MO", "M", "U", "I");
-		InngaaendeHendelse mapMidlertidig = mapper.map(journalpostEndretEventMidlertidig);
+	private GoldenGateEvent buildGoldenGate() {
+		GoldenGateEvent goldenGateEvent = new GoldenGateEvent();
+		goldenGateEvent.setOperationTimestamp(LocalDateTime.now());
 
-		assertNull(mapMidlertidig);
-	}
-
-	@Test
-	public void shouldMapToJournalpostMottatt() {
-		JournalpostEndretEvent journalpostEndretEventMidlertidig = createJournalpostEndretEvent("DAG", "FOR", "M", "M", "I", "I");
-		InngaaendeHendelse mapMidlertidig = mapper.map(journalpostEndretEventMidlertidig);
-		JournalpostEndretEvent journalpostEndretEventMottatt = createJournalpostEndretEvent("DAG", "FOR", "MO", "MO", "I", "I");
-		InngaaendeHendelse mapMottatt = mapper.map(journalpostEndretEventMottatt);
-
-		assertEquals(JOURNALPOST_MOTTATT.toString(), mapMottatt.getHendelsesType());
-		assertEquals(JOURNALPOST_MOTTATT.toString(), mapMidlertidig.getHendelsesType());
-		assertEquals(MOTTATT, mapMidlertidig.getJournalpostStatus());
-		assertEquals(MOTTATT, mapMottatt.getJournalpostStatus());
-	}
-
-	@Test
-	public void shouldMapToJournalpostMottattIfUpdateFromOpplastingDokument() {
-		JournalpostEndretEvent journalpostEndretEventMidlertidig = createJournalpostEndretEvent("DAG", "DAG", "OD", "M", "U", "I");
-		InngaaendeHendelse mapMidlertidig = mapper.map(journalpostEndretEventMidlertidig);
-		JournalpostEndretEvent journalpostEndretEventMottatt = createJournalpostEndretEvent(null, "FOR", null, "MO", "I", "I");
-		InngaaendeHendelse mapMottatt = mapper.map(journalpostEndretEventMottatt);
-
-		assertEquals(JOURNALPOST_MOTTATT.toString(), mapMottatt.getHendelsesType());
-		assertEquals(JOURNALPOST_MOTTATT.toString(), mapMidlertidig.getHendelsesType());
-		assertEquals(MOTTATT, mapMidlertidig.getJournalpostStatus());
-		assertEquals(MOTTATT, mapMottatt.getJournalpostStatus());
-	}
-
-	@Test
-	public void shouldMapToEndeligJournalfort() {
-		JournalpostEndretEvent journalpostEndretEvent = createJournalpostEndretEvent("DAG", "FOR", "M", "J", "U", "I");
-		InngaaendeHendelse map = mapper.map(journalpostEndretEvent);
-
-		assertEquals(ENDELIG_JOURNALFORT.toString(), map.getHendelsesType());
-		assertEquals(JOURNALFORT, map.getJournalpostStatus());
-
-	}
-
-	@Test
-	public void shouldMapToJournalpostUtgaatt() {
-		JournalpostEndretEvent journalpostEndretEventUtgatt = createJournalpostEndretEvent("", "", "MO", "U", "U", "I");
-		JournalpostEndretEvent journalpostEndretEventUkjent = createJournalpostEndretEvent("", "", "MO", "UB", "U", "I");
-		InngaaendeHendelse mapUtgatt = mapper.map(journalpostEndretEventUtgatt);
-		InngaaendeHendelse mapUkjent = mapper.map(journalpostEndretEventUkjent);
-
-		assertEquals(JOURNALPOST_UTGATT.toString(), mapUtgatt.getHendelsesType());
-		assertEquals(JOURNALPOST_UTGATT.toString(), mapUkjent.getHendelsesType());
-		assertEquals(UTGAR, mapUtgatt.getJournalpostStatus());
-		assertEquals(UKJENTBRUKER, mapUkjent.getJournalpostStatus());
-	}
-
-	@Test
-	public void shouldMapToTemaEndret() {
-		JournalpostEndretEvent journalpostEndretEvent = createJournalpostEndretEvent("DAG", "FOR", "MO", "M", "U", "I");
-		InngaaendeHendelse map = mapper.map(journalpostEndretEvent);
-
-		assertEquals(TEMA_ENDRET.toString(), map.getHendelsesType());
-		assertEquals(MOTTATT, map.getJournalpostStatus());
-	}
-
-	@Test
-	public void shouldNotMapToHendelsesType() {
-		JournalpostEndretEvent journalpostEndretEvent = createJournalpostEndretEvent("", "", "", "", "", "");
-
-		assertNull(mapper.map(journalpostEndretEvent));
+		return goldenGateEvent;
 	}
 }
