@@ -100,12 +100,13 @@ public class JournalpostEndretInngaaendeHendelseMapperTest {
 		JournalpostEndretEvent journalpostEndretEventMidlertidig = createJournalpostEndretEvent("DAG", "FOR", "M", "M", "I", "I");
 		InngaaendeHendelse mapMidlertidig = mapper.map(journalpostEndretEventMidlertidig, goldenGateEvent);
 
-		assertEquals(journalpostEndretEventMidlertidig.getJournalpostId() + "-" + goldenGateEvent.getOperationTimestamp(),
+		assertEquals("1234567-" + goldenGateEvent.getOperationTimestamp(),
 				mapMidlertidig.getHendelsesId());
 	}
 
 	private JournalpostEndretEvent createJournalpostEndretEvent(String fagomradeBefore, String fagomradeAfter, String journalpostStatusBefore, String journalpostStatusAfter, String operation, String journalposttype) {
 		return JournalpostEndretEvent.builder()
+				.journalpostId(1234567l)
 				.fagomradeBefore(fagomradeBefore)
 				.fagomradeAfter(fagomradeAfter)
 				.journalpostStatusBefore(journalpostStatusBefore)
