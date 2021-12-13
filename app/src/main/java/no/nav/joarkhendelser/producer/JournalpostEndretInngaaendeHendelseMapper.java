@@ -2,8 +2,7 @@ package no.nav.joarkhendelser.producer;
 
 import lombok.extern.slf4j.Slf4j;
 import no.nav.joarkhendelser.consumer.JournalpostEndretEvent;
-
-import java.util.UUID;
+import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEvent;
 
 import static net.logstash.logback.encoder.org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static no.nav.joarkhendelser.consumer.JournalpostType.INNGAAENDE;
@@ -16,12 +15,12 @@ import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.TEMA_ENDRET
 
 @Slf4j
 public class JournalpostEndretInngaaendeHendelseMapper {
-	public static InngaaendeHendelse map(JournalpostEndretEvent event) {
+	public static InngaaendeHendelse map(JournalpostEndretEvent event, GoldenGateEvent goldenGateEvent) {
 		InngaaendeHendelsesType inngaaendeHendelsesType = finnHendelsesType(event);
 
 		if (inngaaendeHendelsesType != null) {
 			return InngaaendeHendelse.builder()
-					.hendelsesId(UUID.randomUUID().toString())
+					.hendelsesId(buildHendelseId(event, goldenGateEvent)) // OperationTimestamp + journalpostId
 					.versjon(1)
 					.temaNytt(event.getFagomradeAfter())
 					.temaGammelt(event.getFagomradeBefore())
@@ -136,5 +135,9 @@ public class JournalpostEndretInngaaendeHendelseMapper {
 
 	private static boolean wasOpplastingDokument(JournalpostEndretEvent event) {
 		return JoarkJournalpostStatus.OPPLASTINGDOKUMENT.equalsIgnoreCase(event.getJournalpostStatusBefore());
+	}
+
+	private static String buildHendelseId(JournalpostEndretEvent event, GoldenGateEvent goldenGateEvent) {
+		return event.getJournalpostId() + "-" + goldenGateEvent.getOperationTimestamp();
 	}
 }

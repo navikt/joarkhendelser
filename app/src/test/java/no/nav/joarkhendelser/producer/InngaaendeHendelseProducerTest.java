@@ -1,6 +1,7 @@
 package no.nav.joarkhendelser.producer;
 
 import no.nav.joarkhendelser.consumer.JournalpostEndretEvent;
+import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEvent;
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -14,6 +15,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.util.concurrent.ListenableFuture;
+
+import java.time.LocalDateTime;
 
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_MOTTATT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,7 +39,7 @@ public class InngaaendeHendelseProducerTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 		TopicPartition topicPartition = new TopicPartition("Top", 1);
-		RecordMetadata recordMetadata = new RecordMetadata(topicPartition, 1, 1, 1, 1L, 1 ,1);
+		RecordMetadata recordMetadata = new RecordMetadata(topicPartition, 1, 1, 1, 1L, 1, 1);
 
 		when(kafkaTemplate.send(any(ProducerRecord.class)))
 				.thenReturn(listenableFuture);
@@ -63,6 +66,9 @@ public class InngaaendeHendelseProducerTest {
 				.kanalReferanseId("kanal-ref")
 				.build();
 
-		return JournalpostEndretInngaaendeHendelseMapper.map(journalpostEndretEvent);
+		GoldenGateEvent goldenGateEvent = new GoldenGateEvent();
+		goldenGateEvent.setOperationTimestamp(LocalDateTime.now());
+
+		return JournalpostEndretInngaaendeHendelseMapper.map(journalpostEndretEvent, goldenGateEvent);
 	}
 }
