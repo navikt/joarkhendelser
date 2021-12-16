@@ -1,6 +1,5 @@
 {
   "APPNAVN": "joarkhendelser-q1",
-  "NAMESPACE": "teamdokumenthandtering",
   "KAFKA_POOL": "nav-dev",
   "JOURNALFOERINGHENDELSE_TOPIC": "teamdokumenthandtering.aapen-dok-journalfoering-q1",
   "JOURNALPOSTENDRET_TOPIC": "teamdokumenthandtering.privat-dok-journalpost-endret-q1",
