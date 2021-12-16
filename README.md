@@ -15,7 +15,7 @@ Push/merge til master branch vil teste, bygge og deploye til produksjonsmiljø o
 
 # Utvikling
 ## Forutsetninger
-* Java 11
+* Java 17
 * Kubectl
 * Maven
 

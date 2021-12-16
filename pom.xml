@@ -23,7 +23,7 @@
 	</modules>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 
 		<logstash-logback-encoder.version>6.6</logstash-logback-encoder.version>
 		<dok-journalfoering-hendelse-v1.version>0.0.3</dok-journalfoering-hendelse-v1.version>
@@ -110,7 +110,7 @@
 				<configuration>
 					<toolchains>
 						<jdk>
-							<version>11</version>
+							<version>17</version>
 							<vendor>openjdk</vendor>
 						</jdk>
 					</toolchains>
