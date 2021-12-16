@@ -27,7 +27,7 @@
 
 		<logstash-logback-encoder.version>6.6</logstash-logback-encoder.version>
 		<dok-journalfoering-hendelse-v1.version>0.0.3</dok-journalfoering-hendelse-v1.version>
-		<confluent.version>6.2.0</confluent.version>
+		<confluent.version>7.0.1</confluent.version>
 
 		<maven-toolchains-plugin.version>3.0.0</maven-toolchains-plugin.version>
 	</properties>
@@ -54,7 +54,6 @@
 				<artifactId>logstash-logback-encoder</artifactId>
 				<version>${logstash-logback-encoder.version}</version>
 			</dependency>
-
 
 		</dependencies>
 	</dependencyManagement>

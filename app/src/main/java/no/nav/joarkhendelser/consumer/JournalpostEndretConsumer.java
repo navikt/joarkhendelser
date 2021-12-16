@@ -7,13 +7,13 @@ import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEventMapper;
 import no.nav.joarkhendelser.producer.InngaaendeHendelse;
 import no.nav.joarkhendelser.producer.InngaaendeHendelseProducer;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.UUID;
@@ -35,8 +35,7 @@ public class JournalpostEndretConsumer {
 	private final MeterRegistry meterRegistry;
 	private final GoldenGateEventMapper goldenGateEventMapper;
 
-
-	@Inject
+	@Autowired
 	public JournalpostEndretConsumer(
 			JournalpostEndretEventConverter converter,
 			InngaaendeHendelseProducer publisher,
