@@ -27,11 +27,9 @@
 
 		<logstash-logback-encoder.version>6.6</logstash-logback-encoder.version>
 		<dok-journalfoering-hendelse-v1.version>0.0.3</dok-journalfoering-hendelse-v1.version>
-
 		<confluent.version>6.2.0</confluent.version>
-		<avro.version>1.10.2</avro.version>
 
-		<org-apache-maven-plugins.version>3.0.0-M5</org-apache-maven-plugins.version>
+		<maven-toolchains-plugin.version>3.0.0</maven-toolchains-plugin.version>
 	</properties>
 
 	<dependencyManagement>
@@ -66,7 +64,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>${org-apache-maven-plugins.version}</version>
 				<configuration>
 					<additionalClasspathElements>${basedir}/target/classes</additionalClasspathElements>
 				</configuration>
@@ -102,7 +99,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-toolchains-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>${maven-toolchains-plugin.version}</version>
 				<executions>
 					<execution>
 						<goals>
