@@ -1,8 +1,8 @@
 package no.nav.joarkhendelser.producer;
 
 import lombok.extern.slf4j.Slf4j;
-import no.nav.joarkhendelser.exception.AuthenticationFailedExecption;
-import no.nav.joarkhendelser.exception.JoarkJournalfoeringHendelseTechnicalException;
+import no.nav.joarkhendelser.exception.AuthenticationFailedException;
+import no.nav.joarkhendelser.exception.JoarkhendelserTechnicalException;
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.errors.TopicAuthorizationException;
@@ -35,7 +35,7 @@ public class InngaaendeHendelseProducer {
 	}
 
 	@Transactional
-	public void publish(InngaaendeHendelse hendelse) throws JoarkJournalfoeringHendelseTechnicalException {
+	public void publish(InngaaendeHendelse hendelse) throws JoarkhendelserTechnicalException {
 		JournalfoeringHendelseRecord record = new JournalfoeringHendelseRecord(
 				hendelse.getHendelsesId(),
 				hendelse.getVersjon(),
@@ -74,11 +74,11 @@ public class InngaaendeHendelseProducer {
 			if (e.getCause() != null && e.getCause() instanceof KafkaProducerException) {
 				KafkaProducerException ee = (KafkaProducerException) e.getCause();
 				if (ee.getCause() != null && ee.getCause() instanceof TopicAuthorizationException) {
-					throw new AuthenticationFailedExecption("Ikke autentisert for å publisere til topic=" + topic, ee.getCause());
+					throw new AuthenticationFailedException("Ikke autentisert for å publisere til topic=" + topic, ee.getCause());
 				}
 			}
 		} catch (InterruptedException e) {
-			throw new JoarkJournalfoeringHendelseTechnicalException("Feilet sending av Kafka-melding til topic=" + topic, e);
+			throw new JoarkhendelserTechnicalException("Feilet sending av Kafka-melding til topic=" + topic, e);
 		}
 	}
 }

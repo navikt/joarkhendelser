@@ -1,43 +1,30 @@
-joarkhendelser
-==========
-# Funksjonalitet
-Joarkhendelser lar fagsystemene få informasjon når det skjer endringer på inngående journalposter på tema/fagområder som de er interessert i, uavhengig av hvem som har gjort endringen.
+# Joarkhendelser
 
-Tilgangsstyring må kunne begrense hvilke produsenter som kan skrive hendelser til topic.
+## Funksjonalitet
+Joarkhendelser gir andre fagsystem beskjed når det skjer endringer (insert eller update) på en inngående journalpost,
+uavhengig av hvem som har gjort endringen. Ved å filtrere på tema kan ulike fagsystem enkelt få beskjed om oppdateringar som gjelder dem.
 
-For mer informasjon: [confluence](https://confluence.adeo.no/display/BOA/joarkhendelser)
+For informasjon om hvordan du kan abonnere på eventene kan du sjekke ut [Korleis abonnere på hendingar frå Joark](https://confluence.adeo.no/pages/viewpage.action?pageId=432217859).
 
-# Deploy
-Distribusjon av tjenesten er gjort med integrasjon mot Jenkins:
-[joarkhendelser CI / CD](https://dok-jenkins.adeo.no/job/joarkhendelser/job/master/)
+Merk at det eksisterer to versjoner av appen i teamdokumenthandtering-namespacet i dev-fss:
+- joarkhendelser (GoldenGate-replikering fra Joark-databasen i q2)
+- joarkhendelser-q1 (GoldenGate-replikering fra Joark-databasen i q1)
 
-Push/merge til master branch vil teste, bygge og deploye til produksjonsmiljø og testmiljø.
-
-# Utvikling
-## Forutsetninger
-* Java 11
-* Kubectl
+## For intern utvikling
+### Teknologier
+* Spring Boot-app med Java 17
 * Maven
+* Kafka
 
+### Deploy
+Deploy av app og CI/CD skjer på [Jenkins](https://dok-jenkins.adeo.no/job/joarkhendelser/job/master/).
+* Push til feature branch vil deploye til testmiljø i dev-fss.
+* Merge av PR eller push til master-branch vil deploye til prod-fss.
 
-## Kjøre Prosjekt
-Lokal utvikling er satt opp slik at applikasjonen kjøres lokalt på VDI. 
-For å kjøre opp applikasjonen lokalt, bruk systemvariabler hentet fra [Vault](https://vault.adeo.no/ui/vault/secrets/secret/show/dokument/joarkhendelser). Hvis du ikke har den nyeste truststore filen spør på slack kanalen Anakonda.
+### Kjøre opp lokalt
+Applikasjonen kjøres lokalt på VDI.
 
-
-# Drift og støtte
-## Logging
-Loggene til tjenesten kan leses på to måter:
-
-### Kibana
-For [dev-fss](https://logs.adeo.no/goto/2025ed36ac97de78e0a9880b19865ff2)
-
-For [prod-fss](https://logs.adeo.no/goto/ca96f2932f187020cc9089559b1b739e)
-
-### Kubectl
-Merk at det eksisterer to versjoner av appen i dev-fss: joarkhendelser og joarkhendelser-q1, 
-med integrasjoner mot henholdsvis q2 og q1.
-
+### Bruk av Kubectl
 For dev-fss:
 ```
 kubectl config use-context dev-fss
@@ -52,8 +39,6 @@ kubectl get pods -n teamdokumenthandtering | grep joarkhendelser
 kubectl logs -f joarkhendelser-<POD-ID> -n teamdokumenthandtering
 ```
 
-## Metrics
-
 ## Henvendelser
 Spørsmål om koden eller prosjektet kan rettes til Team Dokumentløsninger på:
-* [\#Team Dokumentløsninger](https://nav-it.slack.com/client/T5LNAMWNA/C6W9E5GPJ)
+* [\#Team Dokumentløsninger](https://nav-it.slack.com/archives/C6W9E5GPJ)

@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.5.4</version>
+		<version>2.6.1</version>
 	</parent>
 
 	<groupId>no.nav.joarkhendelser</groupId>
@@ -23,19 +23,24 @@
 	</modules>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 
 		<logstash-logback-encoder.version>6.6</logstash-logback-encoder.version>
 		<dok-journalfoering-hendelse-v1.version>0.0.3</dok-journalfoering-hendelse-v1.version>
+		<confluent.version>7.0.1</confluent.version>
 
-		<confluent.version>6.2.0</confluent.version>
-		<avro.version>1.10.2</avro.version>
-
-		<org-apache-maven-plugins.version>3.0.0-M5</org-apache-maven-plugins.version>
+		<maven-toolchains-plugin.version>3.0.0</maven-toolchains-plugin.version>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
+
+			<!-- Kafka og Avro-skjema-->
+			<dependency>
+				<groupId>io.confluent</groupId>
+				<artifactId>kafka-avro-serializer</artifactId>
+				<version>${confluent.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>no.nav.dok</groupId>
@@ -50,18 +55,6 @@
 				<version>${logstash-logback-encoder.version}</version>
 			</dependency>
 
-			<!-- Kafka -->
-			<dependency>
-				<groupId>io.confluent</groupId>
-				<artifactId>kafka-avro-serializer</artifactId>
-				<version>${confluent.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.confluent</groupId>
-				<artifactId>kafka-json-serializer</artifactId>
-				<version>${confluent.version}</version>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -70,7 +63,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>${org-apache-maven-plugins.version}</version>
 				<configuration>
 					<additionalClasspathElements>${basedir}/target/classes</additionalClasspathElements>
 				</configuration>
@@ -106,7 +98,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-toolchains-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>${maven-toolchains-plugin.version}</version>
 				<executions>
 					<execution>
 						<goals>
@@ -117,7 +109,7 @@
 				<configuration>
 					<toolchains>
 						<jdk>
-							<version>11</version>
+							<version>17</version>
 							<vendor>openjdk</vendor>
 						</jdk>
 					</toolchains>

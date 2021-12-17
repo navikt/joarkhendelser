@@ -106,7 +106,7 @@ public class JournalpostEndretInngaaendeHendelseMapperTest {
 
 	private JournalpostEndretEvent createJournalpostEndretEvent(String fagomradeBefore, String fagomradeAfter, String journalpostStatusBefore, String journalpostStatusAfter, String operation, String journalposttype) {
 		return JournalpostEndretEvent.builder()
-				.journalpostId(1234567l)
+				.journalpostId(1234567L)
 				.fagomradeBefore(fagomradeBefore)
 				.fagomradeAfter(fagomradeAfter)
 				.journalpostStatusBefore(journalpostStatusBefore)
