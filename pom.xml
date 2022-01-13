@@ -26,7 +26,7 @@
 		<java.version>17</java.version>
 
 		<logstash-logback-encoder.version>6.6</logstash-logback-encoder.version>
-		<dok-journalfoering-hendelse-v1.version>0.0.3</dok-journalfoering-hendelse-v1.version>
+		<teamdokumenthandtering-avro-schemas.version>f3479251</teamdokumenthandtering-avro-schemas.version>
 		<confluent.version>7.0.1</confluent.version>
 
 		<maven-toolchains-plugin.version>3.0.0</maven-toolchains-plugin.version>
@@ -43,9 +43,9 @@
 			</dependency>
 
 			<dependency>
-				<groupId>no.nav.dok</groupId>
-				<artifactId>dok-journalfoering-hendelse-v1</artifactId>
-				<version>${dok-journalfoering-hendelse-v1.version}</version>
+				<groupId>no.nav.teamdokumenthandtering</groupId>
+				<artifactId>teamdokumenthandtering-avro-schemas</artifactId>
+				<version>${teamdokumenthandtering-avro-schemas.version}</version>
 			</dependency>
 
 			<!-- Logging -->
