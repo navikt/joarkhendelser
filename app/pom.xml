@@ -31,8 +31,8 @@
 
 		<!-- Kafka -->
 		<dependency>
-			<groupId>no.nav.dok</groupId>
-			<artifactId>dok-journalfoering-hendelse-v1</artifactId>
+			<groupId>no.nav.teamdokumenthandtering</groupId>
+			<artifactId>teamdokumenthandtering-avro-schemas</artifactId>
 		</dependency>
 
 		<dependency>

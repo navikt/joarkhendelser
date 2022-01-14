@@ -30,7 +30,7 @@ public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 			List<JournalfoeringHendelseRecord> records = this.getAllCurrentRecordsOnTopicUt();
 			assertEquals(1, records.size());
 			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
-			assertEquals(1L, utgaaendeRecord.getJournalpostId().longValue());
+			assertEquals(1L, utgaaendeRecord.getJournalpostId());
 			assertEquals(TEMA_ENDRET.toString(), utgaaendeRecord.getHendelsesType().toString());
 			assertEquals("SAK", utgaaendeRecord.getTemaGammelt().toString());
 			assertEquals("AAP", utgaaendeRecord.getTemaNytt().toString());
@@ -48,7 +48,7 @@ public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 			List<JournalfoeringHendelseRecord> records = this.getAllCurrentRecordsOnTopicUt();
 			assertEquals(1, records.size());
 			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
-			assertEquals(1L, utgaaendeRecord.getJournalpostId().longValue());
+			assertEquals(1L, utgaaendeRecord.getJournalpostId());
 			assertEquals(JOURNALPOST_MOTTATT.toString(), utgaaendeRecord.getHendelsesType().toString());
 		});
 	}
@@ -64,7 +64,7 @@ public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 			List<JournalfoeringHendelseRecord> records = this.getAllCurrentRecordsOnTopicUt();
 			assertEquals(1, records.size());
 			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
-			assertEquals(1L, utgaaendeRecord.getJournalpostId().longValue());
+			assertEquals(1L, utgaaendeRecord.getJournalpostId());
 			assertEquals(ENDELIG_JOURNALFORT.toString(), utgaaendeRecord.getHendelsesType().toString());
 		});
 	}
@@ -79,7 +79,7 @@ public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 			List<JournalfoeringHendelseRecord> records = this.getAllCurrentRecordsOnTopicUt();
 			assertEquals(1, records.size());
 			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
-			assertEquals(1L, utgaaendeRecord.getJournalpostId().longValue());
+			assertEquals(1L, utgaaendeRecord.getJournalpostId());
 			assertEquals(JOURNALPOST_UTGATT.toString(), utgaaendeRecord.getHendelsesType().toString());
 		});
 	}
@@ -122,7 +122,7 @@ public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 			List<JournalfoeringHendelseRecord> records = this.getAllCurrentRecordsOnTopicUt();
 			assertEquals(1, records.size());
 			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
-			assertEquals(123456789L, utgaaendeRecord.getJournalpostId().longValue());
+			assertEquals(123456789L, utgaaendeRecord.getJournalpostId());
 			assertEquals(ENDELIG_JOURNALFORT.toString(), utgaaendeRecord.getHendelsesType().toString());
 		});
 	}

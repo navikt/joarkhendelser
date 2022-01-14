@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.6.1</version>
+		<version>2.6.2</version>
 	</parent>
 
 	<groupId>no.nav.joarkhendelser</groupId>
@@ -15,7 +15,6 @@
 	<version>1.0-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
-
 	<name>joarkhendelser</name>
 
 	<modules>
@@ -26,7 +25,7 @@
 		<java.version>17</java.version>
 
 		<logstash-logback-encoder.version>6.6</logstash-logback-encoder.version>
-		<dok-journalfoering-hendelse-v1.version>0.0.3</dok-journalfoering-hendelse-v1.version>
+		<teamdokumenthandtering-avro-schemas.version>f3479251</teamdokumenthandtering-avro-schemas.version>
 		<confluent.version>7.0.1</confluent.version>
 
 		<maven-toolchains-plugin.version>3.0.0</maven-toolchains-plugin.version>
@@ -35,7 +34,7 @@
 	<dependencyManagement>
 		<dependencies>
 
-			<!-- Kafka og Avro-skjema-->
+			<!-- Kafka og Avro-skjema -->
 			<dependency>
 				<groupId>io.confluent</groupId>
 				<artifactId>kafka-avro-serializer</artifactId>
@@ -43,9 +42,9 @@
 			</dependency>
 
 			<dependency>
-				<groupId>no.nav.dok</groupId>
-				<artifactId>dok-journalfoering-hendelse-v1</artifactId>
-				<version>${dok-journalfoering-hendelse-v1.version}</version>
+				<groupId>no.nav.teamdokumenthandtering</groupId>
+				<artifactId>teamdokumenthandtering-avro-schemas</artifactId>
+				<version>${teamdokumenthandtering-avro-schemas.version}</version>
 			</dependency>
 
 			<!-- Logging -->
@@ -63,37 +62,13 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<configuration>
-					<additionalClasspathElements>${basedir}/target/classes</additionalClasspathElements>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>integration-test</goal>
-							<goal>verify</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<skip>false</skip>
-					<fork>true</fork>
-					<useTestClasspath>true</useTestClasspath>
-					<mainClass>no.nav.joarkhendelser.Application</mainClass>
+					<finalName>app</finalName>
 				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-						<configuration>
-							<finalName>app</finalName>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
