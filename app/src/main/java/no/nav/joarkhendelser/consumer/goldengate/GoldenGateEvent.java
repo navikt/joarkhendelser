@@ -21,6 +21,7 @@ public class GoldenGateEvent {
 	@JsonProperty("op_type")
 	private String operation;
 
+	// GG-tidspunkt har tidssone CET (lokaltid for Norge)
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss.SSSSSS")
 	@JsonProperty("op_ts")
 	private LocalDateTime operationTimestamp;

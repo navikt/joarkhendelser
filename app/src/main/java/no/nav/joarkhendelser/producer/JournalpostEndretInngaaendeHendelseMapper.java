@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import no.nav.joarkhendelser.consumer.JournalpostEndretEvent;
 import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEvent;
 
-import static net.logstash.logback.encoder.org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static no.nav.joarkhendelser.consumer.JournalpostType.INNGAAENDE;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.INSERT_OPERATION;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.UPDATE_OPERATION;
@@ -12,6 +11,7 @@ import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.ENDELIG_JOU
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_MOTTATT;
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_UTGATT;
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.TEMA_ENDRET;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 @Slf4j
 public class JournalpostEndretInngaaendeHendelseMapper {
@@ -20,7 +20,7 @@ public class JournalpostEndretInngaaendeHendelseMapper {
 
 		if (inngaaendeHendelsesType != null) {
 			return InngaaendeHendelse.builder()
-					.hendelsesId(buildHendelseId(event, goldenGateEvent)) // OperationTimestamp + journalpostId
+					.hendelsesId(buildHendelseId(event, goldenGateEvent)) // journalpostId + operationTimestamp på ISO8601-format (yyyy-MM-ddTHH:mm:ss)
 					.versjon(1)
 					.temaNytt(event.getFagomradeAfter())
 					.temaGammelt(event.getFagomradeBefore())

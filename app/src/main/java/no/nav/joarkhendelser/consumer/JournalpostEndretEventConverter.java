@@ -1,7 +1,6 @@
 package no.nav.joarkhendelser.consumer;
 
 import lombok.extern.slf4j.Slf4j;
-import net.logstash.logback.encoder.org.apache.commons.lang3.StringUtils;
 import no.nav.joarkhendelser.consumer.goldengate.GoldenGateColumns;
 import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEvent;
 import org.springframework.stereotype.Component;
@@ -9,6 +8,7 @@ import org.springframework.stereotype.Component;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.INSERT_OPERATION;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.UPDATE_OPERATION;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateUtils.prettyPrintOperationName;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 @Component
 @Slf4j
@@ -59,6 +59,6 @@ public class JournalpostEndretEventConverter {
 	}
 
 	private String getStringOrEmptyString(String value) {
-		return StringUtils.isNotEmpty(value) ? value : "";
+		return isNotEmpty(value) ? value : "";
 	}
 }
