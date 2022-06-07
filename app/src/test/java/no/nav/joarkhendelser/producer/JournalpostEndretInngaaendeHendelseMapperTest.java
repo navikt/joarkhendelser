@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class JournalpostEndretInngaaendeHendelseMapperTest {
 
+	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
 
 	@Test
 	public void shouldNotMapToJournalpostMottatt() {
@@ -102,8 +103,6 @@ public class JournalpostEndretInngaaendeHendelseMapperTest {
 		//	format på op_ts: yyyy-MM-dd HH:mm:ss.SSSSSS
 		//	eksempelverdi på op_ts: 2021-09-22 12:47:02.000000
 		String operationTimestamp = "2021-09-22 12:47:02.000000";
-
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
 		LocalDateTime dateTime = LocalDateTime.parse(operationTimestamp, formatter);
 
 		GoldenGateEvent goldenGateEvent = buildGoldenGateEvent(dateTime);
@@ -111,6 +110,22 @@ public class JournalpostEndretInngaaendeHendelseMapperTest {
 		InngaaendeHendelse mapMidlertidig = map(event, goldenGateEvent);
 
 		String iso8610Time = "2021-09-22T12:47:02";
+		assertEquals("1234567-" + iso8610Time, mapMidlertidig.getHendelsesId());
+	}
+
+	@Test
+	public void shouldNotTruncateHendelseIdWhichHasZeroSeconds() {
+		// hendelseId = journalpostId + op_ts som ISO8601-tid (yyyy-MM-ddTHH:mm:ss)
+		//	format på op_ts: yyyy-MM-dd HH:mm:ss.SSSSSS
+		//	eksempelverdi på op_ts: 2021-09-22 12:47:00.000000
+		String operationTimestamp = "2021-09-22 12:47:00.000000";
+		LocalDateTime dateTime = LocalDateTime.parse(operationTimestamp, formatter);
+
+		GoldenGateEvent goldenGateEvent = buildGoldenGateEvent(dateTime);
+		JournalpostEndretEvent event = createJournalpostEndretEvent("DAG", "FOR", "M", "M", "I", "I");
+		InngaaendeHendelse mapMidlertidig = map(event, goldenGateEvent);
+
+		String iso8610Time = "2021-09-22T12:47:00";
 		assertEquals("1234567-" + iso8610Time, mapMidlertidig.getHendelsesId());
 	}
 
