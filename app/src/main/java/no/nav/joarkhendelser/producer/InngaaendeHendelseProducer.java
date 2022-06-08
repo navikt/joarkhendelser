@@ -27,8 +27,7 @@ public class InngaaendeHendelseProducer {
 	@Autowired
 	public InngaaendeHendelseProducer(
 			KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate,
-			@Value("${journalfoeringhendelse.topic}")
-			String topic
+			@Value("${journalfoeringhendelse.topic}") String topic
 	) {
 		this.kafkaTemplate = kafkaTemplate;
 		this.topic = topic;

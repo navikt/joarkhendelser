@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
-import org.springframework.kafka.listener.SeekToCurrentErrorHandler;
+import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.util.backoff.FixedBackOff;
 
 import java.time.Duration;
@@ -32,14 +32,16 @@ public class KafkaConfig {
 			ConsumerFactory<Object, Object> kafkaConsumerFactory
 	) {
 		ConcurrentKafkaListenerContainerFactory<Object, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
+
 		factory.setConsumerFactory(kafkaConsumerFactory);
-		factory.getContainerProperties()
-				.setAuthorizationExceptionRetryInterval(Duration.ofSeconds(10L));
+		factory.getContainerProperties().setAuthExceptionRetryInterval(Duration.ofSeconds(10L));
 
 		factory.setConcurrency(1);
-		factory.setErrorHandler(new SeekToCurrentErrorHandler(
+		factory.setCommonErrorHandler(new DefaultErrorHandler(
 				this::handleError,
-				new FixedBackOff(DEFAULT_INTERVAL, UNLIMITED_ATTEMPTS)));
+				new FixedBackOff(DEFAULT_INTERVAL, UNLIMITED_ATTEMPTS))
+		);
+
 		return factory;
 	}
 
@@ -55,7 +57,6 @@ public class KafkaConfig {
 		Throwable throwable = thr.getCause() == null ? thr : thr.getCause();
 		String exceptionName = throwable.getClass().getSimpleName();
 
-		meterRegistry.counter("dok_exception", "type", "technical", "exception_name", exceptionName)
-				.increment();
+		meterRegistry.counter("dok_exception", "type", "technical", "exception_name", exceptionName).increment();
 	}
 }
