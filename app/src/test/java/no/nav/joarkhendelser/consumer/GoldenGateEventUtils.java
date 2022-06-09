@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 
 public class GoldenGateEventUtils {
 
-	public static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");;
+	public static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
 
 	public static GoldenGateEvent createBasicEvent(String operation) {
 		return new GoldenGateEvent(

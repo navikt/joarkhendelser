@@ -1,8 +1,8 @@
 {
   "APPNAVN": "joarkhendelser-q1",
-  "KAFKA_POOL": "nav-dev",
-  "JOURNALFOERINGHENDELSE_TOPIC": "teamdokumenthandtering.aapen-dok-journalfoering-q1",
-  "JOURNALPOSTENDRET_TOPIC": "teamdokumenthandtering.privat-dok-journalpost-endret-q1",
   "MIN_REPLICAS": 1,
-  "MAX_REPLICAS": 2
+  "MAX_REPLICAS": 2,
+  "KAFKA_POOL": "nav-dev",
+  "JOURNALPOSTENDRET_TOPIC": "teamdokumenthandtering.privat-dok-journalpost-endret-q1",
+  "JOURNALFOERINGHENDELSE_TOPIC": "teamdokumenthandtering.aapen-dok-journalfoering-q1"
 }

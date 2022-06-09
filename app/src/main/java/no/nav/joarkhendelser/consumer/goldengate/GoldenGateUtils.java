@@ -7,15 +7,11 @@ import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.UPD
 public class GoldenGateUtils {
 
 	public static String prettyPrintOperationName(String operation) {
-		switch (operation) {
-			case INSERT_OPERATION:
-				return "INSERT";
-			case UPDATE_OPERATION:
-				return "UPDATE";
-			case DELETE_OPERATION:
-				return "DELETE";
-			default:
-				return operation;
-		}
+		return switch (operation) {
+			case INSERT_OPERATION -> "INSERT";
+			case UPDATE_OPERATION -> "UPDATE";
+			case DELETE_OPERATION -> "DELETE";
+			default -> operation;
+		};
 	}
 }

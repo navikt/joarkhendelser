@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import no.nav.joarkhendelser.consumer.JournalpostEndretEvent;
 import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEvent;
 
+import java.time.format.DateTimeFormatter;
+
 import static no.nav.joarkhendelser.consumer.JournalpostType.INNGAAENDE;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.INSERT_OPERATION;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.UPDATE_OPERATION;
@@ -11,10 +13,13 @@ import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.ENDELIG_JOU
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_MOTTATT;
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_UTGATT;
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.TEMA_ENDRET;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static org.apache.logging.log4j.util.Strings.isNotEmpty;
 
 @Slf4j
 public class JournalpostEndretInngaaendeHendelseMapper {
+
+	private static final DateTimeFormatter formatterWhereSecondsArePreservedIfZero = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
 	public static InngaaendeHendelse map(JournalpostEndretEvent event, GoldenGateEvent goldenGateEvent) {
 		InngaaendeHendelsesType inngaaendeHendelsesType = finnHendelsesType(event);
 
@@ -138,6 +143,7 @@ public class JournalpostEndretInngaaendeHendelseMapper {
 	}
 
 	private static String buildHendelseId(JournalpostEndretEvent event, GoldenGateEvent goldenGateEvent) {
-		return event.getJournalpostId() + "-" + goldenGateEvent.getOperationTimestamp();
+		// Unngå at operationTimestamp-delen blir trunkert for 00-sekund (eksempelvis blir 2021-09-22 12:47:00.000000 trunkert til 2021-09-22T12:47)
+		return event.getJournalpostId() + "-" + goldenGateEvent.getOperationTimestamp().format(formatterWhereSecondsArePreservedIfZero);
 	}
 }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.INSERT_OPERATION;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.UPDATE_OPERATION;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateUtils.prettyPrintOperationName;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static org.apache.logging.log4j.util.Strings.isNotEmpty;
 
 @Component
 @Slf4j
