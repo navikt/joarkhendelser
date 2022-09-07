@@ -6,19 +6,15 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-publish:
     uses: navikt/dok-workflows/.github/workflows/build-and-publish.yaml@main
     with:
       IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
     secrets: inherit
 
-  deploy-dev:
-    needs: build
-    uses: navikt/dok-workflows/.github/workflows/deploy-dev.yaml@main
-    strategy:
-      matrix:
-        environment: [q1, q2]
+  deploy-to-all-dev-environments:
+    needs: build-and-publish
+    uses: navikt/dok-workflows/.github/workflows/deploy-to-all-dev-environments.yaml@main
     with:
       IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
-      NAIS_VARIABLES: nais/${{ matrix.environment }}-config.json
     secrets: inherit
