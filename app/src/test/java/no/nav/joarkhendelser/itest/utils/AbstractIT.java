@@ -34,8 +34,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
+
 @SpringBootTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestInstance(PER_CLASS)
 @ActiveProfiles("itest")
 @EmbeddedKafka(
 		topics = {

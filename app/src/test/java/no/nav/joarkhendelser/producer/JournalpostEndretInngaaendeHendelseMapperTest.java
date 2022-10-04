@@ -65,7 +65,6 @@ public class JournalpostEndretInngaaendeHendelseMapperTest {
 
 		assertEquals(ENDELIG_JOURNALFORT.toString(), map.getHendelsesType());
 		assertEquals(JOURNALFORT, map.getJournalpostStatus());
-
 	}
 
 	@Test
