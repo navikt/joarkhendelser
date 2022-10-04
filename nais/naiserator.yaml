@@ -15,7 +15,7 @@ spec:
       value: {{ JOURNALPOSTENDRET_TOPIC }}
   image: {{ image }}
   liveness:
-    path: /isAlive
+    path: /actuator/health/liveness
     port: 8080
     initialDelay: 30
     failureThreshold: 10
@@ -27,7 +27,7 @@ spec:
   kafka:
     pool: {{ KAFKA_POOL }}
   readiness:
-    path: /isReady
+    path: /actuator/health/readiness
     port: 8080
     initialDelay: 30
     timeout: 3
