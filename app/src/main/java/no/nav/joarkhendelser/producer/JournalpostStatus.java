@@ -1,8 +1,5 @@
 package no.nav.joarkhendelser.producer;
 
-/**
- * @author Martin Burheim Tingstad, Visma Consulting.
- */
 public class JournalpostStatus {
 	public static final String MOTTATT = "MOTTATT";
 	public static final String JOURNALFORT = "JOURNALFOERT";

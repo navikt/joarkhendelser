@@ -13,6 +13,12 @@ import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.ENDELIG_JOU
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_MOTTATT;
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_UTGATT;
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.TEMA_ENDRET;
+import static no.nav.joarkhendelser.producer.JoarkJournalpostStatus.JOURNALFORT;
+import static no.nav.joarkhendelser.producer.JoarkJournalpostStatus.MIDLERTIDIG;
+import static no.nav.joarkhendelser.producer.JoarkJournalpostStatus.MOTTATT;
+import static no.nav.joarkhendelser.producer.JoarkJournalpostStatus.OPPLASTINGDOKUMENT;
+import static no.nav.joarkhendelser.producer.JoarkJournalpostStatus.UKJENTBRUKER;
+import static no.nav.joarkhendelser.producer.JoarkJournalpostStatus.UTGAR;
 import static org.apache.logging.log4j.util.Strings.isNotEmpty;
 
 @Slf4j
@@ -44,15 +50,15 @@ public class JournalpostEndretInngaaendeHendelseMapper {
 	}
 
 	private static String mapJournalstatus(String journalpostStatus) {
-		if (JoarkJournalpostStatus.JOURNALFORT.equalsIgnoreCase(journalpostStatus)) {
+		if (JOURNALFORT.equalsIgnoreCase(journalpostStatus)) {
 			return JournalpostStatus.JOURNALFORT;
-		} else if (JoarkJournalpostStatus.MIDLERTIDIG.equalsIgnoreCase(journalpostStatus) || JoarkJournalpostStatus.MOTTATT.equalsIgnoreCase(journalpostStatus)) {
+		} else if (MIDLERTIDIG.equalsIgnoreCase(journalpostStatus) || MOTTATT.equalsIgnoreCase(journalpostStatus)) {
 			return JournalpostStatus.MOTTATT;
-		} else if (JoarkJournalpostStatus.OPPLASTINGDOKUMENT.equalsIgnoreCase(journalpostStatus)) {
+		} else if (OPPLASTINGDOKUMENT.equalsIgnoreCase(journalpostStatus)) {
 			return JournalpostStatus.OPPLASTINGDOKUMENT;
-		} else if (JoarkJournalpostStatus.UKJENTBRUKER.equalsIgnoreCase(journalpostStatus)) {
+		} else if (UKJENTBRUKER.equalsIgnoreCase(journalpostStatus)) {
 			return JournalpostStatus.UKJENTBRUKER;
-		} else if (JoarkJournalpostStatus.UTGAR.equalsIgnoreCase(journalpostStatus)) {
+		} else if (UTGAR.equalsIgnoreCase(journalpostStatus)) {
 			return JournalpostStatus.UTGAR;
 		}
 		return null;
@@ -107,7 +113,7 @@ public class JournalpostEndretInngaaendeHendelseMapper {
 
 	private static boolean hasChangedJournalpostStatusToUtgarOrUkjentbruker(JournalpostEndretEvent event) {
 		return isNotEmpty(event.getJournalpostStatusBefore()) &&
-				(JoarkJournalpostStatus.UTGAR.equalsIgnoreCase(event.getJournalpostStatusAfter()) || JoarkJournalpostStatus.UKJENTBRUKER.equalsIgnoreCase(event.getJournalpostStatusAfter()));
+				(UTGAR.equalsIgnoreCase(event.getJournalpostStatusAfter()) || UKJENTBRUKER.equalsIgnoreCase(event.getJournalpostStatusAfter()));
 	}
 
 	private static boolean isInsertOperation(JournalpostEndretEvent event) {
@@ -123,23 +129,23 @@ public class JournalpostEndretInngaaendeHendelseMapper {
 	}
 
 	private static boolean isJournalfort(JournalpostEndretEvent event) {
-		return JoarkJournalpostStatus.JOURNALFORT.equalsIgnoreCase(event.getJournalpostStatusAfter());
+		return JOURNALFORT.equalsIgnoreCase(event.getJournalpostStatusAfter());
 	}
 
 	private static boolean isMottatt(JournalpostEndretEvent event) {
-		return JoarkJournalpostStatus.MOTTATT.equalsIgnoreCase(event.getJournalpostStatusAfter());
+		return MOTTATT.equalsIgnoreCase(event.getJournalpostStatusAfter());
 	}
 
 	private static boolean isMidlertidig(JournalpostEndretEvent event) {
-		return JoarkJournalpostStatus.MIDLERTIDIG.equalsIgnoreCase(event.getJournalpostStatusAfter());
+		return MIDLERTIDIG.equalsIgnoreCase(event.getJournalpostStatusAfter());
 	}
 
 	private static boolean wasMidlertidig(JournalpostEndretEvent event) {
-		return JoarkJournalpostStatus.MIDLERTIDIG.equalsIgnoreCase(event.getJournalpostStatusBefore());
+		return MIDLERTIDIG.equalsIgnoreCase(event.getJournalpostStatusBefore());
 	}
 
 	private static boolean wasOpplastingDokument(JournalpostEndretEvent event) {
-		return JoarkJournalpostStatus.OPPLASTINGDOKUMENT.equalsIgnoreCase(event.getJournalpostStatusBefore());
+		return OPPLASTINGDOKUMENT.equalsIgnoreCase(event.getJournalpostStatusBefore());
 	}
 
 	private static String buildHendelseId(JournalpostEndretEvent event, GoldenGateEvent goldenGateEvent) {
