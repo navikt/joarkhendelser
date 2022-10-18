@@ -5,10 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Arrays;
 import java.util.List;
 
-import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateUtils.prettyPrintOperationName;
 import static no.nav.joarkhendelser.consumer.JournalpostType.INNGAAENDE;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.INSERT_OPERATION;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.UPDATE_OPERATION;
+import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.prettyPrintOperationName;
 
 @Slf4j
 public class GoldenGateEventFilter {
