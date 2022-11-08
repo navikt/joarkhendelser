@@ -7,7 +7,6 @@ import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEventMapper;
 import no.nav.joarkhendelser.producer.InngaaendeHendelse;
 import no.nav.joarkhendelser.producer.InngaaendeHendelseProducer;
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -30,19 +29,18 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 @Component
 public class JournalpostEndretConsumer {
 
-	private final JournalpostEndretEventConverter converter;
+	private final JournalpostEndretEventMapper mapper;
 	private final InngaaendeHendelseProducer publisher;
 	private final MeterRegistry meterRegistry;
 	private final GoldenGateEventMapper goldenGateEventMapper;
 
-	@Autowired
 	public JournalpostEndretConsumer(
-			JournalpostEndretEventConverter converter,
+			JournalpostEndretEventMapper mapper,
 			InngaaendeHendelseProducer publisher,
 			MeterRegistry meterRegistry,
 			GoldenGateEventMapper goldenGateEventMapper
 	) {
-		this.converter = converter;
+		this.mapper = mapper;
 		this.publisher = publisher;
 		this.meterRegistry = meterRegistry;
 		this.goldenGateEventMapper = goldenGateEventMapper;
@@ -57,13 +55,13 @@ public class JournalpostEndretConsumer {
 			@Header(OFFSET) int offset
 	) {
 		MDC.put("callId", UUID.randomUUID().toString());
-		log.info("Innkommende Golden Gate-melding fra topic={}, partition={}, offset={}", topic, partition, offset);
+		log.info("Golden Gate-melding mottatt fra topic={}, partition={}, offset={}", topic, partition, offset);
 
 		GoldenGateEvent goldenGateEvent = goldenGateEventMapper.mapToEvent(message);
 		if (goldenGateEvent == null) return;
 		if (shouldStopProcessingOfMessage(goldenGateEvent)) return;
 
-		JournalpostEndretEvent journalpostEndretEvent = converter.convertToEvent(goldenGateEvent);
+		JournalpostEndretEvent journalpostEndretEvent = mapper.mapToJournalpostEndretEvent(goldenGateEvent);
 
 		if (journalpostEndretEvent != null) {
 			InngaaendeHendelse hendelse = map(journalpostEndretEvent, goldenGateEvent);
@@ -75,7 +73,7 @@ public class JournalpostEndretConsumer {
 						"tema", isEmpty(hendelse.getTemaNytt()) ? "UKJENT" : hendelse.getTemaNytt(),
 						"mottakskanal", isEmpty(hendelse.getMottaksKanal()) ? "UKJENT" : hendelse.getMottaksKanal()).increment();
 
-				log.info("Publisert hendelse={} for journalpostId={}, kanalreferanseId={}, og mottakskanal={}.",
+				log.info("Har publisert hendelse med hendelsestype={} for journalpostId={} med kanalreferanseId={} og mottakskanal={}.",
 						hendelse.getHendelsesType(),
 						hendelse.getJournalpostId(),
 						hendelse.getKanalReferanseId(),

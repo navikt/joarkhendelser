@@ -6,9 +6,7 @@ import no.nav.joarkhendelser.exception.JoarkhendelserTechnicalException;
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.errors.TopicAuthorizationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.KafkaProducerException;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
@@ -24,7 +22,6 @@ public class InngaaendeHendelseProducer {
 	private final String topic;
 	private final KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate;
 
-	@Autowired
 	public InngaaendeHendelseProducer(
 			KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate,
 			@Value("${journalfoeringhendelse.topic}") String topic
@@ -48,7 +45,7 @@ public class InngaaendeHendelseProducer {
 				hendelse.getBehandlingsTema()
 		);
 
-		log.info("Utgående record: hendelsesId={}, versjon={}, hendelsesType={}, journalpostId={}, journalpostStatus={}, " +
+		log.info("Utgående melding med data: hendelsesId={}, versjon={}, hendelsesType={}, journalpostId={}, journalpostStatus={}, " +
 						"temaGammelt={}, temaNytt={}, mottaksKanal={}, kanalReferanseId={}, behandlingsTema={}",
 				record.getHendelsesId(), record.getVersjon(), record.getHendelsesType(), record.getJournalpostId(), record.getJournalpostStatus(),
 				record.getTemaGammelt(), record.getTemaNytt(), record.getMottaksKanal(), record.getKanalReferanseId(), record.getBehandlingstema());
@@ -69,14 +66,9 @@ public class InngaaendeHendelseProducer {
 					sendResult.getRecordMetadata().offset(),
 					sendResult.getRecordMetadata().topic()
 			);
-		} catch (ExecutionException e) {
-			if (e.getCause() != null && e.getCause() instanceof KafkaProducerException) {
-				KafkaProducerException ee = (KafkaProducerException) e.getCause();
-				if (ee.getCause() != null && ee.getCause() instanceof TopicAuthorizationException) {
-					throw new AuthenticationFailedException("Ikke autentisert for å publisere til topic=" + topic, ee.getCause());
-				}
-			}
-		} catch (InterruptedException e) {
+		} catch (TopicAuthorizationException e) {
+			throw new AuthenticationFailedException("Ikke autentisert for å publisere til topic=" + topic, e.getCause());
+		} catch (InterruptedException | ExecutionException e) {
 			throw new JoarkhendelserTechnicalException("Feilet sending av Kafka-melding til topic=" + topic, e);
 		}
 	}
