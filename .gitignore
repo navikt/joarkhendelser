@@ -2,18 +2,4 @@
 target
 
 #IntelliJ
-*.iml
-*.iws
 *.idea
-atlassian-ide-plugin.xml
-
-#Eclipse
-.classpath
-.project
-.settings
-
-*.tm*.epoch
-*.lck
-*.log
-testDb.properties
-application-local.properties

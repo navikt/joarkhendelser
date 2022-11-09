@@ -12,9 +12,9 @@ import static org.apache.logging.log4j.util.Strings.isNotEmpty;
 
 @Component
 @Slf4j
-public class JournalpostEndretEventConverter {
+public class JournalpostEndretEventMapper {
 
-	public JournalpostEndretEvent convertToEvent(GoldenGateEvent goldenGateEvent) {
+	public JournalpostEndretEvent mapToJournalpostEndretEvent(GoldenGateEvent goldenGateEvent) {
 
 		String operation = goldenGateEvent.getOperation();
 		if (!(UPDATE_OPERATION.equalsIgnoreCase(operation) || INSERT_OPERATION.equalsIgnoreCase(operation))) {
