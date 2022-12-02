@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static java.time.temporal.ChronoUnit.SECONDS;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
 @SpringBootTest
@@ -95,7 +96,7 @@ public abstract class AbstractIT {
 	}
 
 	public List<JournalfoeringHendelseRecord> getAllCurrentRecordsOnTopicUt() {
-		return StreamSupport.stream(KafkaTestUtils.getRecords(consumer, 2000).records(UT_TOPIC).spliterator(), false)
+		return StreamSupport.stream(KafkaTestUtils.getRecords(consumer, Duration.of(2, SECONDS)).records(UT_TOPIC).spliterator(), false)
 				.map(ConsumerRecord::value)
 				.collect(Collectors.toList());
 	}

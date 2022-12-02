@@ -14,9 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
-import org.springframework.util.concurrent.ListenableFuture;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.CompletableFuture;
 
 import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_MOTTATT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,16 +34,16 @@ public class InngaaendeHendelseProducerTest {
 	@MockBean
 	private KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate;
 	@Mock
-	private ListenableFuture listenableFuture;
+	private CompletableFuture completableFuture;
 
 	@BeforeEach
 	public void setUp() throws Exception {
 		TopicPartition topicPartition = new TopicPartition("Top", 1);
-		RecordMetadata recordMetadata = new RecordMetadata(topicPartition, 1, 1, 1, 1L, 1, 1);
+		RecordMetadata recordMetadata = new RecordMetadata(topicPartition, 1, 1, 1, 1, 1);
 
 		when(kafkaTemplate.send(any(ProducerRecord.class)))
-				.thenReturn(listenableFuture);
-		when(listenableFuture.get())
+				.thenReturn(completableFuture);
+		when(completableFuture.get())
 				.thenReturn(new SendResult<String, JournalfoeringHendelseRecord>(null, recordMetadata));
 	}
 
