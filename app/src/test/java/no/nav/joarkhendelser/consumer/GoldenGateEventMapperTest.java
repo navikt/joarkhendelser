@@ -60,7 +60,6 @@ public class GoldenGateEventMapperTest {
 		assertEquals("EESSI", goldenGateEvent.getAfter().getMottakskanal());
 		assertEquals("1395459_dc20eeeae6d54a3a8957f8e82d99041c_1", goldenGateEvent.getBefore().getKanalreferanseId());
 		assertEquals("ab0269", goldenGateEvent.getBefore().getBehandlingstema());
-
 	}
 
 	public static String readFileAsString(String file) throws Exception {

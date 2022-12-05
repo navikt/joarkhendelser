@@ -21,7 +21,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateEventFilter.shouldStopProcessingOfMessage;
 import static no.nav.joarkhendelser.producer.JournalpostEndretInngaaendeHendelseMapper.map;
 import static org.springframework.kafka.support.KafkaHeaders.OFFSET;
-import static org.springframework.kafka.support.KafkaHeaders.RECEIVED_PARTITION_ID;
+import static org.springframework.kafka.support.KafkaHeaders.RECEIVED_PARTITION;
 import static org.springframework.kafka.support.KafkaHeaders.RECEIVED_TOPIC;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
@@ -51,7 +51,7 @@ public class JournalpostEndretConsumer {
 	public void onMessage(
 			@Payload String message,
 			@Header(RECEIVED_TOPIC) String topic,
-			@Header(RECEIVED_PARTITION_ID) int partition,
+			@Header(RECEIVED_PARTITION) int partition,
 			@Header(OFFSET) int offset
 	) {
 		MDC.put("callId", UUID.randomUUID().toString());
