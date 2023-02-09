@@ -13,6 +13,10 @@ spec:
       value: {{ JOURNALFOERINGHENDELSE_TOPIC }}
     - name: JOURNALPOSTENDRET_TOPIC
       value: {{ JOURNALPOSTENDRET_TOPIC }}
+  ingresses:
+    {{#each INGRESSES}}
+       - {{this }}
+      {{/each}}
   image: {{ image }}
   liveness:
     path: /actuator/health/liveness

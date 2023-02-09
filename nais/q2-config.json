@@ -1,5 +1,8 @@
 {
   "APPNAVN": "joarkhendelser",
+  "INGRESSES": [
+    "https://joarkhendelser.dev.intern.nav.no"
+  ],
   "MIN_REPLICAS": 1,
   "MAX_REPLICAS": 2,
   "KAFKA_POOL": "nav-dev",
