@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.0.2</version>
+		<version>3.0.4</version>
 	</parent>
 
 	<groupId>no.nav.joarkhendelser</groupId>
@@ -22,9 +22,9 @@
 	<properties>
 		<java.version>17</java.version>
 
-		<logstash-logback-encoder.version>7.2</logstash-logback-encoder.version>
+		<logstash-logback-encoder.version>7.3</logstash-logback-encoder.version>
 		<teamdokumenthandtering-avro-schemas.version>357738b9</teamdokumenthandtering-avro-schemas.version>
-		<kafka-avro-serializer.version>7.3.1</kafka-avro-serializer.version>
+		<kafka-avro-serializer.version>7.3.2</kafka-avro-serializer.version>
 
 		<!-- Plugins -->
 		<maven-toolchains-plugin.version>3.1.0</maven-toolchains-plugin.version>
