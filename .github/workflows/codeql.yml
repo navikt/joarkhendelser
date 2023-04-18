@@ -80,7 +80,7 @@ jobs:
       - name: Build
         run: |
           echo "Run, Build Application using script"
-          mvn --batch-mode -s settings.xml --global-toolchains toolchains.xml compile
+          mvn --batch-mode -s settings.xml --global-toolchains toolchains.xml build
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
