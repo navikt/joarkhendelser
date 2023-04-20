@@ -2,7 +2,7 @@ name: "CodeQL"
 
 on:
   schedule:
-    - cron: '15 08 * * 1,2,3,4,5'
+    - cron: '15 8 * * 1,2,3,4,5'
 
 jobs:
   build:
