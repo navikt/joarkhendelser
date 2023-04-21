@@ -3,7 +3,7 @@
   "INGRESSES": [
     "https://joarkhendelser.intern.nav.no"
   ],
-  "MIN_REPLICAS": 2,
+  "MIN_REPLICAS": 3,
   "MAX_REPLICAS": 3,
   "KAFKA_POOL": "nav-prod",
   "JOURNALPOSTENDRET_TOPIC": "teamdokumenthandtering.privat-dok-journalpost-endret",
