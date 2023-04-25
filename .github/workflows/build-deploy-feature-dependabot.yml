@@ -3,6 +3,7 @@ on:
   pull_request:
     branches: [ master ]
 
+# Test
 # Set the access for individual scopes, or use permissions: write-all
 permissions:
   contents: read
