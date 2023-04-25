@@ -5,6 +5,7 @@ on:
 
 # Set the access for individual scopes, or use permissions: write-all
 permissions:
+  contents: read
   packages: write
 
 jobs:
