@@ -3,14 +3,11 @@ on:
   pull_request:
     branches: [ master ]
 
-# Test
-# Set the access for individual scopes, or use permissions: write-all
-permissions:
-  contents: read
-  packages: write
-
 jobs:
   build:
     if: ${{ github.actor == 'dependabot[bot]' }}
-    uses: navikt/dok-workflows/.github/workflows/build-deploy-feature.yml@main
+    permissions:
+      contents: read
+      packages: write
+    uses: navikt/dok-workflows/.github/workflows/build-app.yml@main
     secrets: inherit
