@@ -1,9 +1,9 @@
 name: Dependabot
 on:
-  pull_request:
-    branches: [ master ]
+  push:
+    branches:
+      - 'dependabot/**'
 
-# Set the access for individual scopes, or use permissions: write-all
 permissions:
   contents: read
   packages: write
@@ -11,5 +11,5 @@ permissions:
 jobs:
   build:
     if: ${{ github.actor == 'dependabot[bot]' }}
-    uses: navikt/dok-workflows/.github/workflows/build-deploy-feature.yml@main
+    uses: navikt/dok-workflows/.github/workflows/build-app.yml@main
     secrets: inherit
