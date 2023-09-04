@@ -2,7 +2,7 @@ name: CodeQL
 
 on:
   schedule:
-    - cron: '02 08 * * MON'
+    - cron: '15 06 * * MON'
 
 jobs:
   run-codeql:
