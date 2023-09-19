@@ -1,6 +1,5 @@
 package no.nav.joarkhendelser.config;
 
-import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.context.annotation.Bean;
@@ -10,8 +9,7 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.util.backoff.FixedBackOff;
 
-import java.time.Duration;
-
+import static java.time.Duration.ofSeconds;
 import static org.springframework.util.backoff.FixedBackOff.DEFAULT_INTERVAL;
 import static org.springframework.util.backoff.FixedBackOff.UNLIMITED_ATTEMPTS;
 
@@ -19,42 +17,29 @@ import static org.springframework.util.backoff.FixedBackOff.UNLIMITED_ATTEMPTS;
 @Configuration
 public class KafkaConfig {
 
-	private final MeterRegistry meterRegistry;
-
-	public KafkaConfig(MeterRegistry meterRegistry) {
-		this.meterRegistry = meterRegistry;
-	}
-
 	@Bean("kafkaListenerContainerFactory")
-	ConcurrentKafkaListenerContainerFactory<Object, Object> kafkaListenerFactory(
-			ConsumerFactory<Object, Object> kafkaConsumerFactory
-	) {
+	ConcurrentKafkaListenerContainerFactory<Object, Object> kafkaListenerFactory(ConsumerFactory<Object, Object> kafkaConsumerFactory) {
+
 		ConcurrentKafkaListenerContainerFactory<Object, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
 
 		factory.setConsumerFactory(kafkaConsumerFactory);
-		factory.getContainerProperties().setAuthExceptionRetryInterval(Duration.ofSeconds(10L));
+		factory.getContainerProperties().setAuthExceptionRetryInterval(ofSeconds(10L));
 
 		factory.setConcurrency(1);
-		factory.setCommonErrorHandler(new DefaultErrorHandler(
-				this::handleError,
-				new FixedBackOff(DEFAULT_INTERVAL, UNLIMITED_ATTEMPTS))
-		);
+		var errorHandler = new DefaultErrorHandler(this::handleError, new FixedBackOff(DEFAULT_INTERVAL, UNLIMITED_ATTEMPTS));
+		factory.setCommonErrorHandler(errorHandler);
 
 		return factory;
 	}
 
-	private void handleError(ConsumerRecord<?, ?> rec, Exception thr) {
-		log.error("Exception oppstått i joarkhendelser: {} kafka record til topic: {}, partition: {}, offset: {}, UUID: {} feilmelding={}",
-				thr.getClass().getSimpleName(),
-				rec.topic(),
-				rec.partition(),
-				rec.offset(),
-				rec.key(),
-				thr.getCause()
+	private void handleError(ConsumerRecord<?, ?> record, Exception exception) {
+		log.error("Håndtering av kafka-record på topic={}, partition={} og offset={} med key={} har feilet med feilmelding={}",
+				record.topic(),
+				record.partition(),
+				record.offset(),
+				record.key(),
+				exception.getCause(),
+				exception
 		);
-		Throwable throwable = thr.getCause() == null ? thr : thr.getCause();
-		String exceptionName = throwable.getClass().getSimpleName();
-
-		meterRegistry.counter("dok_exception", "type", "technical", "exception_name", exceptionName).increment();
 	}
 }
