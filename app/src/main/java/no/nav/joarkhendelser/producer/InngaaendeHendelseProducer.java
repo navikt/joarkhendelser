@@ -50,18 +50,14 @@ public class InngaaendeHendelseProducer {
 				record.getHendelsesId(), record.getVersjon(), record.getHendelsesType(), record.getJournalpostId(), record.getJournalpostStatus(),
 				record.getTemaGammelt(), record.getTemaNytt(), record.getMottaksKanal(), record.getKanalReferanseId(), record.getBehandlingstema());
 
-		ProducerRecord<String, JournalfoeringHendelseRecord> producerRecord = new ProducerRecord<>(
-				topic,
-				hendelse.getJournalpostId().toString(),
-				record
-		);
+		ProducerRecord<String, JournalfoeringHendelseRecord> producerRecord = new ProducerRecord<>(topic, hendelse.getJournalpostId().toString(), record);
 
 		CompletableFuture<SendResult<String, JournalfoeringHendelseRecord>> send = kafkaTemplate.send(producerRecord);
 
 		try {
 			SendResult<String, JournalfoeringHendelseRecord> sendResult = send.get();
 
-			log.info("Publiserte til partition={}, offset={}, topic={}",
+			log.info("Publiserte melding til partition={}, offset={}, topic={}",
 					sendResult.getRecordMetadata().partition(),
 					sendResult.getRecordMetadata().offset(),
 					sendResult.getRecordMetadata().topic()

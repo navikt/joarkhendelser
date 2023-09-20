@@ -2,6 +2,10 @@ package no.nav.joarkhendelser.consumer;
 
 import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEvent;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static no.nav.joarkhendelser.consumer.GoldenGateEventUtils.createBasicColumns;
 import static no.nav.joarkhendelser.consumer.GoldenGateEventUtils.createBasicEvent;
@@ -68,12 +72,26 @@ public class GoldenGateEventFilterTest {
 		assertTrue(shouldStopProcessingOfMessage(event));
 	}
 
-	@Test
-	void shouldStopJournalposttypeUlikInngaaende() {
+	@ParameterizedTest
+	@ValueSource(strings = {"U"})
+	@NullSource
+	void shouldStopJournalposttypeUlikInngaaendeForUpdate(String journalposttype) {
 		GoldenGateEvent event = createBasicEvent(UPDATE_OPERATION);
 		event.setBefore(createBasicColumns());
 		event.setAfter(createBasicColumns());
-		event.getAfter().setJournalposttype("U");
+		event.getAfter().setJournalposttype(journalposttype);
+
+		assertTrue(shouldStopProcessingOfMessage(event));
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = {"U"})
+	@NullSource
+	void shouldStopJournalposttypeUlikInngaaendeForInsert(String journalposttype) {
+		GoldenGateEvent event = createBasicEvent(INSERT_OPERATION);
+		event.setBefore(createBasicColumns());
+		event.setAfter(createBasicColumns());
+		event.getAfter().setJournalposttype(journalposttype);
 
 		assertTrue(shouldStopProcessingOfMessage(event));
 	}
