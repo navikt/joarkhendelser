@@ -13,10 +13,10 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.time.ZoneId;
 import java.util.UUID;
 
+import static java.time.Instant.now;
+import static java.time.ZoneId.systemDefault;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateEventFilter.shouldStopProcessingOfMessage;
 import static no.nav.joarkhendelser.producer.JournalpostEndretInngaaendeHendelseMapper.map;
@@ -65,34 +65,40 @@ public class JournalpostEndretConsumer {
 
 		if (journalpostEndretEvent != null) {
 			InngaaendeHendelse hendelse = map(journalpostEndretEvent, goldenGateEvent);
+
 			if (hendelse != null) {
 				publisher.publish(hendelse);
-				meterRegistry.counter(
-						"Inngaaendehendelser",
-						"type", hendelse.getHendelsesType(),
-						"tema", isEmpty(hendelse.getTemaNytt()) ? "UKJENT" : hendelse.getTemaNytt(),
-						"mottakskanal", isEmpty(hendelse.getMottaksKanal()) ? "UKJENT" : hendelse.getMottaksKanal()).increment();
 
+				loggTypeTemaOgMottakskanal(hendelse);
 				log.info("Har publisert hendelse med hendelsestype={} for journalpostId={} med kanalreferanseId={} og mottakskanal={}.",
 						hendelse.getHendelsesType(),
 						hendelse.getJournalpostId(),
 						hendelse.getKanalReferanseId(),
 						hendelse.getMottaksKanal());
 			}
-			journalfoeringHendelseTimer(
-					journalpostEndretEvent.getFagomradeBefore(),
-					journalpostEndretEvent.getMottaksKanal(),
-					goldenGateEvent.getOperationTimestamp().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-			);
+
+			loggTidsbrukFraJoarkTilPublisering(goldenGateEvent, journalpostEndretEvent);
 		}
 	}
 
-	private void journalfoeringHendelseTimer(String tema, String mottaksKanal, Long startTime) {
-		long duration = (startTime == null) ? 0L : Instant.now().toEpochMilli() - startTime;
-		meterRegistry.timer(
-				"databaseoppdateringer_goldengate_timer",
-				"tema", isEmpty(tema) ? "UKJENT" : tema, "mottaksKannal",
-				isEmpty(mottaksKanal) ? "UKJENT" : mottaksKanal
-		).record(duration, MILLISECONDS);
+	private void loggTypeTemaOgMottakskanal(InngaaendeHendelse hendelse) {
+		meterRegistry.counter("joarkhendelse",
+				"type", hendelse.getHendelsesType(),
+				"tema", isEmpty(hendelse.getTemaNytt()) ? "UKJENT" : hendelse.getTemaNytt(),
+				"mottakskanal", isEmpty(hendelse.getMottaksKanal()) ? "UKJENT" : hendelse.getMottaksKanal()).increment();
+	}
+
+	private void loggTidsbrukFraJoarkTilPublisering(GoldenGateEvent goldenGateEvent, JournalpostEndretEvent journalpostEndretEvent) {
+		var tema = journalpostEndretEvent.getFagomradeBefore();
+		var mottakskanal = journalpostEndretEvent.getMottaksKanal();
+		long tidspunktForJoarkendring = goldenGateEvent.getOperationTimestamp().atZone(systemDefault()).toInstant().toEpochMilli();
+		long tidspunktForPublisering = now().toEpochMilli();
+
+		long tidMellomJoarkendringOgPublisering = tidspunktForPublisering - tidspunktForJoarkendring;
+
+		meterRegistry.timer("tid_brukt_fra_endring_i_joark_til_joarkhendelser_publiserer_hendelse",
+				"tema", isEmpty(tema) ? "UKJENT" : tema,
+				"mottakskanal", isEmpty(mottakskanal) ? "UKJENT" : mottakskanal
+		).record(tidMellomJoarkendringOgPublisering, MILLISECONDS);
 	}
 }
