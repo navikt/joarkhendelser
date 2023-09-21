@@ -18,18 +18,18 @@ import org.springframework.kafka.support.SendResult;
 import java.time.LocalDateTime;
 import java.util.concurrent.CompletableFuture;
 
-import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_MOTTATT;
+import static no.nav.joarkhendelser.producer.Hendelsestype.JOURNALPOST_MOTTATT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = {InngaaendeHendelseProducer.class})
-public class InngaaendeHendelseProducerTest {
+@SpringBootTest(classes = {JoarkhendelseProducer.class})
+public class JoarkhendelseProducerTest {
 
 	@Autowired
-	InngaaendeHendelseProducer inngaaendeHendelsePublisher;
+	JoarkhendelseProducer joarkhendelseProducer;
 
 	@MockBean
 	private KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate;
@@ -49,14 +49,14 @@ public class InngaaendeHendelseProducerTest {
 
 	@Test
 	public void shouldPublish() {
-		InngaaendeHendelse hendelse = createInngaaendeHendelse();
-		inngaaendeHendelsePublisher.publish(hendelse);
+		Joarkhendelse hendelse = createInngaaendeHendelse();
+		joarkhendelseProducer.publish(hendelse);
 
 		verify(kafkaTemplate, times(1)).send(any(ProducerRecord.class));
-		assertEquals(JOURNALPOST_MOTTATT.toString(), hendelse.getHendelsesType());
+		assertEquals(JOURNALPOST_MOTTATT.toString(), hendelse.getHendelsestype());
 	}
 
-	private InngaaendeHendelse createInngaaendeHendelse() {
+	private Joarkhendelse createInngaaendeHendelse() {
 		JournalpostEndretEvent journalpostEndretEvent = JournalpostEndretEvent.builder()
 				.journalpostId(1L)
 				.journalpostStatusAfter("MO")
@@ -69,6 +69,6 @@ public class InngaaendeHendelseProducerTest {
 		GoldenGateEvent goldenGateEvent = new GoldenGateEvent();
 		goldenGateEvent.setOperationTimestamp(LocalDateTime.now());
 
-		return JournalpostEndretInngaaendeHendelseMapper.map(journalpostEndretEvent, goldenGateEvent);
+		return JoarkhendelseMapper.map(journalpostEndretEvent, goldenGateEvent);
 	}
 }

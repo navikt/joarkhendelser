@@ -17,12 +17,12 @@ import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @Component
-public class InngaaendeHendelseProducer {
+public class JoarkhendelseProducer {
 
 	private final String topic;
 	private final KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate;
 
-	public InngaaendeHendelseProducer(
+	public JoarkhendelseProducer(
 			KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate,
 			@Value("${journalfoeringhendelse.topic}") String topic
 	) {
@@ -31,18 +31,18 @@ public class InngaaendeHendelseProducer {
 	}
 
 	@Transactional
-	public void publish(InngaaendeHendelse hendelse) throws JoarkhendelserTechnicalException {
+	public void publish(Joarkhendelse hendelse) throws JoarkhendelserTechnicalException {
 		JournalfoeringHendelseRecord record = new JournalfoeringHendelseRecord(
 				hendelse.getHendelsesId(),
 				hendelse.getVersjon(),
-				hendelse.getHendelsesType(),
+				hendelse.getHendelsestype(),
 				hendelse.getJournalpostId(),
-				hendelse.getJournalpostStatus(),
+				hendelse.getJournalpoststatus(),
 				hendelse.getTemaGammelt(),
 				hendelse.getTemaNytt(),
-				hendelse.getMottaksKanal(),
-				hendelse.getKanalReferanseId(),
-				hendelse.getBehandlingsTema()
+				hendelse.getMottakskanal(),
+				hendelse.getKanalreferanseId(),
+				hendelse.getBehandlingstema()
 		);
 
 		log.info("Utgående melding med data: hendelsesId={}, versjon={}, hendelsesType={}, journalpostId={}, journalpostStatus={}, " +

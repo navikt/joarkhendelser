@@ -6,28 +6,28 @@ import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEvent;
 
 import java.time.format.DateTimeFormatter;
 
-import static no.nav.joarkhendelser.consumer.JournalpostType.INNGAAENDE;
+import static no.nav.joarkhendelser.consumer.Journalposttype.INNGAAENDE;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.INSERT_OPERATION;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.UPDATE_OPERATION;
-import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.ENDELIG_JOURNALFORT;
-import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_MOTTATT;
-import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_UTGATT;
-import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.TEMA_ENDRET;
-import static no.nav.joarkhendelser.producer.JoarkJournalpostStatus.JOURNALFORT;
-import static no.nav.joarkhendelser.producer.JoarkJournalpostStatus.MIDLERTIDIG;
-import static no.nav.joarkhendelser.producer.JoarkJournalpostStatus.MOTTATT;
-import static no.nav.joarkhendelser.producer.JoarkJournalpostStatus.OPPLASTINGDOKUMENT;
-import static no.nav.joarkhendelser.producer.JoarkJournalpostStatus.UKJENTBRUKER;
-import static no.nav.joarkhendelser.producer.JoarkJournalpostStatus.UTGAR;
+import static no.nav.joarkhendelser.producer.Hendelsestype.ENDELIG_JOURNALFOERT;
+import static no.nav.joarkhendelser.producer.Hendelsestype.JOURNALPOST_MOTTATT;
+import static no.nav.joarkhendelser.producer.Hendelsestype.JOURNALPOST_UTGAATT;
+import static no.nav.joarkhendelser.producer.Hendelsestype.TEMA_ENDRET;
+import static no.nav.joarkhendelser.producer.JoarkJournalpoststatus.JOURNALFOERT;
+import static no.nav.joarkhendelser.producer.JoarkJournalpoststatus.MIDLERTIDIG;
+import static no.nav.joarkhendelser.producer.JoarkJournalpoststatus.MOTTATT;
+import static no.nav.joarkhendelser.producer.JoarkJournalpoststatus.OPPLASTINGDOKUMENT;
+import static no.nav.joarkhendelser.producer.JoarkJournalpoststatus.UKJENTBRUKER;
+import static no.nav.joarkhendelser.producer.JoarkJournalpoststatus.UTGAAR;
 import static org.apache.logging.log4j.util.Strings.isNotEmpty;
 
 @Slf4j
-public class JournalpostEndretInngaaendeHendelseMapper {
+public class JoarkhendelseMapper {
 
 	private static final DateTimeFormatter formatterWhereSecondsArePreservedIfZero = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
-	public static InngaaendeHendelse map(JournalpostEndretEvent event, GoldenGateEvent goldenGateEvent) {
-		InngaaendeHendelsesType hendelsestype = mapHendelsestype(event);
+	public static Joarkhendelse map(JournalpostEndretEvent event, GoldenGateEvent goldenGateEvent) {
+		Hendelsestype hendelsestype = mapHendelsestype(event);
 
 		if (hendelsestype == null) {
 			log.info("Hendelse med operation={}, journalposttype={}, journalpoststatusBefore={}, journalpoststatusAfter={} er ikke en av dei fire relevante hendelsene.",
@@ -36,34 +36,34 @@ public class JournalpostEndretInngaaendeHendelseMapper {
 			return null;
 		}
 
-		return InngaaendeHendelse.builder()
+		return Joarkhendelse.builder()
 				.hendelsesId(buildHendelseId(event, goldenGateEvent)) // journalpostId + operationTimestamp på ISO8601-format (yyyy-MM-ddTHH:mm:ss)
 				.versjon(1)
 				.temaNytt(event.getFagomradeAfter())
 				.temaGammelt(event.getFagomradeBefore())
 				.journalpostId(event.getJournalpostId())
-				.kanalReferanseId(event.getKanalReferanseId())
-				.mottaksKanal(event.getMottaksKanal())
-				.behandlingsTema(event.getBehandlingsTema())
-				.journalpostStatus(mapJournalstatus(event.getJournalpostStatusAfter()))
-				.hendelsesType(hendelsestype.toString())
+				.kanalreferanseId(event.getKanalReferanseId())
+				.mottakskanal(event.getMottaksKanal())
+				.behandlingstema(event.getBehandlingsTema())
+				.journalpoststatus(mapJournalstatus(event.getJournalpostStatusAfter()))
+				.hendelsestype(hendelsestype.toString())
 				.build();
 	}
 
 	private static String mapJournalstatus(String journalpostStatus) {
 
 		return switch (journalpostStatus) {
-			case JOURNALFORT -> JournalpostStatus.JOURNALFORT;
-			case MIDLERTIDIG, MOTTATT -> JournalpostStatus.MOTTATT;
-			case OPPLASTINGDOKUMENT -> JournalpostStatus.OPPLASTINGDOKUMENT;
-			case UKJENTBRUKER -> JournalpostStatus.UKJENTBRUKER;
-			case UTGAR -> JournalpostStatus.UTGAR;
+			case JOURNALFOERT -> Journalpoststatus.JOURNALFOERT;
+			case MIDLERTIDIG, MOTTATT -> Journalpoststatus.MOTTATT;
+			case OPPLASTINGDOKUMENT -> Journalpoststatus.OPPLASTINGDOKUMENT;
+			case UKJENTBRUKER -> Journalpoststatus.UKJENTBRUKER;
+			case UTGAAR -> Journalpoststatus.UTGAAR;
 			default -> null;
 		};
 	}
 
-	private static InngaaendeHendelsesType mapHendelsestype(JournalpostEndretEvent event) {
-		InngaaendeHendelsesType hendelsestype = null;
+	private static Hendelsestype mapHendelsestype(JournalpostEndretEvent event) {
+		Hendelsestype hendelsestype = null;
 
 		if (!typeErInngaaende(event)) {
 			return hendelsestype;
@@ -71,10 +71,10 @@ public class JournalpostEndretInngaaendeHendelseMapper {
 
 		if (erJournalpostMottatt(event)) {
 			hendelsestype = JOURNALPOST_MOTTATT;
-		} else if (erEndeligJournalfort(event)) {
-			hendelsestype = ENDELIG_JOURNALFORT;
-		} else if (erJournalpostUtgatt(event)) {
-			hendelsestype = JOURNALPOST_UTGATT;
+		} else if (erEndeligJournalfoert(event)) {
+			hendelsestype = ENDELIG_JOURNALFOERT;
+		} else if (erJournalpostUtgaatt(event)) {
+			hendelsestype = JOURNALPOST_UTGAATT;
 		} else if (erTemaEndret(event)) {
 			hendelsestype = TEMA_ENDRET;
 		}
@@ -94,12 +94,12 @@ public class JournalpostEndretInngaaendeHendelseMapper {
 		return nyStatusErMottattEllerMidlertidig(event) && operasjonErUpdate(event) && harEndretFagomraade(event);
 	}
 
-	private static boolean erEndeligJournalfort(JournalpostEndretEvent event) {
-		return (operasjonErInsert(event) || (operasjonErUpdate(event) && forrigeStatusVarMidlertidig(event))) && nyStatusErJournalfort(event);
+	private static boolean erEndeligJournalfoert(JournalpostEndretEvent event) {
+		return (operasjonErInsert(event) || (operasjonErUpdate(event) && forrigeStatusVarMidlertidig(event))) && nyStatusErJournalfoert(event);
 	}
 
-	private static boolean erJournalpostUtgatt(JournalpostEndretEvent event) {
-		return operasjonErUpdate(event) && harEndretStatusTilUtgarEllerUkjentbruker(event);
+	private static boolean erJournalpostUtgaatt(JournalpostEndretEvent event) {
+		return operasjonErUpdate(event) && harEndretStatusTilUtgaarEllerUkjentbruker(event);
 	}
 
 	private static boolean harEndretFagomraade(JournalpostEndretEvent event) {
@@ -108,9 +108,9 @@ public class JournalpostEndretInngaaendeHendelseMapper {
 			   !event.getFagomradeBefore().equalsIgnoreCase(event.getFagomradeAfter());
 	}
 
-	private static boolean harEndretStatusTilUtgarEllerUkjentbruker(JournalpostEndretEvent event) {
+	private static boolean harEndretStatusTilUtgaarEllerUkjentbruker(JournalpostEndretEvent event) {
 		return isNotEmpty(event.getJournalpostStatusBefore()) &&
-			   (UTGAR.equalsIgnoreCase(event.getJournalpostStatusAfter()) || UKJENTBRUKER.equalsIgnoreCase(event.getJournalpostStatusAfter()));
+			   (UTGAAR.equalsIgnoreCase(event.getJournalpostStatusAfter()) || UKJENTBRUKER.equalsIgnoreCase(event.getJournalpostStatusAfter()));
 	}
 
 	private static boolean operasjonErInsert(JournalpostEndretEvent event) {
@@ -125,8 +125,8 @@ public class JournalpostEndretInngaaendeHendelseMapper {
 		return INNGAAENDE.equalsIgnoreCase(event.getJournalpostType());
 	}
 
-	private static boolean nyStatusErJournalfort(JournalpostEndretEvent event) {
-		return JOURNALFORT.equalsIgnoreCase(event.getJournalpostStatusAfter());
+	private static boolean nyStatusErJournalfoert(JournalpostEndretEvent event) {
+		return JOURNALFOERT.equalsIgnoreCase(event.getJournalpostStatusAfter());
 	}
 
 	private static boolean nyStatusErMottattEllerMidlertidig(JournalpostEndretEvent event) {

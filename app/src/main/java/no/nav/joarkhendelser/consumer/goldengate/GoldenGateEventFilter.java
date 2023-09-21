@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Arrays;
 import java.util.List;
 
-import static no.nav.joarkhendelser.consumer.JournalpostType.INNGAAENDE;
+import static no.nav.joarkhendelser.consumer.Journalposttype.INNGAAENDE;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.INSERT_OPERATION;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.UPDATE_OPERATION;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.prettyPrintOperationName;

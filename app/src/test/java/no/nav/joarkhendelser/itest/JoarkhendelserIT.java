@@ -7,15 +7,15 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.ENDELIG_JOURNALFORT;
-import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_MOTTATT;
-import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.JOURNALPOST_UTGATT;
-import static no.nav.joarkhendelser.producer.InngaaendeHendelsesType.TEMA_ENDRET;
+import static no.nav.joarkhendelser.producer.Hendelsestype.ENDELIG_JOURNALFOERT;
+import static no.nav.joarkhendelser.producer.Hendelsestype.JOURNALPOST_MOTTATT;
+import static no.nav.joarkhendelser.producer.Hendelsestype.JOURNALPOST_UTGAATT;
+import static no.nav.joarkhendelser.producer.Hendelsestype.TEMA_ENDRET;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class JoarkJournalfoeringHendelserIT extends AbstractIT {
+public class JoarkhendelserIT extends AbstractIT {
 
 	private static final Long JOURNALPOST_ID_UTGAAENDE = 105L;
 
@@ -65,7 +65,7 @@ public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 			assertEquals(1, records.size());
 			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
 			assertEquals(1L, utgaaendeRecord.getJournalpostId());
-			assertEquals(ENDELIG_JOURNALFORT.toString(), utgaaendeRecord.getHendelsesType());
+			assertEquals(ENDELIG_JOURNALFOERT.toString(), utgaaendeRecord.getHendelsesType());
 		});
 	}
 
@@ -80,7 +80,7 @@ public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 			assertEquals(1, records.size());
 			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
 			assertEquals(1L, utgaaendeRecord.getJournalpostId());
-			assertEquals(JOURNALPOST_UTGATT.toString(), utgaaendeRecord.getHendelsesType());
+			assertEquals(JOURNALPOST_UTGAATT.toString(), utgaaendeRecord.getHendelsesType());
 		});
 	}
 
@@ -123,7 +123,7 @@ public class JoarkJournalfoeringHendelserIT extends AbstractIT {
 			assertEquals(1, records.size());
 			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
 			assertEquals(123456789L, utgaaendeRecord.getJournalpostId());
-			assertEquals(ENDELIG_JOURNALFORT.toString(), utgaaendeRecord.getHendelsesType());
+			assertEquals(ENDELIG_JOURNALFOERT.toString(), utgaaendeRecord.getHendelsesType());
 		});
 	}
 }

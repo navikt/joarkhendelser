@@ -4,8 +4,8 @@ import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEvent;
 import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEventMapper;
-import no.nav.joarkhendelser.producer.InngaaendeHendelse;
-import no.nav.joarkhendelser.producer.InngaaendeHendelseProducer;
+import no.nav.joarkhendelser.producer.Joarkhendelse;
+import no.nav.joarkhendelser.producer.JoarkhendelseProducer;
 import org.slf4j.MDC;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Header;
@@ -19,7 +19,7 @@ import static java.time.Instant.now;
 import static java.time.ZoneId.systemDefault;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateEventFilter.shouldStopProcessingOfMessage;
-import static no.nav.joarkhendelser.producer.JournalpostEndretInngaaendeHendelseMapper.map;
+import static no.nav.joarkhendelser.producer.JoarkhendelseMapper.map;
 import static org.springframework.kafka.support.KafkaHeaders.OFFSET;
 import static org.springframework.kafka.support.KafkaHeaders.RECEIVED_PARTITION;
 import static org.springframework.kafka.support.KafkaHeaders.RECEIVED_TOPIC;
@@ -30,13 +30,13 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 public class JournalpostEndretConsumer {
 
 	private final JournalpostEndretEventMapper mapper;
-	private final InngaaendeHendelseProducer publisher;
+	private final JoarkhendelseProducer publisher;
 	private final MeterRegistry meterRegistry;
 	private final GoldenGateEventMapper goldenGateEventMapper;
 
 	public JournalpostEndretConsumer(
 			JournalpostEndretEventMapper mapper,
-			InngaaendeHendelseProducer publisher,
+			JoarkhendelseProducer publisher,
 			MeterRegistry meterRegistry,
 			GoldenGateEventMapper goldenGateEventMapper
 	) {
@@ -64,28 +64,28 @@ public class JournalpostEndretConsumer {
 		JournalpostEndretEvent journalpostEndretEvent = mapper.mapToJournalpostEndretEvent(goldenGateEvent);
 
 		if (journalpostEndretEvent != null) {
-			InngaaendeHendelse hendelse = map(journalpostEndretEvent, goldenGateEvent);
+			Joarkhendelse hendelse = map(journalpostEndretEvent, goldenGateEvent);
 
 			if (hendelse != null) {
 				publisher.publish(hendelse);
 
 				loggTypeTemaOgMottakskanal(hendelse);
 				log.info("Har publisert hendelse med hendelsestype={} for journalpostId={} med kanalreferanseId={} og mottakskanal={}.",
-						hendelse.getHendelsesType(),
+						hendelse.getHendelsestype(),
 						hendelse.getJournalpostId(),
-						hendelse.getKanalReferanseId(),
-						hendelse.getMottaksKanal());
+						hendelse.getKanalreferanseId(),
+						hendelse.getMottakskanal());
 			}
 
 			loggTidsbrukFraJoarkTilPublisering(goldenGateEvent, journalpostEndretEvent);
 		}
 	}
 
-	private void loggTypeTemaOgMottakskanal(InngaaendeHendelse hendelse) {
+	private void loggTypeTemaOgMottakskanal(Joarkhendelse hendelse) {
 		meterRegistry.counter("joarkhendelse",
-				"type", hendelse.getHendelsesType(),
+				"type", hendelse.getHendelsestype(),
 				"tema", isEmpty(hendelse.getTemaNytt()) ? "UKJENT" : hendelse.getTemaNytt(),
-				"mottakskanal", isEmpty(hendelse.getMottaksKanal()) ? "UKJENT" : hendelse.getMottaksKanal()).increment();
+				"mottakskanal", isEmpty(hendelse.getMottakskanal()) ? "UKJENT" : hendelse.getMottakskanal()).increment();
 	}
 
 	private void loggTidsbrukFraJoarkTilPublisering(GoldenGateEvent goldenGateEvent, JournalpostEndretEvent journalpostEndretEvent) {

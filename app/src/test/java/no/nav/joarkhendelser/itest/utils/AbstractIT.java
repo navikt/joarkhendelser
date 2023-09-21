@@ -34,7 +34,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG;
+import static io.confluent.kafka.serializers.KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG;
 import static java.time.temporal.ChronoUnit.SECONDS;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG;
+import static org.awaitility.Awaitility.setDefaultPollInterval;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
 @SpringBootTest
@@ -45,7 +50,6 @@ import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 				"test-ut-topic",
 				"test-inn-topic",
 		},
-		bootstrapServersProperty = "spring.kafka.bootstrap-servers",
 		brokerProperties = {
 				"offsets.topic.replication.factor=1",
 				"transaction.state.log.replication.factor=1",
@@ -76,12 +80,9 @@ public abstract class AbstractIT {
 
 		// KafkaProducer for å kunne produsere meldinger til topic 'test-inn-topic' som konsumeres av JournalpostEndretConsumer
 		Map<String, Object> configs = new HashMap<>(KafkaTestUtils.producerProps(kafkaEmbedded));
-		producer = new DefaultKafkaProducerFactory<>(
-				configs,
-				new StringSerializer(),
-				new StringSerializer()
-		).createProducer();
-		Awaitility.setDefaultPollInterval(Duration.ofSeconds(1));
+		producer = new DefaultKafkaProducerFactory<>(configs, new StringSerializer(), new StringSerializer()).createProducer();
+
+		setDefaultPollInterval(Duration.ofSeconds(1));
 	}
 
 	protected void sendToInnTopic(JsonNode value) {
@@ -103,13 +104,12 @@ public abstract class AbstractIT {
 
 	public void setUpConsumerForTopicUt() {
 		Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("dittnv-consumer", "true", kafkaEmbedded);
-		consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
-		consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "io.confluent.kafka.serializers.KafkaAvroDeserializer");
-		consumerProps.put(KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG, "mock://localhost");
-		consumerProps.put(KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG, "true");
+		consumerProps.put(KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+		consumerProps.put(VALUE_DESERIALIZER_CLASS_CONFIG, "io.confluent.kafka.serializers.KafkaAvroDeserializer");
+		consumerProps.put(SCHEMA_REGISTRY_URL_CONFIG, "mock://localhost");
+		consumerProps.put(SPECIFIC_AVRO_READER_CONFIG, "true");
 
-		consumer = new DefaultKafkaConsumerFactory<String, JournalfoeringHendelseRecord>(consumerProps)
-				.createConsumer();
+		consumer = new DefaultKafkaConsumerFactory<String, JournalfoeringHendelseRecord>(consumerProps).createConsumer();
 		consumer.subscribe(Collections.singletonList(UT_TOPIC));
 	}
 }
