@@ -17,12 +17,12 @@ import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @Component
-public class InngaaendeHendelseProducer {
+public class JoarkhendelseProducer {
 
 	private final String topic;
 	private final KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate;
 
-	public InngaaendeHendelseProducer(
+	public JoarkhendelseProducer(
 			KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate,
 			@Value("${journalfoeringhendelse.topic}") String topic
 	) {
@@ -31,18 +31,18 @@ public class InngaaendeHendelseProducer {
 	}
 
 	@Transactional
-	public void publish(InngaaendeHendelse hendelse) throws JoarkhendelserTechnicalException {
+	public void publish(Joarkhendelse hendelse) throws JoarkhendelserTechnicalException {
 		JournalfoeringHendelseRecord record = new JournalfoeringHendelseRecord(
 				hendelse.getHendelsesId(),
 				hendelse.getVersjon(),
-				hendelse.getHendelsesType(),
+				hendelse.getHendelsestype(),
 				hendelse.getJournalpostId(),
-				hendelse.getJournalpostStatus(),
+				hendelse.getJournalpoststatus(),
 				hendelse.getTemaGammelt(),
 				hendelse.getTemaNytt(),
-				hendelse.getMottaksKanal(),
-				hendelse.getKanalReferanseId(),
-				hendelse.getBehandlingsTema()
+				hendelse.getMottakskanal(),
+				hendelse.getKanalreferanseId(),
+				hendelse.getBehandlingstema()
 		);
 
 		log.info("Utgående melding med data: hendelsesId={}, versjon={}, hendelsesType={}, journalpostId={}, journalpostStatus={}, " +
@@ -50,18 +50,14 @@ public class InngaaendeHendelseProducer {
 				record.getHendelsesId(), record.getVersjon(), record.getHendelsesType(), record.getJournalpostId(), record.getJournalpostStatus(),
 				record.getTemaGammelt(), record.getTemaNytt(), record.getMottaksKanal(), record.getKanalReferanseId(), record.getBehandlingstema());
 
-		ProducerRecord<String, JournalfoeringHendelseRecord> producerRecord = new ProducerRecord<>(
-				topic,
-				hendelse.getJournalpostId().toString(),
-				record
-		);
+		ProducerRecord<String, JournalfoeringHendelseRecord> producerRecord = new ProducerRecord<>(topic, hendelse.getJournalpostId().toString(), record);
 
 		CompletableFuture<SendResult<String, JournalfoeringHendelseRecord>> send = kafkaTemplate.send(producerRecord);
 
 		try {
 			SendResult<String, JournalfoeringHendelseRecord> sendResult = send.get();
 
-			log.info("Publiserte til partition={}, offset={}, topic={}",
+			log.info("Publiserte melding til partition={}, offset={}, topic={}",
 					sendResult.getRecordMetadata().partition(),
 					sendResult.getRecordMetadata().offset(),
 					sendResult.getRecordMetadata().topic()

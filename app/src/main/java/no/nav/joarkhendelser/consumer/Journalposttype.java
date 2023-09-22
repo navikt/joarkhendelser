@@ -1,6 +1,6 @@
 package no.nav.joarkhendelser.consumer;
 
-public class JournalpostType {
+public class Journalposttype {
 
 	public static final String INNGAAENDE = "I";
 

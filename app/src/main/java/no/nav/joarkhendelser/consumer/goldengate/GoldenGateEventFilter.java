@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Arrays;
 import java.util.List;
 
-import static no.nav.joarkhendelser.consumer.JournalpostType.INNGAAENDE;
+import static no.nav.joarkhendelser.consumer.Journalposttype.INNGAAENDE;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.INSERT_OPERATION;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.UPDATE_OPERATION;
 import static no.nav.joarkhendelser.consumer.goldengate.GoldenGateOperations.prettyPrintOperationName;
@@ -20,22 +20,22 @@ public class GoldenGateEventFilter {
 		String operation = goldenGateEvent.getOperation();
 
 		if (!allowedOperations.contains(operation)) {
-			log.info("Forkaster Golden Gate-melding med operasjon {}", prettyPrintOperationName(operation));
+			log.info("Forkaster Golden Gate-melding med operasjon={}", prettyPrintOperationName(operation));
 			return true;
 		}
 
 		if ((INSERT_OPERATION.equalsIgnoreCase(operation) || UPDATE_OPERATION.equalsIgnoreCase(operation)) && goldenGateEvent.getAfter() == null) {
-			log.warn("Forkaster Golden Gate-melding med operasjon {} som mangler after-feltet", prettyPrintOperationName(operation));
+			log.warn("Forkaster Golden Gate-melding med operasjon={} som mangler after-feltet", prettyPrintOperationName(operation));
 			return true;
 		}
 
 		if (UPDATE_OPERATION.equalsIgnoreCase(operation) && goldenGateEvent.getBefore() == null) {
-			log.warn("Forkaster Golden Gate-melding med operasjon {} som mangler before-feltet", prettyPrintOperationName(operation));
+			log.warn("Forkaster Golden Gate-melding med operasjon={} som mangler before-feltet", prettyPrintOperationName(operation));
 			return true;
 		}
 
 		if (!INNGAAENDE.equalsIgnoreCase((goldenGateEvent.getAfter().getJournalposttype()))) {
-			log.info("Forkaster Golden Gate-melding med journalposttype ulik I (inngaaende)");
+			log.info("Forkaster Golden Gate-melding med journalposttype={} ulik I (inngaaende)", goldenGateEvent.getAfter().getJournalposttype());
 			return true;
 		}
 

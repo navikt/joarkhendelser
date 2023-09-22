@@ -1,14 +1,15 @@
 package no.nav.joarkhendelser.producer;
 
-public enum InngaaendeHendelsesType {
+public enum Hendelsestype {
+
 	JOURNALPOST_MOTTATT("JournalpostMottatt"),
 	TEMA_ENDRET("TemaEndret"),
-	ENDELIG_JOURNALFORT("EndeligJournalført"),
-	JOURNALPOST_UTGATT("JournalpostUtgått");
+	ENDELIG_JOURNALFOERT("EndeligJournalført"),
+	JOURNALPOST_UTGAATT("JournalpostUtgått");
 
 	private final String pretty;
 
-	InngaaendeHendelsesType(String value) {
+	Hendelsestype(String value) {
 		pretty = value;
 	}
 
