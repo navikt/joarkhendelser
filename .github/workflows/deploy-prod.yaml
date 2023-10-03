@@ -9,3 +9,5 @@ jobs:
   deploy-prod:
     uses: navikt/dok-workflows/.github/workflows/deploy-prod.yml@main
     secrets: inherit
+    with:
+      nav-cluster: prod-gcp
