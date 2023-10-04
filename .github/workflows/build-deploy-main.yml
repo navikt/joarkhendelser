@@ -12,7 +12,5 @@ jobs:
       contents: write
       packages: write
       pull-requests: write
-    uses: navikt/dok-workflows/.github/workflows/build-deploy-main.yml@main
+    uses: navikt/dok-workflows/.github/workflows/build-deploy-main-gcp.yml@main
     secrets: inherit
-    with:
-      nav-cluster: dev-gcp
