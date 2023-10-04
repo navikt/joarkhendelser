@@ -1,7 +1,7 @@
 {
   "APPNAVN": "joarkhendelser",
   "INGRESSES": [
-    "https://joarkhendelser.dev.intern.nav.no"
+    "https://joarkhendelser.intern.dev.nav.no"
   ],
   "MIN_REPLICAS": 3,
   "MAX_REPLICAS": 3,
