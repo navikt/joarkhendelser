@@ -1,7 +1,9 @@
-FROM ghcr.io/navikt/baseimages/temurin:17
+FROM gcr.io/distroless/java17-debian12:nonroot
 
 COPY app/target/app.jar /app/app.jar
+WORKDIR /app
 
-ENV JAVA_OPTS="-Xmx512m \
-               -Djava.security.egd=file:/dev/./urandom \
-               -Dspring.profiles.active=nais"
+ENV TZ="Europe/Oslo"
+ENV JAVA_OPTS="-Xmx512m -Dspring.profiles.active=nais"
+
+CMD ["app.jar"]
