@@ -6,6 +6,11 @@ metadata:
   labels:
     team: teamdokumenthandtering
 spec:
+  image: {{ image }}
+  ingresses:
+    {{#each INGRESSES}}
+        - {{ this }}
+      {{/each}}
   env:
     - name: APPNAVN
       value: {{ APPNAVN }}
@@ -13,33 +18,22 @@ spec:
       value: {{ JOURNALFOERINGHENDELSE_TOPIC }}
     - name: JOURNALPOSTENDRET_TOPIC
       value: {{ JOURNALPOSTENDRET_TOPIC }}
-  ingresses:
-    {{#each INGRESSES}}
-       - {{this }}
-      {{/each}}
-  image: {{ image }}
   liveness:
     path: /actuator/health/liveness
-    port: 8080
-    initialDelay: 30
-    failureThreshold: 10
-    timeout: 10
-  port: 8080  
+    initialDelay: 20
+  readiness:
+    path: /actuator/health/readiness
+    initialDelay: 20
+  port: 8080
   prometheus:
     enabled: true
     path: /actuator/prometheus
   kafka:
     pool: {{ KAFKA_POOL }}
-  readiness:
-    path: /actuator/health/readiness
-    port: 8080
-    initialDelay: 30
-    timeout: 3
   replicas:
     min: {{ MIN_REPLICAS }}
     max: {{ MAX_REPLICAS }}
-    cpuThresholdPercentage: 80
+    cpuThresholdPercentage: 50
   resources:
     limits:
-      cpu: 1500m
-      memory: 1024Mi
+      memory: 512Mi
