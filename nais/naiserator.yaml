@@ -35,8 +35,5 @@ spec:
     max: {{ MAX_REPLICAS }}
     cpuThresholdPercentage: 50
   resources:
-    requests:
-      cpu: 250m
-      memory: 256Mi
     limits:
       memory: 512Mi
