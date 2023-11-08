@@ -8,7 +8,7 @@ Hendelsene blir publiserte til følgende Kafka-topic:
 
 For informasjon om hvordan du kan abonnere på hendelsene kan du sjekke ut [Korleis abonnere på hendingar frå Joark](https://confluence.adeo.no/pages/viewpage.action?pageId=432217859).
 
-Merk at det eksisterer to versjoner av appen i teamdokumenthandtering-namespacet i dev-fss:
+Merk at det eksisterer to versjoner av appen i teamdokumenthandtering-namespacet i dev-gcp:
 - joarkhendelser (GoldenGate-replikering fra Joark-databasen i q2)
 - joarkhendelser-q1 (GoldenGate-replikering fra Joark-databasen i q1)
 
