@@ -46,11 +46,6 @@ import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 				"test-ut-topic",
 				"test-inn-topic",
 		},
-		brokerProperties = {
-				"offsets.topic.replication.factor=1",
-				"transaction.state.log.replication.factor=1",
-				"transaction.state.log.min.isr=1"
-		},
 		partitions = 1
 )
 public abstract class AbstractIT {
