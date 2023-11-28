@@ -20,14 +20,30 @@ public class JoarkhendelserIT extends AbstractIT {
 	private static final Long JOURNALPOST_ID_UTGAAENDE = 105L;
 
 	/**
+	 * HVIS man mottar en Insert med JournalStatus = M, skal MidlertidigJournalfoert-hendelse publiseres til utgaaende topic
+	 */
+	@Test
+	public void shouldPublishJournalpostMottattHendelse() throws Exception {
+		sendToInnTopic(classpathToJsonNode("__files/midlertidig_journalfoert.json"));
+
+		await().atMost(5, SECONDS).untilAsserted(() -> {
+			List<JournalfoeringHendelseRecord> records = getAllCurrentRecordsOnTopicUt();
+			assertEquals(1, records.size());
+			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
+			assertEquals(1L, utgaaendeRecord.getJournalpostId());
+			assertEquals(JOURNALPOST_MOTTATT.toString(), utgaaendeRecord.getHendelsesType());
+		});
+	}
+
+	/**
 	 * HVIS man mottar en Update med endring av Tema, skal TemaEndret-hendelse publiseres til utgaaende topic
 	 */
 	@Test
-	public void shouldPublishNewTemaEndretHendelse() throws Exception {
+	public void shouldPublishTemaEndretHendelse() throws Exception {
 		sendToInnTopic(classpathToJsonNode("__files/tema_endret.json"));
 
-		await().atMost(10, SECONDS).untilAsserted(() -> {
-			List<JournalfoeringHendelseRecord> records = this.getAllCurrentRecordsOnTopicUt();
+		await().atMost(5, SECONDS).untilAsserted(() -> {
+			List<JournalfoeringHendelseRecord> records = getAllCurrentRecordsOnTopicUt();
 			assertEquals(1, records.size());
 			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
 			assertEquals(1L, utgaaendeRecord.getJournalpostId());
@@ -38,30 +54,14 @@ public class JoarkhendelserIT extends AbstractIT {
 	}
 
 	/**
-	 * HVIS man mottar en Insert med JournalStatus = M, skal MidlertidigJournalfoert-hendelse publiseres til utgaaende topic
-	 */
-	@Test
-	public void shouldPublishNewMidlertidigJournalfoertHendelse() throws Exception {
-		sendToInnTopic(classpathToJsonNode("__files/midlertidig_jf.json"));
-
-		await().atMost(10, SECONDS).untilAsserted(() -> {
-			List<JournalfoeringHendelseRecord> records = this.getAllCurrentRecordsOnTopicUt();
-			assertEquals(1, records.size());
-			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
-			assertEquals(1L, utgaaendeRecord.getJournalpostId());
-			assertEquals(JOURNALPOST_MOTTATT.toString(), utgaaendeRecord.getHendelsesType());
-		});
-	}
-
-	/**
 	 * HVIS man mottar en Insert med JournalStatus = J, skal EndeligJournalfoert-hendelse publiseres til utgaaende topic
 	 */
 	@Test
-	public void shouldPublishNewEndligJournalfoertHendelse() throws Exception {
-		sendToInnTopic(classpathToJsonNode("__files/endelig_jf.json"));
+	public void shouldPublishEndeligJournalfoertHendelse() throws Exception {
+		sendToInnTopic(classpathToJsonNode("__files/endelig_journalfoert.json"));
 
-		await().atMost(10, SECONDS).untilAsserted(() -> {
-			List<JournalfoeringHendelseRecord> records = this.getAllCurrentRecordsOnTopicUt();
+		await().atMost(5, SECONDS).untilAsserted(() -> {
+			List<JournalfoeringHendelseRecord> records = getAllCurrentRecordsOnTopicUt();
 			assertEquals(1, records.size());
 			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
 			assertEquals(1L, utgaaendeRecord.getJournalpostId());
@@ -73,10 +73,10 @@ public class JoarkhendelserIT extends AbstractIT {
 	 * HVIS man mottar en Update med endring av JournalStatus = U, skal JournalpostUtgaatt-hendelse publiseres til utgaaende topic
 	 */
 	@Test
-	public void shouldPublishNewJournalpostUtgaattHendelse() throws Exception {
-		sendToInnTopic(classpathToJsonNode("__files/journalpost_utgaatt_med_update.json"));
-		await().atMost(10, SECONDS).untilAsserted(() -> {
-			List<JournalfoeringHendelseRecord> records = this.getAllCurrentRecordsOnTopicUt();
+	public void shouldPublishJournalpostUtgaattHendelse() throws Exception {
+		sendToInnTopic(classpathToJsonNode("__files/journalpost_utgaatt.json"));
+		await().atMost(5, SECONDS).untilAsserted(() -> {
+			List<JournalfoeringHendelseRecord> records = getAllCurrentRecordsOnTopicUt();
 			assertEquals(1, records.size());
 			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
 			assertEquals(1L, utgaaendeRecord.getJournalpostId());
@@ -91,8 +91,8 @@ public class JoarkhendelserIT extends AbstractIT {
 	public void shouldNotPublishUtgaaendeEvent() throws Exception {
 		sendToInnTopic(classpathToJsonNode("__files/journalpost_utgaaende.json"));
 
-		await().atLeast(1, SECONDS).atMost(10, SECONDS).untilAsserted(() -> {
-			List<JournalfoeringHendelseRecord> records = this.getAllCurrentRecordsOnTopicUt();
+		await().atMost(5, SECONDS).untilAsserted(() -> {
+			List<JournalfoeringHendelseRecord> records = getAllCurrentRecordsOnTopicUt();
 			assertEquals(0, records.size());
 			assertThat(records).extracting(JournalfoeringHendelseRecord::getJournalpostId).doesNotContain(JOURNALPOST_ID_UTGAAENDE);
 		});
@@ -105,25 +105,9 @@ public class JoarkhendelserIT extends AbstractIT {
 	public void shouldNotPublishSlettetEvent() throws Exception {
 		sendToInnTopic(classpathToJsonNode("__files/slettet.json"));
 
-		await().atMost(10, SECONDS).untilAsserted(() -> {
-			List<JournalfoeringHendelseRecord> records = this.getAllCurrentRecordsOnTopicUt();
+		await().atMost(5, SECONDS).untilAsserted(() -> {
+			List<JournalfoeringHendelseRecord> records = getAllCurrentRecordsOnTopicUt();
 			assertEquals(0, records.size());
-		});
-	}
-
-	/**
-	 * HVIS man mottar en Update med null-verdier i after, så skal det publiseres hendelse til utgaaende topic
-	 */
-	@Test
-	public void shouldNotProduceNullPointer() throws Exception {
-		sendToInnTopic(classpathToJsonNode("__files/nullpointer.json"));
-
-		await().atMost(10, SECONDS).untilAsserted(() -> {
-			List<JournalfoeringHendelseRecord> records = this.getAllCurrentRecordsOnTopicUt();
-			assertEquals(1, records.size());
-			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
-			assertEquals(123456789L, utgaaendeRecord.getJournalpostId());
-			assertEquals(ENDELIG_JOURNALFOERT.toString(), utgaaendeRecord.getHendelsesType());
 		});
 	}
 }

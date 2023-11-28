@@ -2,15 +2,12 @@ package no.nav.joarkhendelser.itest.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord;
 import org.apache.kafka.clients.consumer.Consumer;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +24,15 @@ import org.springframework.test.context.ActiveProfiles;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG;
 import static io.confluent.kafka.serializers.KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG;
-import static java.time.temporal.ChronoUnit.SECONDS;
+import static java.time.temporal.ChronoUnit.MILLIS;
+import static java.util.Collections.singletonList;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG;
 import static org.awaitility.Awaitility.setDefaultPollInterval;
@@ -59,11 +55,11 @@ import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 )
 public abstract class AbstractIT {
 
-	@Value("${journalfoeringhendelse.topic}")
-	public static String UT_TOPIC = "test-ut-topic";
-
 	@Value("${journalpostendret.topic}")
 	public static String INN_TOPIC = "test-inn-topic";
+
+	@Value("${journalfoeringhendelse.topic}")
+	public static String UT_TOPIC = "test-ut-topic";
 
 	@Autowired
 	@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
@@ -76,13 +72,13 @@ public abstract class AbstractIT {
 	@BeforeAll
 	public void setUpClass() {
 		// KafkaConsumer for å kunne konsumere meldinger som InngaaendeHendelsePublisher dytter til 'test-ut-topic'
-		this.setUpConsumerForTopicUt();
+		setUpConsumerForTopicUt();
 
 		// KafkaProducer for å kunne produsere meldinger til topic 'test-inn-topic' som konsumeres av JournalpostEndretConsumer
 		Map<String, Object> configs = new HashMap<>(KafkaTestUtils.producerProps(kafkaEmbedded));
 		producer = new DefaultKafkaProducerFactory<>(configs, new StringSerializer(), new StringSerializer()).createProducer();
 
-		setDefaultPollInterval(Duration.ofSeconds(1));
+		setDefaultPollInterval(Duration.ofMillis(100));
 	}
 
 	protected void sendToInnTopic(JsonNode value) {
@@ -97,9 +93,9 @@ public abstract class AbstractIT {
 	}
 
 	public List<JournalfoeringHendelseRecord> getAllCurrentRecordsOnTopicUt() {
-		return StreamSupport.stream(KafkaTestUtils.getRecords(consumer, Duration.of(2, SECONDS)).records(UT_TOPIC).spliterator(), false)
+		return StreamSupport.stream(KafkaTestUtils.getRecords(consumer, Duration.of(250, MILLIS)).records(UT_TOPIC).spliterator(), false)
 				.map(ConsumerRecord::value)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	public void setUpConsumerForTopicUt() {
@@ -110,6 +106,6 @@ public abstract class AbstractIT {
 		consumerProps.put(SPECIFIC_AVRO_READER_CONFIG, "true");
 
 		consumer = new DefaultKafkaConsumerFactory<String, JournalfoeringHendelseRecord>(consumerProps).createConsumer();
-		consumer.subscribe(Collections.singletonList(UT_TOPIC));
+		consumer.subscribe(singletonList(UT_TOPIC));
 	}
 }

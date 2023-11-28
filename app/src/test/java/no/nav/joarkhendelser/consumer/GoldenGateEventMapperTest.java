@@ -18,7 +18,7 @@ public class GoldenGateEventMapperTest {
 
 	@Test
 	void shouldMapInsertMelding() throws Exception {
-		String pathInsertMelding = "src/test/resources/__files/endelig_jf.json";
+		String pathInsertMelding = "src/test/resources/__files/endelig_journalfoert.json";
 		String json = readFileAsString(pathInsertMelding);
 		GoldenGateEvent goldenGateEvent = goldenGateEventMapper.mapToEvent(json);
 

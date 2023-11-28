@@ -1,13 +1,13 @@
 {
   "table": "JOARK.T_JOURNALPOST",
-  "op_type": "D",
-  "op_ts": "2018-10-09 11:06:02.000000",
+  "op_type": "I",
+  "op_ts": "2018-10-09 11:06:02.123456",
   "current_ts": "2018-10-09T13:06:04.842000",
   "pos": "00000000000000091406",
-  "before": {
+  "after": {
     "JOURNALPOST_ID": 1,
     "K_FAGOMRADE": "SAK",
-    "K_JOURNAL_S": "M",
+    "K_JOURNAL_S": "J",
     "K_JOURNALPOST_T": "I",
     "K_MOTTAKS_KANAL": "SKAN_NETS",
     "KANAL_REFERANSE_ID": null,
