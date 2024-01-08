@@ -6,13 +6,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static no.nav.joarkhendelser.producer.Hendelsestype.ENDELIG_JOURNALFOERT;
 import static no.nav.joarkhendelser.producer.Hendelsestype.JOURNALPOST_MOTTATT;
 import static no.nav.joarkhendelser.producer.Hendelsestype.JOURNALPOST_UTGAATT;
 import static no.nav.joarkhendelser.producer.Hendelsestype.TEMA_ENDRET;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class JoarkhendelserIT extends AbstractIT {
@@ -26,13 +24,12 @@ public class JoarkhendelserIT extends AbstractIT {
 	public void shouldPublishJournalpostMottattHendelse() throws Exception {
 		sendToInnTopic(classpathToJsonNode("__files/midlertidig_journalfoert.json"));
 
-		await().atMost(5, SECONDS).untilAsserted(() -> {
-			List<JournalfoeringHendelseRecord> records = getAllCurrentRecordsOnTopicUt();
-			assertEquals(1, records.size());
-			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
-			assertEquals(1L, utgaaendeRecord.getJournalpostId());
-			assertEquals(JOURNALPOST_MOTTATT.toString(), utgaaendeRecord.getHendelsesType());
-		});
+		List<JournalfoeringHendelseRecord> records = getAllCurrentRecordsOnTopicUt();
+
+		assertEquals(1, records.size());
+		JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
+		assertEquals(1L, utgaaendeRecord.getJournalpostId());
+		assertEquals(JOURNALPOST_MOTTATT.toString(), utgaaendeRecord.getHendelsesType());
 	}
 
 	/**
@@ -42,15 +39,14 @@ public class JoarkhendelserIT extends AbstractIT {
 	public void shouldPublishTemaEndretHendelse() throws Exception {
 		sendToInnTopic(classpathToJsonNode("__files/tema_endret.json"));
 
-		await().atMost(5, SECONDS).untilAsserted(() -> {
-			List<JournalfoeringHendelseRecord> records = getAllCurrentRecordsOnTopicUt();
-			assertEquals(1, records.size());
-			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
-			assertEquals(1L, utgaaendeRecord.getJournalpostId());
-			assertEquals(TEMA_ENDRET.toString(), utgaaendeRecord.getHendelsesType());
-			assertEquals("SAK", utgaaendeRecord.getTemaGammelt());
-			assertEquals("AAP", utgaaendeRecord.getTemaNytt());
-		});
+		List<JournalfoeringHendelseRecord> records = getAllCurrentRecordsOnTopicUt();
+
+		assertEquals(1, records.size());
+		JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
+		assertEquals(1L, utgaaendeRecord.getJournalpostId());
+		assertEquals(TEMA_ENDRET.toString(), utgaaendeRecord.getHendelsesType());
+		assertEquals("SAK", utgaaendeRecord.getTemaGammelt());
+		assertEquals("AAP", utgaaendeRecord.getTemaNytt());
 	}
 
 	/**
@@ -60,13 +56,12 @@ public class JoarkhendelserIT extends AbstractIT {
 	public void shouldPublishEndeligJournalfoertHendelse() throws Exception {
 		sendToInnTopic(classpathToJsonNode("__files/endelig_journalfoert.json"));
 
-		await().atMost(5, SECONDS).untilAsserted(() -> {
-			List<JournalfoeringHendelseRecord> records = getAllCurrentRecordsOnTopicUt();
-			assertEquals(1, records.size());
-			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
-			assertEquals(1L, utgaaendeRecord.getJournalpostId());
-			assertEquals(ENDELIG_JOURNALFOERT.toString(), utgaaendeRecord.getHendelsesType());
-		});
+		List<JournalfoeringHendelseRecord> records = getAllCurrentRecordsOnTopicUt();
+
+		assertEquals(1, records.size());
+		JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
+		assertEquals(1L, utgaaendeRecord.getJournalpostId());
+		assertEquals(ENDELIG_JOURNALFOERT.toString(), utgaaendeRecord.getHendelsesType());
 	}
 
 	/**
@@ -75,13 +70,13 @@ public class JoarkhendelserIT extends AbstractIT {
 	@Test
 	public void shouldPublishJournalpostUtgaattHendelse() throws Exception {
 		sendToInnTopic(classpathToJsonNode("__files/journalpost_utgaatt.json"));
-		await().atMost(5, SECONDS).untilAsserted(() -> {
-			List<JournalfoeringHendelseRecord> records = getAllCurrentRecordsOnTopicUt();
-			assertEquals(1, records.size());
-			JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
-			assertEquals(1L, utgaaendeRecord.getJournalpostId());
-			assertEquals(JOURNALPOST_UTGAATT.toString(), utgaaendeRecord.getHendelsesType());
-		});
+
+		List<JournalfoeringHendelseRecord> records = getAllCurrentRecordsOnTopicUt();
+
+		assertEquals(1, records.size());
+		JournalfoeringHendelseRecord utgaaendeRecord = records.get(0);
+		assertEquals(1L, utgaaendeRecord.getJournalpostId());
+		assertEquals(JOURNALPOST_UTGAATT.toString(), utgaaendeRecord.getHendelsesType());
 	}
 
 	/**
@@ -91,11 +86,10 @@ public class JoarkhendelserIT extends AbstractIT {
 	public void shouldNotPublishUtgaaendeEvent() throws Exception {
 		sendToInnTopic(classpathToJsonNode("__files/journalpost_utgaaende.json"));
 
-		await().atMost(5, SECONDS).untilAsserted(() -> {
-			List<JournalfoeringHendelseRecord> records = getAllCurrentRecordsOnTopicUt();
-			assertEquals(0, records.size());
-			assertThat(records).extracting(JournalfoeringHendelseRecord::getJournalpostId).doesNotContain(JOURNALPOST_ID_UTGAAENDE);
-		});
+		List<JournalfoeringHendelseRecord> records = getAllCurrentRecordsOnTopicUt();
+
+		assertEquals(0, records.size());
+		assertThat(records).extracting(JournalfoeringHendelseRecord::getJournalpostId).doesNotContain(JOURNALPOST_ID_UTGAAENDE);
 	}
 
 	/**
@@ -105,9 +99,8 @@ public class JoarkhendelserIT extends AbstractIT {
 	public void shouldNotPublishSlettetEvent() throws Exception {
 		sendToInnTopic(classpathToJsonNode("__files/slettet.json"));
 
-		await().atMost(5, SECONDS).untilAsserted(() -> {
-			List<JournalfoeringHendelseRecord> records = getAllCurrentRecordsOnTopicUt();
-			assertEquals(0, records.size());
-		});
+		List<JournalfoeringHendelseRecord> records = getAllCurrentRecordsOnTopicUt();
+
+		assertEquals(0, records.size());
 	}
 }

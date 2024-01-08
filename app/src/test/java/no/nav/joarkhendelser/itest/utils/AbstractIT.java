@@ -31,12 +31,12 @@ import java.util.stream.StreamSupport;
 
 import static io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG;
 import static io.confluent.kafka.serializers.KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG;
-import static java.time.temporal.ChronoUnit.MILLIS;
+import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.Collections.singletonList;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG;
-import static org.awaitility.Awaitility.setDefaultPollInterval;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
+import static org.springframework.kafka.test.utils.KafkaTestUtils.getRecords;
 
 @SpringBootTest
 @TestInstance(PER_CLASS)
@@ -45,6 +45,11 @@ import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 		topics = {
 				"test-ut-topic",
 				"test-inn-topic",
+		},
+		brokerProperties = {
+				"offsets.topic.replication.factor=1",
+				"transaction.state.log.replication.factor=1",
+				"transaction.state.log.min.isr=1"
 		},
 		partitions = 1
 )
@@ -72,8 +77,6 @@ public abstract class AbstractIT {
 		// KafkaProducer for å kunne produsere meldinger til topic 'test-inn-topic' som konsumeres av JournalpostEndretConsumer
 		Map<String, Object> configs = new HashMap<>(KafkaTestUtils.producerProps(kafkaEmbedded));
 		producer = new DefaultKafkaProducerFactory<>(configs, new StringSerializer(), new StringSerializer()).createProducer();
-
-		setDefaultPollInterval(Duration.ofMillis(100));
 	}
 
 	protected void sendToInnTopic(JsonNode value) {
@@ -88,7 +91,7 @@ public abstract class AbstractIT {
 	}
 
 	public List<JournalfoeringHendelseRecord> getAllCurrentRecordsOnTopicUt() {
-		return StreamSupport.stream(KafkaTestUtils.getRecords(consumer, Duration.of(250, MILLIS)).records(UT_TOPIC).spliterator(), false)
+		return StreamSupport.stream(getRecords(consumer, Duration.of(5, SECONDS)).records(UT_TOPIC).spliterator(), false)
 				.map(ConsumerRecord::value)
 				.toList();
 	}
