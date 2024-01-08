@@ -1,6 +1,6 @@
 {
   "table": "JOARK.T_JOURNALPOST",
-  "op_type": "D",
+  "op_type": "U",
   "op_ts": "2018-10-09 11:06:02.000000",
   "current_ts": "2018-10-09T13:06:04.842000",
   "pos": "00000000000000091406",
@@ -12,5 +12,10 @@
     "K_MOTTAKS_KANAL": "SKAN_NETS",
     "KANAL_REFERANSE_ID": null,
     "K_BEHANDLINGSTEMA": null
+  },
+  "after": {
+    "JOURNALPOST_ID": 1,
+    "K_JOURNAL_S": "U",
+    "K_JOURNALPOST_T": "I"
   }
 }
