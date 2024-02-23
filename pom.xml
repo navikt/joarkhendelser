@@ -27,6 +27,7 @@
 		<kafka-avro-serializer.version>7.5.1</kafka-avro-serializer.version>
 
 		<!-- Plugins -->
+		<cyclonedx-maven-plugin.version>2.7.11</cyclonedx-maven-plugin.version>
 		<maven-toolchains-plugin.version>3.1.0</maven-toolchains-plugin.version>
 	</properties>
 
@@ -52,6 +53,20 @@
 
 	<build>
 		<plugins>
+			<!-- Gir økt oppløsning på dependency graph i salsa	for Maven-prosjekt -->
+			<plugin>
+				<groupId>org.cyclonedx</groupId>
+				<artifactId>cyclonedx-maven-plugin</artifactId>
+				<version>${cyclonedx-maven-plugin.version}</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>makeAggregateBom</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
