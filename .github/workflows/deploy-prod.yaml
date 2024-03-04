@@ -7,5 +7,7 @@ on:
 
 jobs:
   deploy-prod:
-    uses: navikt/dok-workflows/.github/workflows/deploy-prod-gcp.yml@main
+    uses: navikt/dok-workflows/.github/workflows/deploy-prod-gar.yml@main
     secrets: inherit
+    with:
+      nav-cluster: 'prod-gcp'
