@@ -23,7 +23,7 @@
 		<java.version>17</java.version>
 
 		<logstash-logback-encoder.version>7.4</logstash-logback-encoder.version>
-		<teamdokumenthandtering-avro-schemas.version>46c11161</teamdokumenthandtering-avro-schemas.version>
+		<teamdokumenthandtering-avro-schemas.version>1.1.0</teamdokumenthandtering-avro-schemas.version>
 		<kafka-avro-serializer.version>7.6.0</kafka-avro-serializer.version>
 
 		<!-- Plugins -->
