@@ -3,7 +3,6 @@ package no.nav.joarkhendelser.consumer;
 import no.nav.joarkhendelser.consumer.goldengate.GoldenGateEvent;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
