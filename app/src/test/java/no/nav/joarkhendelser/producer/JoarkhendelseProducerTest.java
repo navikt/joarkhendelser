@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.CompletableFuture;
@@ -31,8 +31,9 @@ public class JoarkhendelseProducerTest {
 	@Autowired
 	JoarkhendelseProducer joarkhendelseProducer;
 
-	@MockBean
+	@MockitoBean
 	private KafkaTemplate<String, JournalfoeringHendelseRecord> kafkaTemplate;
+
 	@Mock
 	private CompletableFuture completableFuture;
 
