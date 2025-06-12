@@ -37,3 +37,10 @@ spec:
   resources:
     limits:
       memory: 512Mi
+    requests:
+      cpu: 20m
+  observability:
+    logging:
+      destinations:
+        - id: elastic
+        - id: loki
