@@ -12,6 +12,12 @@ spec:
         - {{ this }}
       {{/each}}
   env:
+    - name: JAVA_TRUSTSTORE_OPTIONS
+      value: "-Djavax.net.ssl.trustStore=$(NAV_TRUSTSTORE_PATH)
+              -Djavax.net.ssl.trustStorePassword=$(NAV_TRUSTSTORE_PASSWORD)"
+    - name: JDK_JAVA_OPTIONS
+      value: "-XX:MaxRAMPercentage=75
+              $(JAVA_TRUSTSTORE_OPTIONS)"
     - name: APPNAVN
       value: {{ APPNAVN }}
     - name: JOURNALFOERINGHENDELSE_TOPIC
