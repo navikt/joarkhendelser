@@ -1,7 +1,7 @@
 package no.nav.joarkhendelser.itest.utils;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -86,7 +86,7 @@ public abstract class AbstractIT {
 
 	protected JsonNode classpathToJsonNode(String classpathResource) throws IOException {
 		InputStream inputStream = new ClassPathResource(classpathResource).getInputStream();
-		ObjectMapper mapper = new ObjectMapper();
+		JsonMapper mapper = JsonMapper.builder().build();
 		return mapper.readTree(inputStream);
 	}
 
