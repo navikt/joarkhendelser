@@ -17,6 +17,7 @@ spec:
               -Djavax.net.ssl.trustStorePassword=$(NAV_TRUSTSTORE_PASSWORD)"
     - name: JDK_JAVA_OPTIONS
       value: "-XX:MaxRAMPercentage=75
+              -Dorg.apache.avro.SERIALIZABLE_CLASSES=no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
               $(JAVA_TRUSTSTORE_OPTIONS)"
     - name: APPNAVN
       value: {{ APPNAVN }}
