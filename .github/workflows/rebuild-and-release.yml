@@ -10,3 +10,5 @@ jobs:
       id-token: write
     uses: navikt/dok-workflows/.github/workflows/rebuild-and-release.yml@main
     secrets: inherit
+    with:
+      nav-cluster: prod-gcp
